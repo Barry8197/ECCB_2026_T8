@@ -2,8 +2,6 @@
 # Learn more at https://jupyterbook.org/customize/config.html
 
 title: ECCB 2026 T8
-baseurl: /ECCB_2026_T8
-url: https://barry8197.github.io
 author: https://biomedicalinformaticsgroup.github.io/
 logo: logo.png
 
@@ -60,7 +58,7 @@ sphinx:
       navbar_end: ["theme-switcher"]
       icon_links:
         - name: Home
-          url: /index.html
+          url: ECCB_2026_T8/index.html
           icon: fas fa-home
           type: fontawesome
           attributes:
