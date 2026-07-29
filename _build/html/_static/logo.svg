@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="GraphOmics logo: a knowledge graph with a gene helix and an LLM spark">
+  <defs>
+    <linearGradient id="helix" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E8F89"/>
+      <stop offset="100%" stop-color="#1B2A4A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- soft gene-helix curve running through the graph -->
+  <path d="M 120 42 C 80 75, 160 105, 120 120 C 80 135, 160 165, 120 198"
+        fill="none" stroke="url(#helix)" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+  <path d="M 120 42 C 160 75, 80 105, 120 120 C 160 135, 80 165, 120 198"
+        fill="none" stroke="url(#helix)" stroke-width="4" stroke-linecap="round" opacity="0.35"/>
+  <!-- helix rungs -->
+  <line x1="98" y1="66" x2="142" y2="66" stroke="#1E8F89" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+  <line x1="98" y1="174" x2="142" y2="174" stroke="#1B2A4A" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- knowledge-graph hexagon: outline edges -->
+  <polygon points="120,42 187.6,81 187.6,159 120,198 52.4,159 52.4,81"
+           fill="none" stroke="#1B2A4A" stroke-width="2.5" opacity="0.35"/>
+
+  <!-- spokes to the central node -->
+  <g stroke="#1B2A4A" stroke-width="2.5" opacity="0.55">
+    <line x1="120" y1="120" x2="120" y2="42"/>
+    <line x1="120" y1="120" x2="187.6" y2="81"/>
+    <line x1="120" y1="120" x2="187.6" y2="159"/>
+    <line x1="120" y1="120" x2="120" y2="198"/>
+    <line x1="120" y1="120" x2="52.4" y2="159"/>
+    <line x1="120" y1="120" x2="52.4" y2="81"/>
+  </g>
+
+  <!-- outer nodes -->
+  <circle cx="120" cy="42" r="10" fill="#1E8F89"/>
+  <circle cx="187.6" cy="159" r="8" fill="#1B2A4A"/>
+  <circle cx="120" cy="198" r="9" fill="#1E8F89"/>
+  <circle cx="52.4" cy="159" r="8" fill="#1B2A4A"/>
+  <circle cx="52.4" cy="81" r="8" fill="#1B2A4A"/>
+
+  <!-- LLM node, accented -->
+  <circle cx="187.6" cy="81" r="11" fill="#F5A623"/>
+
+  <!-- central knowledge-graph core -->
+  <circle cx="120" cy="120" r="15" fill="#6C5CE7"/>
+  <circle cx="120" cy="120" r="15" fill="none" stroke="#4B3FB0" stroke-width="1.5"/>
+
+  <!-- spark over the LLM node -->
+  <g transform="translate(187.6,81)" fill="#FFFFFF">
+    <path d="M0,-7 L1.8,-1.8 L7,0 L1.8,1.8 L0,7 L-1.8,1.8 L-7,0 L-1.8,-1.8 Z"/>
+  </g>
+</svg>

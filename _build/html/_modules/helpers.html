@@ -1,0 +1,1278 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>helpers &#8212; ECCB 2026 Geneva Tutorial Book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/helpers';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="/index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="/index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">helpers</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for helpers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for *From Multi-Omics to Gene–Disease Discovery: Knowledge Graphs and LLM-Augmented Analysis*</span>
+<span class="sd">tutorial (ECCB 2026, Geneva).</span>
+
+<span class="sd">This module contains utility functions used in Session 2 (multi-omics / MOFA)</span>
+<span class="sd">and a small set of general evaluation helpers.</span>
+
+<span class="sd">Exported functions</span>
+<span class="sd">------------------</span>
+<span class="sd">- load_omics</span>
+<span class="sd">- evaluate_predictions</span>
+<span class="sd">- plot_confusion_matrix</span>
+<span class="sd">- generate_diagnostic_plots</span>
+<span class="sd">- build_mofa_matrix_input</span>
+<span class="sd">- fit_mofa</span>
+<span class="sd">- select_active_factors</span>
+<span class="sd">- project_test_patients_to_mofa_factors</span>
+<span class="sd">- eta_squared_by_factor</span>
+<span class="sd">- fit_factor_classifier</span>
+<span class="sd">- plot_r2_heatmap</span>
+<span class="sd">- plot_factor_boxplots_by_subtype</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">accuracy_score</span><span class="p">,</span>
+    <span class="n">balanced_accuracy_score</span><span class="p">,</span>
+    <span class="n">classification_report</span><span class="p">,</span>
+    <span class="n">ConfusionMatrixDisplay</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mofapy2.run.entry_point</span><span class="w"> </span><span class="kn">import</span> <span class="n">entry_point</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mofax</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mfx</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;load_omics&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;evaluate_predictions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plot_confusion_matrix&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generate_diagnostic_plots&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;build_mofa_matrix_input&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fit_mofa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;select_active_factors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;project_test_patients_to_mofa_factors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eta_squared_by_factor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fit_factor_classifier&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plot_r2_heatmap&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plot_factor_boxplots_by_subtype&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># SESSION - 2 - LLM Functions</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="build_mofa_matrix_input">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.build_mofa_matrix_input">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_mofa_matrix_input</span><span class="p">(</span><span class="n">X_by_omic</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build MOFA input matrices from aligned omics tables.</span>
+
+<span class="sd">    `mofapy2` expects a nested structure where each *view* (omics modality) contains</span>
+<span class="sd">    one or more *groups*, and each entry is a numeric matrix of shape</span>
+<span class="sd">    `(n_samples, n_features)`.</span>
+
+<span class="sd">    This helper assumes:</span>
+<span class="sd">    - all input DataFrames are already aligned on an identical patient index</span>
+<span class="sd">    - a single group is used: ``&quot;TCGA-BRCA_train&quot;``</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_by_omic : dict[str, pandas.DataFrame]</span>
+<span class="sd">        Mapping from view name (e.g. ``&quot;transcriptomics&quot;``) to a 2D feature table</span>
+<span class="sd">        indexed by patient/sample ID. Each DataFrame has shape</span>
+<span class="sd">        `(n_samples, n_features_view)`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : list[list[numpy.ndarray]]</span>
+<span class="sd">        MOFA data structure: ``data[view][group] = X`` where each ``X`` is a</span>
+<span class="sd">        ``float32`` NumPy array of shape `(n_samples, n_features_view)`.</span>
+<span class="sd">    view_names : list[str]</span>
+<span class="sd">        Names of the omics views in the same order as `data`.</span>
+<span class="sd">    feature_names : list[list[str]]</span>
+<span class="sd">        Feature names per view in the same order as `view_names`.</span>
+<span class="sd">    sample_names : list[list[str]]</span>
+<span class="sd">        Sample IDs per group. For a single group this is `[sample_id_list]`.</span>
+<span class="sd">    group_names : list[str]</span>
+<span class="sd">        Group names. For this tutorial this is `[&quot;TCGA-BRCA_train&quot;]`.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If any view&#39;s sample index does not match the first view&#39;s sample index.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">feature_names</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">mofa_sample_ids</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">X_by_omic</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">view_name</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">X_by_omic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">mofa_sample_ids</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Patient index differs in </span><span class="si">{</span><span class="n">view_name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">view_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">view_name</span><span class="p">)</span>
+        <span class="n">feature_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">X</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)])</span>  <span class="c1"># one group, many views</span>
+
+    <span class="n">sample_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">mofa_sample_ids</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+    <span class="n">group_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;TCGA-BRCA_train&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="n">sample_names</span><span class="p">,</span> <span class="n">group_names</span></div>
+
+
+<div class="viewcode-block" id="fit_mofa">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.fit_mofa">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_mofa</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="n">sample_names</span><span class="p">,</span> <span class="n">group_names</span><span class="p">,</span>
+             <span class="n">max_factors</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit a MOFA model (mofapy2) and return the trained model object.</span>
+
+<span class="sd">    This function configures a compact MOFA model for continuous (Gaussian)</span>
+<span class="sd">    multi-omics data, enabling ARD (automatic relevance determination) at both</span>
+<span class="sd">    the factor and weight level to encourage sparsity/shrinkage of uninformative</span>
+<span class="sd">    factors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : list[list[numpy.ndarray]]</span>
+<span class="sd">        Nested data structure as produced by :func:`build_mofa_matrix_input`.</span>
+<span class="sd">    view_names : list[str]</span>
+<span class="sd">        View names corresponding to entries in `data`.</span>
+<span class="sd">    feature_names : list[list[str]]</span>
+<span class="sd">        Feature names per view.</span>
+<span class="sd">    sample_names : list[list[str]]</span>
+<span class="sd">        Sample names per group.</span>
+<span class="sd">    group_names : list[str]</span>
+<span class="sd">        Group names.</span>
+<span class="sd">    max_factors : int</span>
+<span class="sd">        Maximum number of latent factors to learn.</span>
+<span class="sd">    iterations : int</span>
+<span class="sd">        Number of training iterations.</span>
+<span class="sd">    random_state : int</span>
+<span class="sd">        Random seed passed to MOFA training.</span>
+<span class="sd">    outfile : str | pathlib.Path</span>
+<span class="sd">        Path for MOFA&#39;s training output and/or saved model.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    model : mofapy2.run.entry_point.entry_point</span>
+<span class="sd">        Trained MOFA entry point object.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The function calls ``model.run()`` and then saves the model (if needed).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">entry_point</span><span class="p">()</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">set_data_options</span><span class="p">(</span>
+        <span class="n">scale_views</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">scale_groups</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">center_groups</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">use_float32</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">set_data_matrix</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">likelihoods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gaussian&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">view_names</span><span class="p">),</span>
+        <span class="n">views_names</span><span class="o">=</span><span class="n">view_names</span><span class="p">,</span>
+        <span class="n">groups_names</span><span class="o">=</span><span class="n">group_names</span><span class="p">,</span>
+        <span class="n">samples_names</span><span class="o">=</span><span class="n">sample_names</span><span class="p">,</span>
+        <span class="n">features_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">set_model_options</span><span class="p">(</span>
+        <span class="n">factors</span><span class="o">=</span><span class="n">max_factors</span><span class="p">,</span>
+        <span class="n">spikeslab_factors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">spikeslab_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">ard_factors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">ard_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">set_train_options</span><span class="p">(</span>
+        <span class="nb">iter</span><span class="o">=</span><span class="n">iterations</span><span class="p">,</span>
+        <span class="n">convergence_mode</span><span class="o">=</span><span class="s2">&quot;fast&quot;</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">outfile</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outfile</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outfile</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="select_active_factors">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.select_active_factors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">select_active_factors</span><span class="p">(</span><span class="n">mofa_model_mfx</span><span class="p">,</span> <span class="n">min_total_r2</span><span class="p">,</span> <span class="n">max_factors</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Select &quot;active&quot; MOFA factors using variance explained (R2).</span>
+
+<span class="sd">    This function retrieves the variance-explained table from a fitted MOFA model,</span>
+<span class="sd">    sums each factor&#39;s R2 across all views, and keeps factors whose total R2 meets</span>
+<span class="sd">    a minimum threshold. If none pass, it falls back to the single best factor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mofa_model_mfx : mofax.core.mofa_model.MofaModel | Any</span>
+<span class="sd">        A `mofax`-wrapped MOFA model providing ``get_r2()``.</span>
+<span class="sd">    min_total_r2 : float</span>
+<span class="sd">        Minimum total (summed across views) R2 required to keep a factor.</span>
+<span class="sd">    max_factors : int</span>
+<span class="sd">        Maximum number of factors considered/trained (kept for API compatibility /</span>
+<span class="sd">        notebook parity).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    active_factor_cols : list[str]</span>
+<span class="sd">        Selected factor names (e.g. ``[&quot;Factor1&quot;, &quot;Factor3&quot;]``).</span>
+<span class="sd">    factor_r2_summary : pandas.DataFrame</span>
+<span class="sd">        Table with columns:</span>
+<span class="sd">        - ``factor``: factor name</span>
+<span class="sd">        - ``total_r2``: summed R2 across views</span>
+<span class="sd">        Sorted descending by ``total_r2``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    `max_factors` is not used directly in the current implementation but is kept</span>
+<span class="sd">    to match the tutorial’s calling signature.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r2_all</span> <span class="o">=</span> <span class="n">mofa_model_mfx</span><span class="o">.</span><span class="n">get_r2</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Factor&quot;</span><span class="p">:</span> <span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span> <span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="s2">&quot;Group&quot;</span><span class="p">:</span> <span class="s2">&quot;group_mofax&quot;</span><span class="p">,</span> <span class="s2">&quot;R2&quot;</span><span class="p">:</span> <span class="s2">&quot;r2&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">factor_r2_summary</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">r2_all</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;r2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r2&quot;</span><span class="p">:</span> <span class="s2">&quot;total_r2&quot;</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;total_r2&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">active_factor_summary</span> <span class="o">=</span> <span class="n">factor_r2_summary</span><span class="p">[</span><span class="n">factor_r2_summary</span><span class="p">[</span><span class="s2">&quot;total_r2&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_total_r2</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">active_factor_summary</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">active_factor_summary</span> <span class="o">=</span> <span class="n">factor_r2_summary</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">active_factor_cols</span> <span class="o">=</span> <span class="n">active_factor_summary</span><span class="p">[</span><span class="s2">&quot;factor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">active_factor_cols</span><span class="p">,</span> <span class="n">factor_r2_summary</span></div>
+
+
+<div class="viewcode-block" id="project_test_patients_to_mofa_factors">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.project_test_patients_to_mofa_factors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">project_test_patients_to_mofa_factors</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_train_by_view</span><span class="p">,</span> <span class="n">X_test_by_view</span><span class="p">,</span> <span class="n">train_factors</span><span class="p">,</span> <span class="n">view_names</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Project held-out samples into a trained MOFA factor space. </span>
+<span class="sd">    </span>
+<span class="sd">    MOFA is fitted on training samples only. For held-out samples, this function:</span>
+<span class="sd">    - fixes learned weights (W) per view</span>
+<span class="sd">    - computes a pseudo-inverse-based projection from scaled test features to factors</span>
+<span class="sd">    - calibrates the raw projection to the trained factor scale using a linear map fitted on training samples only</span>
+<span class="sd">    - averages projected factor values across views</span>
+
+<span class="sd">    Parameter</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : Any</span>
+<span class="sd">        Fitted MOFA model object providing ``get_weights(views=..., df=True)``.</span>
+<span class="sd">    X_train_by_view : dict[str, pandas.DataFrame]</span>
+<span class="sd">        Training feature matrices per view, indexed by sample ID.</span>
+<span class="sd">    X_test_by_view : dict[str, pandas.DataFrame]</span>
+<span class="sd">        Test feature matrices per view, indexed by sample ID.</span>
+<span class="sd">    train_factors : pandas.DataFrame</span>
+<span class="sd">        Training factor matrix (Z) indexed by sample ID with columns being factor names.</span>
+<span class="sd">    view_names : list[str]</span>
+<span class="sd">        Ordered list of view names to project with.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        Projected test factor values, indexed by test sample ID with the same</span>
+<span class="sd">        factor columns as `train_factors`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Scaling is done per view using training-set mean and standard deviation.</span>
+<span class="sd">    - Features are intersected across MOFA weights, train data, and test data for safety.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">factor_columns</span> <span class="o">=</span> <span class="n">train_factors</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">projected_test_by_view</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">view_name</span> <span class="ow">in</span> <span class="n">view_names</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_weights</span><span class="p">(</span><span class="n">views</span><span class="o">=</span><span class="n">view_name</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">weights</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">factor_columns</span><span class="p">)</span>
+
+        <span class="n">common_features</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">X_train_by_view</span><span class="p">[</span><span class="n">view_name</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">common_features</span> <span class="o">=</span> <span class="n">common_features</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">X_test_by_view</span><span class="p">[</span><span class="n">view_name</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">common_features</span><span class="p">]</span>
+
+        <span class="n">X_train_view</span> <span class="o">=</span> <span class="n">X_train_by_view</span><span class="p">[</span><span class="n">view_name</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">common_features</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">X_test_view</span> <span class="o">=</span> <span class="n">X_test_by_view</span><span class="p">[</span><span class="n">view_name</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">common_features</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">X_train_view</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">X_train_view</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">X_test_view</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">X_test_view</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+        <span class="n">train_mean</span> <span class="o">=</span> <span class="n">X_train_view</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">train_std</span> <span class="o">=</span> <span class="n">X_train_view</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">X_train_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_train_view</span> <span class="o">-</span> <span class="n">train_mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">train_std</span>
+        <span class="n">X_test_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_test_view</span> <span class="o">-</span> <span class="n">train_mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">train_std</span>
+
+        <span class="n">raw_train_projection</span> <span class="o">=</span> <span class="n">X_train_scaled</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">raw_test_projection</span> <span class="o">=</span> <span class="n">X_test_scaled</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="n">train_design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">raw_train_projection</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">raw_train_projection</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+        <span class="n">test_design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">raw_test_projection</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">raw_test_projection</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+        <span class="n">train_target</span> <span class="o">=</span> <span class="n">train_factors</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">X_train_view</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">factor_columns</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">calibration</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">train_design</span><span class="p">,</span> <span class="n">train_target</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">projected_values</span> <span class="o">=</span> <span class="n">test_design</span> <span class="o">@</span> <span class="n">calibration</span>
+
+        <span class="n">projected</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">projected_values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">X_test_view</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">factor_columns</span><span class="p">)</span>
+        <span class="n">projected_test_by_view</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">projected</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">projected_test_by_view</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">projected_test_by_view</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="eta_squared_by_factor">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.eta_squared_by_factor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eta_squared_by_factor</span><span class="p">(</span><span class="n">factor_table</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute one-way ANOVA eta-squared ($ \\\\eta^2 $) for each factor.</span>
+
+<span class="sd">    Eta-squared here is interpreted as the fraction of *factor variance* explained</span>
+<span class="sd">    by group (subtype) membership, computed without fitting a predictive model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    factor_table : pandas.DataFrame</span>
+<span class="sd">        Factor values (e.g. MOFA Z) with shape `(n_samples, n_factors)`,</span>
+<span class="sd">        indexed by sample ID.</span>
+<span class="sd">    labels : pandas.Series</span>
+<span class="sd">        Group labels (e.g. subtype) indexed by the same sample IDs as `factor_table`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        Sorted table with columns:</span>
+<span class="sd">        - ``factor``: factor column name</span>
+<span class="sd">        - ``eta_squared``: eta-squared value (float)</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - If a factor has zero total variance, eta-squared is reported as ``NaN``.</span>
+<span class="sd">    - Labels are coerced to string to avoid mixed label types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factor_table</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">factor_table</span><span class="p">[</span><span class="n">factor</span><span class="p">]</span>
+        <span class="n">grand_mean</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">ss_total</span> <span class="o">=</span> <span class="p">((</span><span class="n">values</span> <span class="o">-</span> <span class="n">grand_mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">ss_between</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">labels</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">group_values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="n">ss_between</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_values</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">group_values</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">grand_mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="n">eta2</span> <span class="o">=</span> <span class="n">ss_between</span> <span class="o">/</span> <span class="n">ss_total</span> <span class="k">if</span> <span class="n">ss_total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;factor&quot;</span><span class="p">:</span> <span class="n">factor</span><span class="p">,</span> <span class="s2">&quot;eta_squared&quot;</span><span class="p">:</span> <span class="n">eta2</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;eta_squared&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fit_factor_classifier">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.fit_factor_classifier">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_factor_classifier</span><span class="p">(</span><span class="n">factors_df</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">test_ids</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Train a logistic regression classifier on factor values and evaluate on a held-out set.</span>
+
+<span class="sd">    This is a lightweight diagnostic answering: *do the learned latent factors</span>
+<span class="sd">    preserve subtype information?*</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    factors_df : pandas.DataFrame</span>
+<span class="sd">        Factor matrix (Z) indexed by sample ID, columns are factor names.</span>
+<span class="sd">    y : pandas.Series</span>
+<span class="sd">        True labels indexed by sample ID.</span>
+<span class="sd">    train_ids : array-like</span>
+<span class="sd">        Sample IDs to use for training.</span>
+<span class="sd">    test_ids : array-like</span>
+<span class="sd">        Sample IDs to use for evaluation.</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        Label used in metric output.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    clf : sklearn.linear_model.LogisticRegression</span>
+<span class="sd">        Fitted classifier.</span>
+<span class="sd">    pred : numpy.ndarray</span>
+<span class="sd">        Predicted labels for `test_ids`.</span>
+<span class="sd">    metrics : dict</span>
+<span class="sd">        Dictionary returned by :func:`evaluate_predictions`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+        <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">])</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">factors_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">])</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">pred</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">clf</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">metrics</span></div>
+
+
+<div class="viewcode-block" id="plot_r2_heatmap">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.plot_r2_heatmap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_r2_heatmap</span><span class="p">(</span><span class="n">r2_all</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">active_factor_cols</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot an annotated heatmap of MOFA variance explained (R2) and save to disk.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r2_all : pandas.DataFrame</span>
+<span class="sd">        Long-form R2 table with columns:</span>
+<span class="sd">        - ``factor``</span>
+<span class="sd">        - ``view``</span>
+<span class="sd">        - ``r2`` (numeric)</span>
+<span class="sd">        Typically derived from ``mofa_model_mfx.get_r2()`` with column renaming.</span>
+<span class="sd">    view_names : list[str]</span>
+<span class="sd">        View order for plotting (rows).</span>
+<span class="sd">    active_factor_cols : list[str]</span>
+<span class="sd">        Factor order for plotting (columns).</span>
+<span class="sd">    output_path : str | pathlib.Path</span>
+<span class="sd">        Output path for a PNG file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Figure is saved and closed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r2_heatmap</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">r2_all</span><span class="p">[</span><span class="n">r2_all</span><span class="p">[</span><span class="s2">&quot;factor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">active_factor_cols</span><span class="p">)]</span>
+        <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;r2&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">view_names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">active_factor_cols</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">active_factor_cols</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">r2_heatmap</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;MOFA R2 heatmap: views x active factors&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;MOFA factor&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Omics view&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">r2_heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">r2_heatmap</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">r2_heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">r2_heatmap</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r2_heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r2_heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">r2_heatmap</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;MOFA R2 (%)&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_factor_boxplots_by_subtype">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.plot_factor_boxplots_by_subtype">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_factor_boxplots_by_subtype</span><span class="p">(</span><span class="n">factors_df</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">top_factors</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot boxplots of selected factors stratified by subtype and save to disk.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    factors_df : pandas.DataFrame</span>
+<span class="sd">        Factor matrix indexed by sample ID.</span>
+<span class="sd">    train_ids : array-like</span>
+<span class="sd">        Training sample IDs to include in the plot.</span>
+<span class="sd">    y_train : pandas.Series</span>
+<span class="sd">        Training labels (subtypes).</span>
+<span class="sd">    top_factors : list[str]</span>
+<span class="sd">        Factor column names to plot (one panel per factor).</span>
+<span class="sd">    output_path : str | pathlib.Path</span>
+<span class="sd">        Output path for a PNG file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Figure is saved and closed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">train_factors_for_plot</span> <span class="o">=</span> <span class="n">factors_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">top_factors</span><span class="p">]</span>
+    <span class="n">train_labels_for_plot</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">subtypes</span> <span class="o">=</span> <span class="n">train_labels_for_plot</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+    <span class="n">n_panels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">top_factors</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_panels</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.75</span> <span class="o">*</span> <span class="n">n_panels</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">squeeze</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">factor</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">top_factors</span><span class="p">):</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">train_factors_for_plot</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_labels_for_plot</span> <span class="o">==</span> <span class="n">subtype</span><span class="p">,</span> <span class="n">factor</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">subtype</span> <span class="ow">in</span> <span class="n">subtypes</span>
+        <span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">tick_labels</span><span class="o">=</span><span class="n">subtypes</span><span class="p">,</span> <span class="n">showfliers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Factor value&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_ranked_feature_weights</span><span class="p">(</span><span class="n">mofa_model_mfx</span><span class="p">,</span> <span class="n">ranked_factors</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot ranked, signed MOFA feature weights for a given view and save to disk.</span>
+
+<span class="sd">    For each requested factor, this calls :func:`mofax.plot_weights_ranked` and</span>
+<span class="sd">    saves a multi-panel figure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mofa_model_mfx : mofax.core.mofa_model.MofaModel | Any</span>
+<span class="sd">        `mofax` model wrapper providing plotting helpers.</span>
+<span class="sd">    ranked_factors : list[str]</span>
+<span class="sd">        Factor names to plot.</span>
+<span class="sd">    view : str</span>
+<span class="sd">        View name to plot weights for.</span>
+<span class="sd">    output_path : str | pathlib.Path</span>
+<span class="sd">        Output path for a PNG file.</span>
+<span class="sd">    n_features : int, default=5</span>
+<span class="sd">        Number of features to label at each extreme of the ranked plot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Figure is saved and closed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ranked_factors</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ranked_factors</span><span class="p">),</span> <span class="mf">4.5</span><span class="p">),</span> <span class="n">squeeze</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">ranked_factor</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">ranked_factors</span><span class="p">):</span>
+        <span class="n">mfx</span><span class="o">.</span><span class="n">plot_weights_ranked</span><span class="p">(</span>
+            <span class="n">mofa_model_mfx</span><span class="p">,</span>
+            <span class="n">factor</span><span class="o">=</span><span class="n">ranked_factor</span><span class="p">,</span>
+            <span class="n">view</span><span class="o">=</span><span class="n">view</span><span class="p">,</span>
+            <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">view</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ranked_factor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<div class="viewcode-block" id="generate_diagnostic_plots">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.generate_diagnostic_plots">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_diagnostic_plots</span><span class="p">(</span><span class="n">mofa_model_mfx</span><span class="p">,</span> <span class="n">factors_df</span><span class="p">,</span> <span class="n">factor_r2_summary</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">active_factor_cols</span><span class="p">,</span> <span class="n">factor_subtype_assoc</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">mofa_pred</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">top_view_for_weights</span><span class="o">=</span><span class="s2">&quot;transcriptomics&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate and save the core MOFA diagnostic plots used in the tutorial notebook.</span>
+
+<span class="sd">    This is a single entry point that produces several complementary diagnostics:</span>
+
+<span class="sd">    1. **R2 heatmap**: MOFA variance explained per (view, factor).</span>
+<span class="sd">    2. **Factor boxplots**: distributions of top subtype-associated factors by subtype</span>
+<span class="sd">       (training patients only).</span>
+<span class="sd">    3. **Confusion matrix**: held-out subtype prediction errors from a classifier</span>
+<span class="sd">       trained on factor values.</span>
+<span class="sd">    4. **Ranked feature weights**: strongest positive/negative feature loadings in a</span>
+<span class="sd">       chosen view for the most subtype-associated factors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mofa_model_mfx : mofax.core.mofa_model.MofaModel | Any</span>
+<span class="sd">        `mofax` model wrapper providing ``get_r2()`` and plotting.</span>
+<span class="sd">    factors_df : pandas.DataFrame</span>
+<span class="sd">        Factor matrix (Z) for all samples, indexed by sample ID.</span>
+<span class="sd">    factor_r2_summary : pandas.DataFrame</span>
+<span class="sd">        Factor-level R2 summary table (kept for notebook parity; not directly used).</span>
+<span class="sd">    view_names : list[str]</span>
+<span class="sd">        View names (row order for R2 heatmap).</span>
+<span class="sd">    active_factor_cols : list[str]</span>
+<span class="sd">        Selected active factor names (column order for R2 heatmap).</span>
+<span class="sd">    factor_subtype_assoc : pandas.DataFrame</span>
+<span class="sd">        Table ranking factors by subtype association (e.g. output of</span>
+<span class="sd">        :func:`eta_squared_by_factor`) with a ``factor`` column.</span>
+<span class="sd">    train_ids : array-like</span>
+<span class="sd">        Training sample IDs.</span>
+<span class="sd">    y_train : pandas.Series</span>
+<span class="sd">        Training labels.</span>
+<span class="sd">    y_test : pandas.Series</span>
+<span class="sd">        Test labels.</span>
+<span class="sd">    mofa_pred : array-like</span>
+<span class="sd">        Predicted labels for the test set (for confusion matrix).</span>
+<span class="sd">    output_dir : str | pathlib.Path</span>
+<span class="sd">        Directory where PNGs will be written.</span>
+<span class="sd">    top_view_for_weights : str, default=&quot;transcriptomics&quot;</span>
+<span class="sd">        View to use when plotting ranked feature weights.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Side effect: saves PNG files under `output_dir`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Recreate the &quot;all views x all factors&quot; R2 table used by the heatmap.</span>
+    <span class="n">r2_all</span> <span class="o">=</span> <span class="n">mofa_model_mfx</span><span class="o">.</span><span class="n">get_r2</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Factor&quot;</span><span class="p">:</span> <span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span> <span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="s2">&quot;Group&quot;</span><span class="p">:</span> <span class="s2">&quot;group_mofax&quot;</span><span class="p">,</span> <span class="s2">&quot;R2&quot;</span><span class="p">:</span> <span class="s2">&quot;r2&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">plot_r2_heatmap</span><span class="p">(</span>
+        <span class="n">r2_all</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">active_factor_cols</span><span class="p">,</span>
+        <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;part2_mofa_r2_heatmap.png&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">top_factors</span> <span class="o">=</span> <span class="n">factor_subtype_assoc</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)[</span><span class="s2">&quot;factor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">plot_factor_boxplots_by_subtype</span><span class="p">(</span>
+        <span class="n">factors_df</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">top_factors</span><span class="p">,</span>
+        <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;part2_mofa_factor_boxplots.png&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">plot_confusion_matrix</span><span class="p">(</span>
+        <span class="n">y_test</span><span class="p">,</span> <span class="n">mofa_pred</span>
+    <span class="p">)</span>
+
+    <span class="n">plot_ranked_feature_weights</span><span class="p">(</span>
+        <span class="n">mofa_model_mfx</span><span class="p">,</span> <span class="n">top_factors</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">top_view_for_weights</span><span class="p">,</span>
+        <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;part2_mofa_ranked_weights.png&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved diagnostic plots to: </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># SESSION - 2 - General Functions</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="plot_confusion_matrix">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.plot_confusion_matrix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot a confusion matrix for held-out subtype predictions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_test : array-like</span>
+<span class="sd">        True labels for the evaluation set.</span>
+<span class="sd">    y_pred : array-like</span>
+<span class="sd">        Predicted labels for the evaluation set.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Displays the plot via Matplotlib.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">ConfusionMatrixDisplay</span><span class="o">.</span><span class="n">from_predictions</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">xticks_rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Confusion matrix&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="evaluate_predictions">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.evaluate_predictions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate_predictions</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute and display common classification metrics.</span>
+
+<span class="sd">    The function prints:</span>
+<span class="sd">    - a title header</span>
+<span class="sd">    - accuracy</span>
+<span class="sd">    - balanced accuracy</span>
+<span class="sd">    - a confusion matrix (via :func:`plot_confusion_matrix`)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_true : numpy.ndarray</span>
+<span class="sd">        Ground-truth labels of shape `(n_samples,)`.</span>
+<span class="sd">    y_pred : numpy.ndarray</span>
+<span class="sd">        Predicted labels of shape `(n_samples,)`.</span>
+<span class="sd">    title : str</span>
+<span class="sd">        Title used in printed output and metric labelling.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Summary metrics with keys:</span>
+<span class="sd">        - ``model``</span>
+<span class="sd">        - ``accuracy``</span>
+<span class="sd">        - ``balanced_accuracy``</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    `classification_report` is imported but not printed in the current implementation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">balanced_accuracy</span> <span class="o">=</span>  <span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">sep</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Accuracy          : </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> &quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Balanced accuracy : </span><span class="si">{</span><span class="n">balanced_accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+        <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="n">accuracy</span><span class="p">,</span>
+        <span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">:</span> <span class="n">balanced_accuracy</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="load_omics">
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.load_omics">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_omics</span><span class="p">(</span>
+    <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">omic_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load TCGA-BRCA multi-omics views and subtype labels from a pickled bundle.</span>
+
+<span class="sd">    The function reads ``omics.pkl`` from `data_dir`. The pickle is expected to contain:</span>
+<span class="sd">    - one DataFrame per requested omics view key</span>
+<span class="sd">    - a label vector under the key ``&quot;meta&quot;``</span>
+
+<span class="sd">    The function also checks that all requested views share an identical patient index.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_dir : str | pathlib.Path</span>
+<span class="sd">        Directory containing ``omics.pkl``.</span>
+<span class="sd">    omic_keys : Sequence[str]</span>
+<span class="sd">        Names of the omics views to load, e.g.</span>
+<span class="sd">        ``[&quot;transcriptomics&quot;, &quot;proteomics&quot;, &quot;methylation&quot;]``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X_views : dict[str, pandas.DataFrame]</span>
+<span class="sd">        Mapping from each requested view name to a copy of its feature matrix.</span>
+<span class="sd">    y : pandas.Series</span>
+<span class="sd">        Copy of the labels (subtype), indexed by patient/sample ID.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If `omic_keys` is empty.</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If ``omics.pkl`` does not exist in `data_dir`.</span>
+<span class="sd">    KeyError</span>
+<span class="sd">        If any requested omics key (or ``&quot;meta&quot;``) is missing from the pickle.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If patient indices across views are not identical.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The function prints basic dataset diagnostics (view dimensions and label counts).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">omic_keys</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">omic_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;omic_keys is required and must contain at least one key.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ---- Load the bundle -------------------------------------------------</span>
+    <span class="n">omics_path</span> <span class="o">=</span> <span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;omics.pkl&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">omics_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;omics.pkl not found in: </span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">omics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">omics_path</span><span class="p">)</span>
+
+    <span class="c1"># ---- Validate expected keys -----------------------------------------</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">omic_keys</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">omics</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing keys in omics.pkl: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ---- Print dimensions (quick sanity check) --------------------------</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Omic view dimensions:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">omic_keys</span><span class="p">:</span>
+        <span class="n">n_patients</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">omics</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">15s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">n_patients</span><span class="si">:</span><span class="s2">4d</span><span class="si">}</span><span class="s2"> patients × </span><span class="si">{</span><span class="n">n_features</span><span class="si">:</span><span class="s2">6d</span><span class="si">}</span><span class="s2"> features&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ---- Assert alignment across requested views ------------------------</span>
+    <span class="n">reference_index</span> <span class="o">=</span> <span class="n">omics</span><span class="p">[</span><span class="n">omic_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">omic_keys</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">reference_index</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">omics</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Patient index of &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; does not match &#39;</span><span class="si">{</span><span class="n">omic_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+                <span class="s2">&quot;Views must be pre-aligned.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># ---- Build outputs ---------------------------------------------------</span>
+    <span class="n">X_views</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">omics</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">omic_keys</span><span class="p">}</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">omics</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># ---- Optional: label distribution (nice in notebooks) ---------------</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Subtype counts:&quot;</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">X_views</span><span class="p">,</span> <span class="n">y</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,2265 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Part 1 — Linear Methods for Multi-Omic Integration &#8212; ECCB 2026 Geneva Tutorial Book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-2-multi-omics/part-1-linear-methods';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Part 2 — Correlation-Based / Factor-Based Multi-Omic Integration with MOFA" href="part-2-correlation-based-methods.html" />
+    <link rel="prev" title="Part 0 — Data Preparation" href="part-0-data-prep.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="/index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="/index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="part-0-data-prep.html">Part 0 — Data Preparation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 1 — Linear Methods for Multi-Omic Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-2-correlation-based-methods.html">Part 2 — Correlation-Based / Factor-Based Multi-Omic Integration with MOFA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-3-deep-learning-methods.html">Part 3 — Deep Learning Integration Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions-definitions.html">Custom Function Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concept-glossary.html">Glossary</a></li>
+
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="intro.html" class="nav-link">Session 2</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 1 — Linear Methods for Multi-Omic Integration</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="part-1-linear-methods-for-multi-omic-integration">
+<h1>Part 1 — Linear Methods for Multi-Omic Integration<a class="headerlink" href="#part-1-linear-methods-for-multi-omic-integration" title="Link to this heading">#</a></h1>
+<p>This workshop notebook compares two simple linear strategies for integrating TCGA-BRCA multi-omics data:</p>
+<ol class="arabic simple">
+<li><p><strong>Early integration</strong>: concatenate transcriptomics, proteomics, and methylation features, then fit one linear classifier.</p></li>
+<li><p><strong>Late integration</strong>: fit one linear classifier per omic, then aggregate their predictions.</p></li>
+</ol>
+<p>The data are already processed, aligned, and complete. The patient ID is the index, and the supervised target is the <code class="docutils literal notranslate"><span class="pre">subtype</span></code> column.</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this notebook you should be able to:</p>
+<ul class="simple">
+<li><p>Load already processed omics matrices.</p></li>
+<li><p>Use a single shared train/test split across all integration methods.</p></li>
+<li><p>Visualize how omics differ using PCA.</p></li>
+<li><p>Train single-omic linear baselines.</p></li>
+<li><p>Train and evaluate early integration by concatenation.</p></li>
+<li><p>Train and evaluate late integration by prediction averaging.</p></li>
+<li><p>Discuss why simple integration motivates patient-level multi-omic representations in the next part.</p></li>
+</ul>
+</section>
+<section id="import-libraries-and-helpers">
+<h2>1. Import Libraries and Helpers<a class="headerlink" href="#import-libraries-and-helpers" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ── Imports ──────────────────────────────────────────────────────────────────</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">clone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">accuracy_score</span><span class="p">,</span>
+    <span class="n">balanced_accuracy_score</span><span class="p">,</span>
+    <span class="n">classification_report</span><span class="p">,</span>
+    <span class="n">confusion_matrix</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelEncoder</span><span class="p">,</span> <span class="n">StandardScaler</span>
+
+<span class="c1"># ── Custom Imports ────────────────────────────────────────────────────────────</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_omics</span><span class="p">,</span> <span class="n">evaluate_predictions</span><span class="p">,</span> <span class="n">plot_confusion_matrix</span>
+
+<span class="c1"># ── Reproducibility ───────────────────────────────────────────────────────────</span>
+<span class="n">RANDOM_STATE</span> <span class="o">=</span> <span class="mi">42</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-the-prepared-omics-data-and-patient-train-test-splits">
+<h2>2. Load the prepared omics data and patient train / test splits<a class="headerlink" href="#load-the-prepared-omics-data-and-patient-train-test-splits" title="Link to this heading">#</a></h2>
+<p>We separate:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">subtype</span></code> as the prediction target</p></li>
+<li><p>all remaining columns as omic features</p></li>
+<li><p>the index as the patient ID</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../../data_tmp/TCGA-BRCA/&quot;</span><span class="p">)</span>
+
+<span class="n">X_omics</span> <span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_omics</span><span class="p">(</span><span class="n">DATA_DIR</span> <span class="p">,</span> <span class="n">omic_keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;transcriptomics&#39;</span> <span class="p">,</span> <span class="s1">&#39;proteomics&#39;</span><span class="p">,</span> <span class="s1">&#39;methylation&#39;</span><span class="p">])</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DATA_DIR</span><span class="si">}</span><span class="s1">/patient_splits.pkl&#39;</span> <span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span> <span class="p">:</span> 
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="n">train_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;train_ids&#39;</span><span class="p">]</span>
+<span class="n">test_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;test_ids&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Omic view dimensions:
+  transcriptomics:  500 patients ×  29995 features
+  proteomics     :  500 patients ×    464 features
+  methylation    :  500 patients × 200000 features
+
+Subtype counts:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>paper_BRCA_Subtype_PAM50
+LumA      237
+LumB      100
+Basal      97
+Her2       41
+Normal     25
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pca-view-of-each-omic">
+<h2>3. PCA view of each omic<a class="headerlink" href="#pca-view-of-each-omic" title="Link to this heading">#</a></h2>
+<p>PCA is not used for the classifiers below. It is only a quick visual check: if the panels separate patients differently, they may contain complementary information.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">y_encoded</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">class_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">label_encoder</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_pca_by_omic</span><span class="p">(</span><span class="n">X_omics</span><span class="p">,</span> <span class="n">y_encoded</span><span class="p">,</span> <span class="n">class_names</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot the first two PCs for each omic using all patients.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">pca_pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+            <span class="p">(</span><span class="s2">&quot;scaler&quot;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+            <span class="p">(</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">RANDOM_STATE</span><span class="p">)),</span>
+        <span class="p">])</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">pca_pipe</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">evr</span> <span class="o">=</span> <span class="n">pca_pipe</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s2">&quot;pca&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+        <span class="n">scatter</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">scores</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">scores</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y_encoded</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: PCA&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PC1 (</span><span class="si">{</span><span class="n">evr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> variance)&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PC2 (</span><span class="si">{</span><span class="n">evr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> variance)&quot;</span><span class="p">)</span>
+        <span class="n">handles</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scatter</span><span class="o">.</span><span class="n">legend_elements</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="p">,</span> <span class="n">class_names</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;subtype&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plot_pca_by_omic</span><span class="p">(</span><span class="n">X_omics</span><span class="p">,</span> <span class="n">y_encoded</span><span class="p">,</span> <span class="n">class_names</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a09133858b022dc5a9ea4c204fb895e9b5eea70b2f444db025fff32af1e1e616.png" src="../_images/a09133858b022dc5a9ea4c204fb895e9b5eea70b2f444db025fff32af1e1e616.png" />
+<img alt="../_images/a9bf498a13cf5b68f7f8e7e552c04f5785b8ecf5c82a37f75ac342a915af330c.png" src="../_images/a9bf498a13cf5b68f7f8e7e552c04f5785b8ecf5c82a37f75ac342a915af330c.png" />
+<img alt="../_images/069046d82a1f9ef748724071923c9c00fa00ff84722604ad6d8308dc8e8bd7bb.png" src="../_images/069046d82a1f9ef748724071923c9c00fa00ff84722604ad6d8308dc8e8bd7bb.png" />
+</div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>Transcriptomics shows the clearest visible subtype structure: Basal (purple) forms a distinct cluster separated from the LumA/LumB/Normal samples. This suggests that transcriptomic variation contains strong subtype-related signal, which may translate into stronger performance for transcriptomics-based models, although this must be confirmed using supervised prediction.</p>
+<p>Proteomics shows weaker visible subtype structure in the first two principal components: samples from different subtypes largely overlap, with only a few outliers separated along PC1. This suggests that subtype-related variation is less dominant in the major variance directions, which may make classification more challenging, although predictive performance must be evaluated directly.</p>
+<p>Methylation shows weaker partial structure: some separation along PC1 is visible (Basal/Her2 trending right, LumA/LumB trending left), but subtype groups remain substantially overlapping compared with transcriptomics.</p>
+<p>Low variance explained everywhere (7–16% per PC) means these plots are only 2D projections of high-dimensional data. Fine cluster shapes should not be over-interpreted; only broad patterns, such as the stronger subtype separation in transcriptomics, could be considered meaningful.</p>
+</details></section>
+<section id="model-helpers">
+<h2>4. Model helpers<a class="headerlink" href="#model-helpers" title="Link to this heading">#</a></h2>
+<p>We use the same regularized linear classifier everywhere. Standardization is included inside the pipeline so scaling is learned only from the training data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">make_linear_classifier</span><span class="p">():</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Regularized linear model for high-dimensional omics classification.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Pipeline</span><span class="p">([</span>
+        <span class="p">(</span><span class="s2">&quot;scaler&quot;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+            <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">l1_ratio</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>        <span class="c1"># equivalent to L2</span>
+            <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="c1">#instead of liblinear because it doesn&#39;t handle 3+ classes</span>
+            <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>
+            <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">RANDOM_STATE</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fit a model and return class predictions and probabilities for the test set.&quot;&quot;&quot;</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">fitted</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">X_test</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">)</span>
+    <span class="n">proba</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">fitted</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">X_test</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">fitted</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">proba</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="single-omic-benchmarks">
+<h2>5. Single-omic benchmarks<a class="headerlink" href="#single-omic-benchmarks" title="Link to this heading">#</a></h2>
+<p><strong>Why integrate in the first place?</strong></p>
+<p>Before integrating data types, measure how far each omic gets on its own..</p>
+<p>Before comparing integration strategies, we need a reason to integrate in the first place. Each omic layer below is trained as a standalone linear classifier, using the <em>same</em> train/test split, model, and metrics as every method that follows.</p>
+<p>The question isn’t “which single omic is best?”; it’s whether the omics agree with each other or not. If every omic already predicted the same subtype for every patient, integration would add complexity without adding information. If they disagree on a meaningful fraction of patients, that disagreement is exactly the signal integration is trying to recover.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">single_omic_models</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">single_omic_probabilities</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">base_model</span> <span class="o">=</span> <span class="n">make_linear_classifier</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">proba</span> <span class="o">=</span> <span class="n">fit_predict</span><span class="p">(</span>
+        <span class="n">base_model</span><span class="p">,</span>
+        <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span>
+        <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">single_omic_models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="n">single_omic_probabilities</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">proba</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">pred</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;single omic: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">results_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: transcriptomics
+────────────────────────────
+  Accuracy          : 0.824 
+  Balanced accuracy : 0.799
+</pre></div>
+</div>
+<img alt="../_images/2337cacb8bc225808974c0440638f10d158d30f05f5cc02a1a7e8049445f0070.png" src="../_images/2337cacb8bc225808974c0440638f10d158d30f05f5cc02a1a7e8049445f0070.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: proteomics
+───────────────────────
+  Accuracy          : 0.720 
+  Balanced accuracy : 0.643
+</pre></div>
+</div>
+<img alt="../_images/d27b24da484ddc3ca1e76a78b3a8f1daf607ad357e5a3e65c4e954f1c997c890.png" src="../_images/d27b24da484ddc3ca1e76a78b3a8f1daf607ad357e5a3e65c4e954f1c997c890.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: methylation
+────────────────────────
+  Accuracy          : 0.712 
+  Balanced accuracy : 0.688
+</pre></div>
+</div>
+<img alt="../_images/3fe21f183772da159d01b8345eba0aa77fdd3c9f22ec7e3ba199e46d189cab46.png" src="../_images/3fe21f183772da159d01b8345eba0aa77fdd3c9f22ec7e3ba199e46d189cab46.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># How often do the single-omic models actually agree on a prediction?</span>
+<span class="n">single_omic_preds</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">single_omic_models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">X_omics</span>
+<span class="p">}</span>
+<span class="n">pred_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">single_omic_preds</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">test_ids</span><span class="p">)</span>
+<span class="n">pred_table</span><span class="p">[</span><span class="s2">&quot;true_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">]</span>
+
+<span class="n">n_unique_preds</span> <span class="o">=</span> <span class="n">pred_table</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">X_omics</span><span class="p">)]</span><span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">agreement_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;n_patients&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">n_unique_preds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+        <span class="p">(</span><span class="n">n_unique_preds</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+    <span class="p">],</span>
+<span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all omics agree&quot;</span><span class="p">,</span> <span class="s2">&quot;omics disagree&quot;</span><span class="p">])</span>
+<span class="n">agreement_summary</span><span class="p">[</span><span class="s2">&quot;pct&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">agreement_summary</span><span class="p">[</span><span class="s2">&quot;n_patients&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_ids</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test patients where every omic predicts the same subtype: &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">agreement_summary</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;all omics agree&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;pct&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">agreement_summary</span><span class="p">)</span>
+
+<span class="c1"># Look at a few disputed patients: does any single omic get the true label right</span>
+<span class="c1"># where others miss it? This is the concrete case for integration.</span>
+<span class="n">disputed</span> <span class="o">=</span> <span class="n">pred_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">n_unique_preds</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">disputed</span><span class="p">[</span><span class="s2">&quot;any_omic_correct&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">disputed</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">X_omics</span><span class="p">)]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">disputed</span><span class="p">[</span><span class="s2">&quot;true_label&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Of the disputed patients, </span><span class="si">{</span><span class="n">disputed</span><span class="p">[</span><span class="s1">&#39;any_omic_correct&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;have at least one omic that got the true subtype right.&quot;</span><span class="p">)</span>
+<span class="n">disputed</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test patients where every omic predicts the same subtype: 60.0%
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_patients</th>
+      <th>pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>all omics agree</th>
+      <td>75</td>
+      <td>60.0</td>
+    </tr>
+    <tr>
+      <th>omics disagree</th>
+      <td>50</td>
+      <td>40.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Of the disputed patients, 92% have at least one omic that got the true subtype right.
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>transcriptomics</th>
+      <th>proteomics</th>
+      <th>methylation</th>
+      <th>true_label</th>
+      <th>any_omic_correct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>TCGA-E9-A5UO</th>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-D8-A1XY</th>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-D8-A27G</th>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-AR-A5QQ</th>
+      <td>Basal</td>
+      <td>Basal</td>
+      <td>Normal</td>
+      <td>Basal</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-BH-A1FN</th>
+      <td>Basal</td>
+      <td>Basal</td>
+      <td>LumB</td>
+      <td>LumB</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-E2-A108</th>
+      <td>Normal</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>Normal</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-AO-A0JC</th>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-AR-A0TX</th>
+      <td>Her2</td>
+      <td>LumA</td>
+      <td>Her2</td>
+      <td>Her2</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-BH-A0BJ</th>
+      <td>Normal</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-AR-A24R</th>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>LumB</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>We asked each omic to predict the subtype alone.
+On 65% of patients, all three omics agree. These represent cases where each modality provides consistent information, so integration may provide less additional benefit compared with cases where the omics disagree.</p>
+<p>In the remaining 35%, the predictions disagree, suggesting that different omics capture different aspects of the underlying biology or contain different levels of uncertainty for those patients.</p>
+<p>In 89% of disagreement cases, at least one omic-specific model correctly predicted the subtype.The signal was not absent; it was distributed across modalities, with no single omic capturing all of the relevant information consistently.</p>
+<p>Therefore, the goal is not simply to identify the “best” omic, but to build models that can combine these partial views into an integrated representation that captures information from multiple sources.</p>
+</details></section>
+<section id="early-integration-by-concatenation">
+<h2>7. Early integration by concatenation<a class="headerlink" href="#early-integration-by-concatenation" title="Link to this heading">#</a></h2>
+<p><strong>What’s the simplest way to to combine multi omics, and at what does this simplicity cost us?</strong></p>
+<p>Early integration joins all omic features into one wide matrix and trains one classifier.</p>
+<p>This is easy and often strong, but it increases dimensionality and does not explicitly distinguish shared, redundant, and omic-specific signal.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">prefix_columns</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">omic_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an omic prefix so features remain traceable after concatenation.&quot;&quot;&quot;</span>
+    <span class="n">X_prefixed</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">X_prefixed</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">omic_name</span><span class="si">}</span><span class="s2">::</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">X_prefixed</span>
+
+<span class="n">X_early</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">prefix_columns</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Early integration matrix: </span><span class="si">{</span><span class="n">X_early</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> patients x </span><span class="si">{</span><span class="n">X_early</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> features&quot;</span><span class="p">)</span>
+
+<span class="n">early_model</span><span class="p">,</span> <span class="n">early_pred</span><span class="p">,</span> <span class="n">early_proba</span> <span class="o">=</span> <span class="n">fit_predict</span><span class="p">(</span>
+    <span class="n">base_model</span><span class="p">,</span>
+    <span class="n">X_early</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span>
+    <span class="n">X_early</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">early_pred</span><span class="p">,</span> <span class="s2">&quot;early integration: concatenation&quot;</span><span class="p">))</span>
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">results_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Early integration matrix: 500 patients x 230459 features
+
+early integration: concatenation
+────────────────────────────────
+  Accuracy          : 0.752 
+  Balanced accuracy : 0.702
+</pre></div>
+</div>
+<img alt="../_images/dde06a7be6f07bd4d0c59b32b970ed41b618c69b2a9a869da8964b563c05c311.png" src="../_images/dde06a7be6f07bd4d0c59b32b970ed41b618c69b2a9a869da8964b563c05c311.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>early integration: concatenation</td>
+      <td>0.752</td>
+      <td>0.702333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>Transcriptomics alone is the best performer (0.669 balanced accuracy), outperforming the other single-omic models and the concatenated model.</p>
+<p>Early integration underperforms transcriptomics alone (0.647 vs 0.669), showing that simply combining all modalities does not guarantee improved prediction. Additional omic features may introduce redundant or noisy information that the model must separate from the strongest signal.</p>
+</details></section>
+<section id="inspect-feature-usage-in-the-early-integration-model">
+<h2>8. Inspect feature usage in the early-integration model<a class="headerlink" href="#inspect-feature-usage-in-the-early-integration-model" title="Link to this heading">#</a></h2>
+<p><strong>When early integration works, does it actually use all omics or lean on one?</strong></p>
+<p>Concatenating features gives the model access to everything at once, but access isn’t the same as use. Before trusting an early-integration result, it’s worth checking which omics its largest coefficients actually come from. A linear model on concatenated features can be inspected directly through coefficient magnitude, so this is a cheap, concrete check rather than a guess: does the top-100 coefficient list spread across omics, or does one omic quietly dominate?</p>
+<p>This matters for what comes next: if early integration turns out to lean on a single omic, that is itself an argument for late integration (Section 9 onward) –&gt; keeping omics as separate models makes this kind of imbalance visible and controllable (via weights) instead of hidden inside one shared coefficient vector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">early_feature_importance</span><span class="p">(</span><span class="n">fitted_pipeline</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract maximum absolute coefficient per feature.&quot;&quot;&quot;</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">fitted_pipeline</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">coef_</span>
+    <span class="n">importance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">feature_importance</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s2">&quot;feature&quot;</span><span class="p">:</span> <span class="n">feature_names</span><span class="p">,</span>
+        <span class="s2">&quot;abs_coefficient&quot;</span><span class="p">:</span> <span class="n">importance</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="n">feature_importance</span><span class="p">[</span><span class="s2">&quot;omic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_importance</span><span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">feature_importance</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;abs_coefficient&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">feature_importance</span> <span class="o">=</span> <span class="n">early_feature_importance</span><span class="p">(</span><span class="n">early_model</span><span class="p">,</span> <span class="n">X_early</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="n">TOP_N</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_importance</span><span class="p">))</span>
+<span class="n">top_feature_usage</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">feature_importance</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">TOP_N</span><span class="p">)[</span><span class="s2">&quot;omic&quot;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">&quot;omic&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;features_in_top_</span><span class="si">{</span><span class="n">TOP_N</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">top_feature_usage</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">feature_importance</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">top_feature_usage</span><span class="p">[</span><span class="s2">&quot;omic&quot;</span><span class="p">],</span> <span class="n">top_feature_usage</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;features_in_top_</span><span class="si">{</span><span class="n">TOP_N</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Count among top </span><span class="si">{</span><span class="n">TOP_N</span><span class="si">}</span><span class="s2"> coefficients&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Which omics dominate early-integration coefficients?&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>omic</th>
+      <th>features_in_top_100</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>transcriptomics</td>
+      <td>56</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>proteomics</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>methylation</td>
+      <td>21</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature</th>
+      <th>abs_coefficient</th>
+      <th>omic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>223955</th>
+      <td>methylation::cg26591149</td>
+      <td>0.003857</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>30088</th>
+      <td>proteomics::CDK1_pT14</td>
+      <td>0.003600</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>30347</th>
+      <td>proteomics::PLK1</td>
+      <td>0.003514</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>30119</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>0.003480</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>229474</th>
+      <td>methylation::cg24964883</td>
+      <td>0.003210</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>30136</th>
+      <td>proteomics::DNMT1</td>
+      <td>0.003144</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>219956</th>
+      <td>methylation::cg16050326</td>
+      <td>0.003037</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>18078</th>
+      <td>transcriptomics::ENSG00000223392.1</td>
+      <td>0.002989</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>179328</th>
+      <td>methylation::cg21250931</td>
+      <td>0.002979</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>30084</th>
+      <td>proteomics::cdc25C</td>
+      <td>0.002977</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>30111</th>
+      <td>proteomics::Cox2</td>
+      <td>0.002966</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>18200</th>
+      <td>transcriptomics::ENSG00000223949.8</td>
+      <td>0.002958</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>30271</th>
+      <td>proteomics::MSH6</td>
+      <td>0.002941</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>30038</th>
+      <td>proteomics::Aurora-A</td>
+      <td>0.002797</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>29739</th>
+      <td>transcriptomics::ENSG00000287564.1</td>
+      <td>0.002743</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>9904</th>
+      <td>transcriptomics::ENSG00000159495.8</td>
+      <td>0.002687</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>209145</th>
+      <td>methylation::cg07980671</td>
+      <td>0.002674</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>5718</th>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>0.002652</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>16308</th>
+      <td>transcriptomics::ENSG00000198914.5</td>
+      <td>0.002610</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>13759</th>
+      <td>transcriptomics::ENSG00000179826.7</td>
+      <td>0.002590</td>
+      <td>transcriptomics</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../_images/d5d0f8f479e5955d692373984ee70e07550d551f321b31276cfad53a03bf576f.png" src="../_images/d5d0f8f479e5955d692373984ee70e07550d551f321b31276cfad53a03bf576f.png" />
+</div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>Proteomics has a compact feature space (464 proteins), so individual features contribute relatively more weight compared with larger omics. However, its weaker standalone performance suggests that these features capture only part of the subtype signal. The presence of proteomic features among the top-ranked predictors means that proteomics may provide complementary information rather than being uninformative.</p>
+<p>Transcriptomics has both the strongest standalone predictive performance and the largest contribution among highly weighted features (54% of the top 100). Its dominance is therefore not explained by feature count alone; it reflects a strong subtype-associated signal distributed across many genes.</p>
+<p>Methylation has the largest feature space (~200,000 CpG sites), but only 29% of the top 100 features are methylation-derived. This suggests that predictive methylation signal may be sparse and distributed across a small subset of sites, making it harder for simple models to identify without additional structure or feature selection.</p>
+</details></section>
+<section id="cross-omic-redundancy-among-highly-weighted-features">
+<h2>9. Cross-omic redundancy among highly weighted features<a class="headerlink" href="#cross-omic-redundancy-among-highly-weighted-features" title="Link to this heading">#</a></h2>
+<p><strong>Among the top features we just found, are different omics contributing genuinely independent information, or are some of them just correlated proxies for the same underlying signal, counted twice?</strong></p>
+<p>Concatenation does not model correlation between features — it has no way to know that a transcript and a protein it produces are, biologically, close to the same variable measured twice. If the top weighted features from two omics turn out to be highly correlated with each other, the model isn’t combining three independent views of the tumor; it’s partly double-counting one view. That’s a second, more specific way early integration’s flexibility can work against it (the first was Section 8’s single-omic dominance), and it further motivates keeping omics as separate, explicitly weighted models in the next section.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">top_features_per_omic</span><span class="p">(</span><span class="n">feature_importance</span><span class="p">,</span> <span class="n">n_per_omic</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the top coefficient features within each omic.&quot;&quot;&quot;</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">feature_importance</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;omic&quot;</span><span class="p">):</span>
+        <span class="n">selected</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n_per_omic</span><span class="p">)[</span><span class="s2">&quot;feature&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">selected</span>
+
+<span class="n">selected_features</span> <span class="o">=</span> <span class="n">top_features_per_omic</span><span class="p">(</span><span class="n">feature_importance</span><span class="p">,</span> <span class="n">n_per_omic</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">X_selected</span> <span class="o">=</span> <span class="n">X_early</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">selected_features</span><span class="p">]</span>
+
+<span class="n">corr</span> <span class="o">=</span> <span class="n">X_selected</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feature_1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">corr</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+    <span class="n">omic_1</span> <span class="o">=</span> <span class="n">feature_1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">feature_2</span> <span class="ow">in</span> <span class="n">corr</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">omic_2</span> <span class="o">=</span> <span class="n">feature_2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">omic_1</span> <span class="o">!=</span> <span class="n">omic_2</span><span class="p">:</span>
+            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;feature_1&quot;</span><span class="p">:</span> <span class="n">feature_1</span><span class="p">,</span>
+                <span class="s2">&quot;feature_2&quot;</span><span class="p">:</span> <span class="n">feature_2</span><span class="p">,</span>
+                <span class="s2">&quot;omic_pair&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">omic_1</span><span class="si">}</span><span class="s2"> ↔ </span><span class="si">{</span><span class="n">omic_2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;abs_correlation&quot;</span><span class="p">:</span> <span class="n">corr</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">feature_1</span><span class="p">,</span> <span class="n">feature_2</span><span class="p">],</span>
+            <span class="p">})</span>
+
+<span class="n">cross_omic_corr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;abs_correlation&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">cross_omic_corr</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">cross_omic_corr</span><span class="p">[</span><span class="s2">&quot;abs_correlation&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Absolute correlation&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Feature-pair count&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Cross-omic correlation among highly weighted features&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature_1</th>
+      <th>feature_2</th>
+      <th>omic_pair</th>
+      <th>abs_correlation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>815</th>
+      <td>proteomics::CDK1_pT14</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.439948</td>
+    </tr>
+    <tr>
+      <th>855</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.432839</td>
+    </tr>
+    <tr>
+      <th>835</th>
+      <td>proteomics::PLK1</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.420436</td>
+    </tr>
+    <tr>
+      <th>824</th>
+      <td>proteomics::PLK1</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.410333</td>
+    </tr>
+    <tr>
+      <th>1010</th>
+      <td>proteomics::ASNS</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.403460</td>
+    </tr>
+    <tr>
+      <th>844</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.396262</td>
+    </tr>
+    <tr>
+      <th>1004</th>
+      <td>proteomics::ASNS</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.393260</td>
+    </tr>
+    <tr>
+      <th>1075</th>
+      <td>proteomics::TRIP13</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.392305</td>
+    </tr>
+    <tr>
+      <th>859</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>transcriptomics::ENSG00000129484.14</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.389710</td>
+    </tr>
+    <tr>
+      <th>804</th>
+      <td>proteomics::CDK1_pT14</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.384738</td>
+    </tr>
+    <tr>
+      <th>839</th>
+      <td>proteomics::PLK1</td>
+      <td>transcriptomics::ENSG00000129484.14</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.381803</td>
+    </tr>
+    <tr>
+      <th>970</th>
+      <td>proteomics::CYCLINE1</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.375960</td>
+    </tr>
+    <tr>
+      <th>850</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.364153</td>
+    </tr>
+    <tr>
+      <th>830</th>
+      <td>proteomics::PLK1</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.362718</td>
+    </tr>
+    <tr>
+      <th>819</th>
+      <td>proteomics::CDK1_pT14</td>
+      <td>transcriptomics::ENSG00000129484.14</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.352746</td>
+    </tr>
+    <tr>
+      <th>944</th>
+      <td>proteomics::Aurora-A</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.349084</td>
+    </tr>
+    <tr>
+      <th>895</th>
+      <td>proteomics::cdc25C</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.343621</td>
+    </tr>
+    <tr>
+      <th>924</th>
+      <td>proteomics::MSH6</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.340917</td>
+    </tr>
+    <tr>
+      <th>969</th>
+      <td>proteomics::CYCLINE1</td>
+      <td>transcriptomics::ENSG00000241359.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.339857</td>
+    </tr>
+    <tr>
+      <th>1090</th>
+      <td>proteomics::FOXM1</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.339588</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../_images/4386f3652926f3657504f7a8d01de773307af59ebb1b251908fd53f746d32608.png" src="../_images/4386f3652926f3657504f7a8d01de773307af59ebb1b251908fd53f746d32608.png" />
+</div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>The highly weighted features from early integration show moderate cross-omic correlation, concentrated mainly between proteomics and transcriptomics. This pattern is consistent with shared biological processes being captured at both the RNA and protein levels. In contrast, methylation features show less overlap with these highly weighted features, suggesting that they may provide more distinct information.</p>
+<p>These results suggest that early integration may treat correlated features across modalities as separate sources of evidence rather than explicitly recognizing their shared biological origin. In this dataset, concatenation may therefore capture redundant signals alongside complementary ones.</p>
+<p>→ Early integration cannot distinguish complementary signal from redundant signal automatically. To address this, we next test approaches that keep omics separate and combine their predictions through late integration.</p>
+</details></section>
+<section id="late-integration-by-prediction-averaging">
+<h2>10. Late integration by prediction averaging<a class="headerlink" href="#late-integration-by-prediction-averaging" title="Link to this heading">#</a></h2>
+<p><strong>Instead of merging features, what if we let each omic make its own prediction and then vote — and how much does the voting rule matter?</strong></p>
+<p>Late integration trains one model per omic and averages the class probabilities. Each omic gets an equal vote by default.This sidesteps the dimensionality problem of early integration and keeps each omic’s model easy to inspect on its own, but it assumes equal weighting is the right call, an assumption we will stress-test later.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">late_integrated_probabilities</span><span class="p">(</span><span class="n">probability_tables</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Average same-index, same-column probability tables from omic-specific models.&quot;&quot;&quot;</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="ow">or</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">probability_tables</span><span class="p">}</span>
+    <span class="n">weight_total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="n">averaged</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">proba</span> <span class="ow">in</span> <span class="n">probability_tables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">weighted_proba</span> <span class="o">=</span> <span class="n">proba</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">averaged</span> <span class="o">=</span> <span class="n">weighted_proba</span> <span class="k">if</span> <span class="n">averaged</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">averaged</span> <span class="o">+</span> <span class="n">weighted_proba</span>
+
+    <span class="k">return</span> <span class="n">averaged</span> <span class="o">/</span> <span class="n">weight_total</span>
+
+<span class="n">late_proba</span> <span class="o">=</span> <span class="n">late_integrated_probabilities</span><span class="p">(</span><span class="n">single_omic_probabilities</span><span class="p">)</span>
+<span class="n">late_pred</span> <span class="o">=</span> <span class="n">late_proba</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;prediction&quot;</span><span class="p">)</span>
+
+<span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">late_pred</span><span class="p">,</span> <span class="s2">&quot;late integration: equal weights&quot;</span><span class="p">))</span>
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">results_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late integration: equal weights
+───────────────────────────────
+  Accuracy          : 0.832 
+  Balanced accuracy : 0.772
+</pre></div>
+</div>
+<img alt="../_images/7bbc1e435175d6e8b446184d1a4ae00ca82dc9e47902fc3cafeddee53976ad6c.png" src="../_images/7bbc1e435175d6e8b446184d1a4ae00ca82dc9e47902fc3cafeddee53976ad6c.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>late integration: equal weights</td>
+      <td>0.832</td>
+      <td>0.772000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>early integration: concatenation</td>
+      <td>0.752</td>
+      <td>0.702333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>What is your interpretation of these results?</p>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>Late integration with equal weights did not improve performance (balanced accuracy = 0.637), falling below transcriptomics alone (0.669) and even below early integration (0.647). This suggests that treating all omics as equally informative is not optimal for this dataset.</p>
+<p>Transcriptomics provides the strongest standalone signal, while proteomics and methylation contribute weaker predictions. Equal-weight averaging assumes that each modality provides equally reliable information, so the weaker omic predictions may dilute the stronger transcriptomic signal rather than enhance it.</p>
+<p>However, this does not mean that proteomics or methylation are uninformative. Their disagreement with transcriptomics may reflect complementary information that is not captured by a simple averaging rule. A learned integration approach could allow the model to determine how much each modality should contribute rather than imposing equal weights.</p>
+</details></section>
+<section id="late-integration-weight-sensitivity">
+<h2>11. Late-integration weight sensitivity<a class="headerlink" href="#late-integration-weight-sensitivity" title="Link to this heading">#</a></h2>
+<p><strong>How much does the (essentially arbitrary) choice of omic weights actually change the outcome — and could we have learned better weights instead?</strong></p>
+<p>Equal weighting is simple, but it encodes a strong assumption: each omic should contribute equally. This small test boosts one omic at a time and checks whether the held-out accuracy changes. If it does, equal weighting was an arbitrary choice, not a principled one — which is exactly what the next section addresses by learning the weights instead of guessing them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weight_rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">base_weights</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="p">}</span>
+
+<span class="c1"># Equal weights.</span>
+<span class="n">proba</span> <span class="o">=</span> <span class="n">late_integrated_probabilities</span><span class="p">(</span><span class="n">single_omic_probabilities</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">base_weights</span><span class="p">)</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">proba</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">weight_rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+    <span class="s2">&quot;weighting&quot;</span><span class="p">:</span> <span class="s2">&quot;equal weights&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">pred</span><span class="p">,</span> <span class="s2">&quot;late&quot;</span><span class="p">),</span>
+<span class="p">})</span>
+
+<span class="c1"># Boost each omic while keeping the same trained single-omic models and same test split.</span>
+<span class="k">for</span> <span class="n">boosted_omic</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="p">:</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">base_weights</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">weights</span><span class="p">[</span><span class="n">boosted_omic</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">proba</span> <span class="o">=</span> <span class="n">late_integrated_probabilities</span><span class="p">(</span><span class="n">single_omic_probabilities</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">proba</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">weight_rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;weighting&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;boost </span><span class="si">{</span><span class="n">boosted_omic</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">pred</span><span class="p">,</span> <span class="s2">&quot;late&quot;</span><span class="p">),</span>
+    <span class="p">})</span>
+
+<span class="n">weight_sensitivity</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">weight_rows</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">weight_sensitivity</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">weight_sensitivity</span><span class="p">[</span><span class="s2">&quot;weighting&quot;</span><span class="p">],</span> <span class="n">weight_sensitivity</span><span class="p">[</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Balanced accuracy on held-out test set&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Late-integration weighting sensitivity&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
+────
+  Accuracy          : 0.832 
+  Balanced accuracy : 0.772
+</pre></div>
+</div>
+<img alt="../_images/7bbc1e435175d6e8b446184d1a4ae00ca82dc9e47902fc3cafeddee53976ad6c.png" src="../_images/7bbc1e435175d6e8b446184d1a4ae00ca82dc9e47902fc3cafeddee53976ad6c.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
+────
+  Accuracy          : 0.824 
+  Balanced accuracy : 0.764
+</pre></div>
+</div>
+<img alt="../_images/ff758c965bf591cdac8f1703e6d97ff780041f57c9137947be50a052c978024a.png" src="../_images/ff758c965bf591cdac8f1703e6d97ff780041f57c9137947be50a052c978024a.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
+────
+  Accuracy          : 0.832 
+  Balanced accuracy : 0.707
+</pre></div>
+</div>
+<img alt="../_images/65eed25d437ee589bd43d22295838c53a85700149846cd2bcc7582810c428497.png" src="../_images/65eed25d437ee589bd43d22295838c53a85700149846cd2bcc7582810c428497.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
+────
+  Accuracy          : 0.776 
+  Balanced accuracy : 0.729
+</pre></div>
+</div>
+<img alt="../_images/e3c55c6c53c5b2530e453a646052bf1c4f43ee8f023134175f84b803b15ceb43.png" src="../_images/e3c55c6c53c5b2530e453a646052bf1c4f43ee8f023134175f84b803b15ceb43.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>weighting</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>equal weights</td>
+      <td>0.832</td>
+      <td>0.772000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>boost transcriptomics</td>
+      <td>0.824</td>
+      <td>0.764000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>boost methylation</td>
+      <td>0.776</td>
+      <td>0.729000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>boost proteomics</td>
+      <td>0.832</td>
+      <td>0.707333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../_images/5234fec91cc37cde215597f3c210f967037125d49f2dcd6d2df4842a5faa0434.png" src="../_images/5234fec91cc37cde215597f3c210f967037125d49f2dcd6d2df4842a5faa0434.png" />
+</div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>All fixed weighting schemes perform within a narrow range (balanced accuracy = 0.627–0.644), indicating that manual adjustments to modality weights produce only modest changes compared with equal weighting.</p>
+<p>The best fixed-weight result comes from boosting proteomics (0.644), despite proteomics being the weakest standalone predictor (0.564). Conversely, boosting transcriptomics, the strongest individual modality (0.669), provides only a small improvement over equal weighting (0.641 vs 0.637), while increasing methylation contribution reduces performance (0.627).</p>
+<p>This demonstrates that standalone predictive performance does not determine how much a modality should contribute during multimodal integration. A weaker modality may still provide complementary information when combined with stronger modalities, while a strong modality may already capture overlapping signal.</p>
+<p>Fixed weighting is therefore a limited approach for our dataset: the optimal contribution of each modality cannot be reliably inferred from single-omic performance alone. Instead, a learned fusion strategy can adaptively determine how different modality-specific predictions should contribute to the final decision.</p>
+</details></section>
+<section id="late-integration-take-two-stacking-a-learned-combiner">
+<h2>12. Late integration, take two — stacking (a learned combiner)<a class="headerlink" href="#late-integration-take-two-stacking-a-learned-combiner" title="Link to this heading">#</a></h2>
+<p><strong>Key question:</strong> could we replace the guessed, fixed weights of equal-weight averaging with weights the data itself tells us to use?</p>
+<p>The previous section showed that equal-weight averaging is sensitive to a choice we can’t justify from data alone. Stacking keeps the same “one model per omic” structure, but replaces the fixed averaging rule with a second linear model that <em>learns</em> how much each omic contributes per class. It’s still late integration in the strict sense (each omic still collapses to an independent prediction before anything cross-omic happens) but the combining rule is now learned rather than assumed.</p>
+<p>To avoid leaking test information into the meta-learner, the per-omic probabilities used to train it are computed out-of-fold on the training set (cross-validated), not from models that have already seen the training labels. At test time we reuse the same single-omic models and probabilities from Section 6.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_predict</span>
+
+<span class="n">N_FOLDS</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">out_of_fold_probabilities</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">class_names</span><span class="p">,</span> <span class="n">n_folds</span><span class="o">=</span><span class="n">N_FOLDS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cross-validated (leakage-free) train-set probabilities for meta-learner training.&quot;&quot;&quot;</span>
+    <span class="n">oof</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+        <span class="n">clone</span><span class="p">(</span><span class="n">model</span><span class="p">),</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;predict_proba&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">oof</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">unique</span><span class="p">()))[</span><span class="n">class_names</span><span class="p">]</span>
+
+<span class="n">meta_train_blocks</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">oof_proba</span> <span class="o">=</span> <span class="n">out_of_fold_probabilities</span><span class="p">(</span><span class="n">base_model</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span> <span class="n">class_names</span><span class="p">)</span>
+    <span class="n">oof_proba</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">::</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">oof_proba</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">meta_train_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oof_proba</span><span class="p">)</span>
+<span class="n">meta_X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">meta_train_blocks</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">meta_test_blocks</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="p">:</span>
+    <span class="n">proba</span> <span class="o">=</span> <span class="n">single_omic_probabilities</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">class_names</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">proba</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">::</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">]</span>
+    <span class="n">meta_test_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proba</span><span class="p">)</span>
+<span class="n">meta_X_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">meta_test_blocks</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">meta_model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+    <span class="n">l1_ratio</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">RANDOM_STATE</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">meta_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">meta_X_train</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">train_ids</span><span class="p">])</span>
+<span class="n">stacked_pred</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">meta_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">meta_X_test</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">test_ids</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">)</span>
+
+<span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">stacked_pred</span><span class="p">,</span> <span class="s2">&quot;late integration: stacking (meta-learner)&quot;</span><span class="p">))</span>
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">results_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late integration: stacking (meta-learner)
+─────────────────────────────────────────
+  Accuracy          : 0.808 
+  Balanced accuracy : 0.801
+</pre></div>
+</div>
+<img alt="../_images/1738393142a80d40218d89155e26730e71edd563fc0c20da8c8e2157713b6416.png" src="../_images/1738393142a80d40218d89155e26730e71edd563fc0c20da8c8e2157713b6416.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>late integration: stacking (meta-learner)</td>
+      <td>0.808</td>
+      <td>0.801333</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>late integration: equal weights</td>
+      <td>0.832</td>
+      <td>0.772000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>early integration: concatenation</td>
+      <td>0.752</td>
+      <td>0.702333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Unlike late integration&#39;s fixed weights, stacking&#39;s learned coefficients show</span>
+<span class="c1"># how much the meta-learner trusts each omic, per predicted subtype.</span>
+<span class="n">meta_coefs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">meta_model</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">meta_model</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">meta_X_train</span><span class="o">.</span><span class="n">columns</span>
+<span class="p">)</span>
+<span class="n">meta_coefs</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
+    <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">meta_coefs</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;omic&quot;</span><span class="p">,</span> <span class="s2">&quot;class&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1">#magnitude of reliance</span>
+<span class="n">meta_coefs</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;omic&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>omic</th>
+      <th>methylation</th>
+      <th>proteomics</th>
+      <th>transcriptomics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Basal</th>
+      <td>0.36</td>
+      <td>1.02</td>
+      <td>0.75</td>
+    </tr>
+    <tr>
+      <th>Her2</th>
+      <td>0.50</td>
+      <td>0.62</td>
+      <td>0.92</td>
+    </tr>
+    <tr>
+      <th>LumA</th>
+      <td>0.49</td>
+      <td>0.49</td>
+      <td>0.72</td>
+    </tr>
+    <tr>
+      <th>LumB</th>
+      <td>0.73</td>
+      <td>0.57</td>
+      <td>0.76</td>
+    </tr>
+    <tr>
+      <th>Normal</th>
+      <td>0.52</td>
+      <td>0.44</td>
+      <td>1.13</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>The stacking model does not assign one fixed contribution to each omic. Instead, the meta-model learns subtype-specific contributions for each modality prediction, allowing different omics to influence different classification decisions.</p>
+<p>For example, transcriptomics receives larger coefficients for Her2 and Normal predictions compared with methylation, while its contribution is closer to proteomics for Basal and LumA. This type of class-specific flexibility cannot be captured by equal-weight late integration, which assumes that all modalities contribute equally across all predictions.</p>
+<p>These coefficients illustrate why learned fusion can be advantageous: the optimal contribution of each modality depends on the prediction context rather than being determined solely by standalone performance. However, these coefficients describe prediction combination rather than direct biological importance of each omic.</p>
+</details></section>
+<section id="compare-all-linear-methods">
+<h2>13. Compare all linear methods<a class="headerlink" href="#compare-all-linear-methods" title="Link to this heading">#</a></h2>
+<p><strong>After all that, did integration actually beat the best single omic? And which integration strategy “won” ?</strong></p>
+<p>A genuine improvement here justifies the added complexity of early, late, or stacked integration. A tie (or a loss) can be just as informative; it tells you that the extra modeling complexity is not justified for this dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">summary</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">],</span> <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Balanced accuracy on held-out test set&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Single-omic vs integrated linear models&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>late integration: stacking (meta-learner)</td>
+      <td>0.808</td>
+      <td>0.801333</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>late integration: equal weights</td>
+      <td>0.832</td>
+      <td>0.772000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>early integration: concatenation</td>
+      <td>0.752</td>
+      <td>0.702333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../_images/1d4f97d911145e93fdc5e3ef094f53af48097f02b1237485e15ba4f8eadbab3b.png" src="../_images/1d4f97d911145e93fdc5e3ef094f53af48097f02b1237485e15ba4f8eadbab3b.png" />
+</div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>Naive integration strategies did not improve over the strongest single-omic model in this benchmark. Early integration through concatenation (0.647 balanced accuracy) and late integration through equal-weight averaging (0.637) both performed below transcriptomics alone (0.669), suggesting that simply combining modalities does not guarantee improved prediction.</p>
+<p>In contrast, stacking achieved the highest performance (0.699 balanced accuracy), exceeding transcriptomics alone by learning how to combine modality-specific predictions rather than applying a fixed fusion rule. The learned combination allows different omics to contribute differently depending on the classification context, capturing complementary information that was not fully exploited by simpler integration strategies.</p>
+<p>This result demonstrates that the challenge in multi-omics integration is not simply adding more data, but learning how different modalities should contribute to the final prediction.</p>
+</details></section>
+<section id="confusion-matrix-and-classification-report">
+<h2>14. Confusion matrix and classification report<a class="headerlink" href="#confusion-matrix-and-classification-report" title="Link to this heading">#</a></h2>
+<p>Use this section to discuss which subtypes are easier or harder for the best simple model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">best_model_name</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;model&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best model by balanced accuracy: </span><span class="si">{</span><span class="n">best_model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">best_model_name</span> <span class="o">==</span> <span class="s2">&quot;early integration: concatenation&quot;</span><span class="p">:</span>
+    <span class="n">best_pred</span> <span class="o">=</span> <span class="n">early_pred</span>
+<span class="k">elif</span> <span class="n">best_model_name</span> <span class="o">==</span> <span class="s2">&quot;late integration: equal weights&quot;</span><span class="p">:</span>
+    <span class="n">best_pred</span> <span class="o">=</span> <span class="n">late_pred</span>
+<span class="k">elif</span> <span class="n">best_model_name</span> <span class="o">==</span> <span class="s2">&quot;late integration: stacking (meta-learner)&quot;</span><span class="p">:</span>
+    <span class="n">best_pred</span> <span class="o">=</span> <span class="n">stacked_pred</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">best_omic</span> <span class="o">=</span> <span class="n">best_model_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">best_pred</span> <span class="o">=</span> <span class="n">single_omic_models</span><span class="p">[</span><span class="n">best_omic</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_omics</span><span class="p">[</span><span class="n">best_omic</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">])</span>
+    <span class="n">best_pred</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">best_pred</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">test_ids</span><span class="p">)</span>
+    
+<span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">best_pred</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model by balanced accuracy: late integration: stacking (meta-learner)
+</pre></div>
+</div>
+<img alt="../_images/1738393142a80d40218d89155e26730e71edd563fc0c20da8c8e2157713b6416.png" src="../_images/1738393142a80d40218d89155e26730e71edd563fc0c20da8c8e2157713b6416.png" />
+</div>
+</div>
+<details>
+<summary><b>Interpretation</b> (click to expand)</summary>
+<p>The stacked model separates Basal and Her2 very well, with near-perfect recall for both classes. This suggests that these subtypes contain strong predictive signals that are consistently captured across the integrated modality predictions.</p>
+<p>The main challenge is distinguishing LumA from LumB. These subtypes show substantial overlap, with many LumB samples classified as LumA, consistent with the idea that these molecular subtypes represent a biological continuum rather than completely distinct categories.</p>
+<p>The Normal class shows high precision but low recall: when the model predicts Normal it is usually correct, but it misses many true Normal samples. This likely reflects both the limited number of Normal samples available (only 7 test patients) and the difficulty of learning a minority class with few examples.</p>
+<p>Overall, this demonstrates that integration strategy can improve how information is combined across omics, but it cannot compensate for limited sample size, class imbalance, or intrinsically overlapping biological categories.</p>
+</details></section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<table>
+  <colgroup>
+    <col style="width:15%">
+    <col style="width:45%">
+    <col style="width:15%">
+    <col style="width:10%">
+    <col style="width:15%">
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Strategy</th>
+      <th>Data Flow</th>
+      <th>Integration Point</th>
+      <th>Output</th>
+      <th>Key Characteristic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Early Integration</strong></td>
+      <td>RNA-seq + Methylation + Proteomics → <strong>Combine</strong></td>
+      <td>Before training</td>
+      <td>One feature matrix</td>
+      <td>All modalities are merged into a single input representation.</td>
+    </tr>
+    <tr>
+      <td><strong>Late Integration</strong></td>
+      <td>
+        RNA-seq → Model<br>
+        Methylation → Model<br>
+        Proteomics → Model → <strong>Average predictions</strong>
+      </td>
+      <td>After prediction</td>
+      <td>Combined prediction</td>
+      <td>Each modality is modeled independently before combining predictions.</td>
+    </tr>
+    <tr>
+      <td><strong>Stacking</strong></td>
+      <td>
+        RNA-seq → Model<br>
+        Methylation → Model<br>
+        Proteomics → Model → <strong>Meta-model</strong>
+      </td>
+      <td>Meta-learning</td>
+      <td>Final prediction</td>
+      <td>Learns the optimal way to combine modality-specific model outputs.</td>
+    </tr>
+  </tbody>
+</table></section>
+<section id="takeaways">
+<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Different omics capture different aspects of biological variation.</strong> PCA provides a visual entry point for comparing how modalities represent sample structure and where shared or distinct patterns may exist.</p></li>
+<li><p><strong>Single-omic models are essential baselines.</strong> Integration should be evaluated against individual modalities to determine whether combining data provides additional value beyond single sources.</p></li>
+<li><p><strong>Early integration is simple but assumes features can be combined directly.</strong> Concatenation creates a unified feature space, allowing models to use information across omics simultaneously. However, it does not explicitly model relationships between modalities, so correlated features may be treated as independent evidence.</p></li>
+<li><p><strong>Predictive features are not necessarily independent features.</strong> Correlated features across omics can represent shared biological processes, meaning that high feature importance does not automatically indicate unique information.</p></li>
+<li><p><strong>Late integration is interpretable but depends on the fusion rule.</strong> Combining modality-specific predictions keeps models separate and easier to interpret, but fixed weighting schemes may not capture differences in modality reliability.</p></li>
+<li><p><strong>Stacking provides a more adaptive form of late integration.</strong> Instead of fixing how modalities contribute, a meta-model learns how to combine modality-specific predictions from the data.</p></li>
+<li><p><strong>Classical integration methods do not explicitly model cross-omic feature relationships.</strong> This limitation motivates approaches that learn shared structure across modalities, covered next in Part 2.</p></li>
+<li><p>The goal is not to find the most complex integration method, but the method whose assumptions match the data and biological question.</p></li>
+</ol>
+</section>
+<section id="bridge-to-the-next-part">
+<h2>Bridge to the next part<a class="headerlink" href="#bridge-to-the-next-part" title="Link to this heading">#</a></h2>
+<p>None of the classical integration methods we just learned explicitly model relationships between features across omics. Feature concatenation places all features into a shared space but does not account for redundancy or structured relationships between modalities (which is why proteomics/transcriptomics redundancy in Section 9 was not apparent until we examined feature relationships directly). Prediction averaging and stacking address this limitation indirectly; they combine modality-specific predictions without examining the feature-level relationships that generated them.</p>
+<p>A method that models cross-omic relationships directly could separate shared signal (such as the genes we found correlated across proteomics and transcriptomics) from genuinely omic-specific variation. This avoids treating redundant features as independent evidence during early integration or relying only on prediction-level combinations during stacking. That is precisely what the next session introduces: methods that learn shared latent factors directly from cross-omic covariance, making the redundancy we identified manually an explicit, modeled part of the representation rather than a blind spot.</p>
+<p>These approaches are not necessarily “better” than classical integration methods; they make different assumptions about where useful information exists in the data. Their advantage comes from being able to model shared and modality-specific structure explicitly when those relationships are important for the biological question.</p>
+<p>This moves us towards generating an integrated multi-omic profile for each patient, where shared and modality-specific biological signals can be represented explicitly.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-2-multi-omics"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="part-0-data-prep.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Part 0 — Data Preparation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="part-2-correlation-based-methods.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Part 2 — Correlation-Based / Factor-Based Multi-Omic Integration with MOFA</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-libraries-and-helpers">1. Import Libraries and Helpers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-prepared-omics-data-and-patient-train-test-splits">2. Load the prepared omics data and patient train / test splits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-view-of-each-omic">3. PCA view of each omic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-helpers">4. Model helpers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-omic-benchmarks">5. Single-omic benchmarks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#early-integration-by-concatenation">7. Early integration by concatenation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-feature-usage-in-the-early-integration-model">8. Inspect feature usage in the early-integration model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-omic-redundancy-among-highly-weighted-features">9. Cross-omic redundancy among highly weighted features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#late-integration-by-prediction-averaging">10. Late integration by prediction averaging</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#late-integration-weight-sensitivity">11. Late-integration weight sensitivity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#late-integration-take-two-stacking-a-learned-combiner">12. Late integration, take two — stacking (a learned combiner)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-all-linear-methods">13. Compare all linear methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-matrix-and-classification-report">14. Confusion matrix and classification report</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bridge-to-the-next-part">Bridge to the next part</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/session-2-multi-omics/part-1-linear-methods.ipynb">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

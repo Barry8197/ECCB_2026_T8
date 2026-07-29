@@ -1,0 +1,24 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+chapters:
+- file: GettingStarted
+- file: session-1-intro-networks/intro
+  sections: 
+  - file: session-1-intro-networks/functions-definitions
+  - file: session-1-intro-networks/concept-glossary
+- file: session-2-multi-omics/intro
+  sections: 
+  - file: session-2-multi-omics/part-0-data-prep
+  - file: session-2-multi-omics/part-1-linear-methods
+  - file: session-2-multi-omics/part-2-correlation-based-methods
+  - file: session-2-multi-omics/part-3-deep-learning-methods
+  - file: session-2-multi-omics/functions-definitions
+  - file: session-2-multi-omics/concept-glossary
+- file: session-3-agentic-llm-workflows/intro
+  sections: 
+  - file: session-3-agentic-llm-workflows/functions-definitions
+  - file: session-3-agentic-llm-workflows/concept-glossary
+#- file: feedback_survey

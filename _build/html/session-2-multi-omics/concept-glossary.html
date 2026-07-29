@@ -1,0 +1,884 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Glossary &#8212; ECCB 2026 Geneva Tutorial Book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-2-multi-omics/concept-glossary';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Session 3" href="../session-3-agentic-llm-workflows/intro.html" />
+    <link rel="prev" title="Custom Function Definitions" href="functions-definitions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="/index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="/index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="part-0-data-prep.html">Part 0 — Data Preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-1-linear-methods.html">Part 1 — Linear Methods for Multi-Omic Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-2-correlation-based-methods.html">Part 2 — Correlation-Based / Factor-Based Multi-Omic Integration with MOFA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-3-deep-learning-methods.html">Part 3 — Deep Learning Integration Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions-definitions.html">Custom Function Definitions</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Glossary</a></li>
+
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="intro.html" class="nav-link">Session 2</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Glossary</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="glossary">
+<h1>Glossary<a class="headerlink" href="#glossary" title="Link to this heading">#</a></h1>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="session-2-creating-multi-omics-profiles">
+<h1>Session 2 : Creating Multi-Omics Profiles<a class="headerlink" href="#session-2-creating-multi-omics-profiles" title="Link to this heading">#</a></h1>
+<section id="global-concepts-across-all-parts">
+<h2>Global concepts across all parts<a class="headerlink" href="#global-concepts-across-all-parts" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Term</p></th>
+<th class="head"><p>Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Omic / omics layer</strong></p></td>
+<td><p>One molecular data type profiled on the same patients — transcriptomics (RNA-seq), proteomics, or methylation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Subtype</strong></p></td>
+<td><p>The supervised prediction target — the breast cancer subtype label (e.g., Basal, LumA, LumB, Her2, Normal) for each patient in TCGA-BRCA.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Patient ID / index</strong></p></td>
+<td><p>The identifier used to align rows (patients) consistently across all omics matrices and the label vector.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Feature</strong></p></td>
+<td><p>A single measured variable within an omic (e.g., one gene’s expression, one protein level, one methylation probe).</p></td>
+</tr>
+<tr class="row-even"><td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Train/test split</strong></p></td>
+<td><p>A single, patient-level split shared across all omics views, ensuring a patient’s data isn’t split across train and test in different views.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Out-of-fold (OOF) probabilities</strong></p></td>
+<td><p>Predicted probabilities for training patients generated via cross-validation, so that a meta-learner (stacking) is trained on predictions the base model didn’t get to “cheat” on — avoiding information leakage.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Cross-validation (<code class="docutils literal notranslate"><span class="pre">cross_val_predict</span></code>)</strong></p></td>
+<td><p>The technique used to generate out-of-fold predictions on the training set for building the stacking meta-learner.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Data leakage</strong></p></td>
+<td><p>When information from the test set inadvertently influences model training (e.g. fitting a scaler on all data instead of just training data), leading to overly optimistic performance estimates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Standardization / scaling</strong></p></td>
+<td><p>Rescaling features (via <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>) to comparable ranges before fitting; done inside the pipeline so scaling parameters are learned only from training data, not test data.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Label encoding</strong></p></td>
+<td><p>Converting categorical class labels (e.g. cancer subtypes) into integer codes that a model can work with.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Held-out test set</strong></p></td>
+<td><p>The patients not used in training, used only to evaluate final model performance.</p></td>
+</tr>
+<tr class="row-even"><td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Balanced accuracy</strong></p></td>
+<td><p>The primary comparison metric — the average of per-class recall, which avoids favoring predictions on larger subtype classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Macro-F1</strong></p></td>
+<td><p>The unweighted average F1 score across all subtype classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Classification report</strong></p></td>
+<td><p>Per-class precision, recall, and F1-score summary for a model’s predictions.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Confusion matrix</strong></p></td>
+<td><p>A table cross-tabulating true vs. predicted subtypes</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>PCA (Principal Component Analysis)</strong></p></td>
+<td><p>Used only as a quick, exploratory 2D visualization of each omic (not fed into the classifiers) to see whether different omics separate patients/subtypes differently.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-1-linear-methods-for-multi-omic-integration">
+<h2>Part 1: Linear Methods for Multi-Omic Integration<a class="headerlink" href="#part-1-linear-methods-for-multi-omic-integration" title="Link to this heading">#</a></h2>
+<section id="linear-integration-strategies">
+<h3>Linear integration strategies<a class="headerlink" href="#linear-integration-strategies" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Term</p></th>
+<th class="head"><p>Meaning in this notebook</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Early integration (concatenation)</strong></p></td>
+<td><p>Combining all omics (transcriptomics, proteomics, methylation) into one wide feature matrix before training a single classifier. Simple and often strong, but increases dimensionality and doesn’t distinguish shared, redundant, or omic-specific signal.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Late integration (prediction averaging)</strong></p></td>
+<td><p>Training one classifier per omic, then combining their predicted class probabilities (by default, an equal-weighted average) into a final prediction. Keeps each omic’s model separate and interpretable.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Stacking (learned combiner / meta-learner)</strong></p></td>
+<td><p>A more adaptive form of late integration: instead of a fixed averaging rule, a second (“meta”) model is trained on the per-omic predicted probabilities to learn how much each omic should contribute, potentially differently per class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Single-omic baseline</strong></p></td>
+<td><p>A classifier trained on just one omics layer, used as a reference point to judge whether any integration strategy actually improves over using the best individual omic alone.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Fusion rule</strong></p></td>
+<td><p>The rule used to combine modality-specific outputs — e.g., fixed equal-weight averaging (late integration) versus a learned rule (stacking).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="part-2-correlation-based-factor-based-multi-omic-integration-with-mofa">
+<h2>Part 2: Correlation-Based / Factor-Based Multi-Omic Integration with MOFA<a class="headerlink" href="#part-2-correlation-based-factor-based-multi-omic-integration-with-mofa" title="Link to this heading">#</a></h2>
+<section id="core-mofa-concepts">
+<h3>Core MOFA concepts<a class="headerlink" href="#core-mofa-concepts" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Term</p></th>
+<th class="head"><p>Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>MOFA (Multi-Omics Factor Analysis)</strong></p></td>
+<td><p>An unsupervised, intermediate-integration method that keeps omics views separate but learns one shared patient-level latent representation across them.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Intermediate integration (latent-factor integration)</strong></p></td>
+<td><p>An integration strategy that is neither early integration (concatenating all omics into one table) nor late integration (training separate models per view and combining results at the end); MOFA instead learns shared latent factors directly from multiple views.</p></td>
+</tr>
+<tr class="row-even"><td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sample</strong></p></td>
+<td><p>One patient. Each row in the omics matrices is a patient.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>View</strong></p></td>
+<td><p>One omics layer measured on the same patients (e.g., transcriptomics, proteomics, methylation).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Group</strong></p></td>
+<td><p>A cohort or batch of samples; here a single group, <code class="docutils literal notranslate"><span class="pre">TCGA-BRCA</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Feature</strong></p></td>
+<td><p>One measured variable within a view — a gene, protein, or methylation probe.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Factor</strong></p></td>
+<td><p>A hidden (“latent”) axis of variation learned by MOFA. May reflect a biological process, technical effect, subtype gradient, or other source of covariance across views. Factors are not automatically biological pathways — they must be interpreted after fitting.</p></td>
+</tr>
+<tr class="row-even"><td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Factor value</strong></p></td>
+<td><p>The coordinate of one patient on one factor — how strongly that factor is active in that patient. Collected in the factor matrix <strong>Z</strong>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Weight / loading</strong></p></td>
+<td><p>The contribution of one feature to one factor — which molecular features define the factor. Collected in the weight matrix <strong>W</strong> (one per view).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Variance explained (R2)</strong></p></td>
+<td><p>A summary (as a %) of how much of a view’s variance is reconstructed by a given factor. Read from the fitted model via <code class="docutils literal notranslate"><span class="pre">mofax</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Factor activity</strong></p></td>
+<td><p>A factor’s value in a given patient (or the average factor value within a group, e.g., a subtype), used to describe how “on” or “off” that latent axis is.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Variable feature selection</strong></p></td>
+<td><p>Reducing high-dimensional views (transcriptomics, methylation) to their most variable features, computed on training patients only</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="mofa-definitions-structure-and-math">
+<h3>MOFA definitions, structure, and math<a class="headerlink" href="#mofa-definitions-structure-and-math" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Term</p></th>
+<th class="head"><p>Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>X_view / Y(v)</strong></p></td>
+<td><p>One molecular table (e.g., transcriptomics) — the observed omics data for view <em>v</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Z (factor matrix)</strong></p></td>
+<td><p>Patients × factors matrix of factor values, shared across all views.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>W(v) (weight/loading matrix)</strong></p></td>
+<td><p>Features × factors matrix for view <em>v</em>, giving each feature’s contribution to each factor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Reconstruction</strong></p></td>
+<td><p>The approximation of each input matrix as <code class="docutils literal notranslate"><span class="pre">X_view</span> <span class="pre">≈</span> <span class="pre">Z</span> <span class="pre">×</span> <span class="pre">W(v)</span> <span class="pre">+</span> <span class="pre">noise</span></code>; conceptually similar to PCA but extended to multiple omics views simultaneously.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Sign ambiguity</strong></p></td>
+<td><p>The direction (positive/negative) of a factor and its weights is arbitrary — multiplying both by −1 describes the same pattern. Only relative differences between patients/features matter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>ARD (Automatic Relevance Determination)</strong></p></td>
+<td><p>A model mechanism (<code class="docutils literal notranslate"><span class="pre">ard_factors</span></code>, <code class="docutils literal notranslate"><span class="pre">ard_weights</span></code>) that automatically shrinks/down-weights factors or features that explain little signal, letting a compact model discover how many factors are actually needed.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Spike-and-slab prior</strong></p></td>
+<td><p>A sparsity-inducing prior (<code class="docutils literal notranslate"><span class="pre">spikeslab_weights</span></code>) that lets individual feature weights be effectively zero, making factors easier to interpret by concentrating on a smaller set of strong features.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Variational inference</strong></p></td>
+<td><p>The optimization approach MOFA uses to fit its probabilistic model — searching for factors and weights that best reconstruct the omics data while accounting for noise.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Eta-squared (η²)</strong></p></td>
+<td><p>An ANOVA-based statistic estimating the proportion of a factor’s total variation explained by subtype-group differences; used to rank factors by subtype association.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Active factors</strong></p></td>
+<td><p>The subset of the initialized (upper-bound) factors that are kept for interpretation, selected by summing each factor’s R2 across views and keeping those above a chosen cutoff (<code class="docutils literal notranslate"><span class="pre">MIN_TOTAL_R2</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Projection</strong></p></td>
+<td><p>Estimating factor values for new (e.g., held-out test) patients by keeping the learned MOFA weights fixed and computing where those patients fall on the existing factors, without refitting the model.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="part-3-deep-learning-integration-methods-methods">
+<h2>Part 3: Deep Learning Integration Methods Methods<a class="headerlink" href="#part-3-deep-learning-integration-methods-methods" title="Link to this heading">#</a></h2>
+<section id="core-deep-learning-concepts">
+<h3>Core Deep-Learning Concepts<a class="headerlink" href="#core-deep-learning-concepts" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Term</p></th>
+<th class="head"><p>Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Neural network</strong></p></td>
+<td><p>A model made of layers of connected “neurons” (weighted sums followed by a non-linear activation) that learns to map inputs to outputs by adjusting weights during training.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Multi-layer perceptron (MLP)</strong></p></td>
+<td><p>A basic type of neural network consisting of one or more fully-connected (<code class="docutils literal notranslate"><span class="pre">Linear</span></code>) layers stacked with non-linear activations in between.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Multi-modal encoder</strong></p></td>
+<td><p>A fusion strategy that trains a separate encoder for each data view first, then combines (concatenates) the resulting embeddings before a shared classifier.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Integrated Gradients</strong></p></td>
+<td><p>A gradient-based feature-attribution method that estimates each input feature’s contribution to a model’s prediction by integrating gradients along a path from a baseline input to the actual input.</p></td>
+</tr>
+<tr class="row-even"><td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Encoder</strong></p></td>
+<td><p>The part of a neural network that compresses raw input features into a lower-dimensional internal representation (an embedding).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Embedding</strong></p></td>
+<td><p>A dense, lower-dimensional numeric vector that represents an input (e.g. a patient’s omics profile) in a way that preserves useful structure for downstream tasks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Linear layer</strong></p></td>
+<td><p>A neural network layer that applies a weighted sum plus a bias to its inputs (<code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">Wx</span> <span class="pre">+</span> <span class="pre">b</span></code>); the basic building block of an MLP.</p></td>
+</tr>
+<tr class="row-even"><td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>ReLU (Rectified Linear Unit)</strong></p></td>
+<td><p>A non-linear activation function, <code class="docutils literal notranslate"><span class="pre">f(x)</span> <span class="pre">=</span> <span class="pre">max(0,</span> <span class="pre">x)</span></code>, applied after linear layers so the network can learn non-linear relationships.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Dropout</strong></p></td>
+<td><p>A regularisation technique that randomly “switches off” a fraction of neurons during training to reduce overfitting.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Batch / mini-batch</strong></p></td>
+<td><p>A small subset of training samples processed together in one forward/backward pass, rather than using the whole dataset at once.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Epoch</strong></p></td>
+<td><p>One complete pass through the entire training dataset during model training.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>DataLoader</strong></p></td>
+<td><p>A PyTorch utility that wraps a dataset and serves it in shuffled mini-batches during training/evaluation.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Cross-entropy loss</strong></p></td>
+<td><p>A loss function commonly used for multi-class classification; it measures how well the predicted class probabilities match the true labels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Adam optimiser</strong></p></td>
+<td><p>An adaptive gradient-descent algorithm commonly used to update neural network weights during training.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Weight decay (L2 regularisation)</strong></p></td>
+<td><p>A penalty added during training that discourages large weight values, helping to reduce overfitting.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Gradient descent</strong></p></td>
+<td><p>An optimisation method that iteratively adjusts model parameters in the direction that reduces the loss function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-2-multi-omics"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="functions-definitions.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Custom Function Definitions</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../session-3-agentic-llm-workflows/intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Session 3</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Glossary</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#session-2-creating-multi-omics-profiles">Session 2 : Creating Multi-Omics Profiles</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#global-concepts-across-all-parts">Global concepts across all parts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-linear-methods-for-multi-omic-integration">Part 1: Linear Methods for Multi-Omic Integration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-integration-strategies">Linear integration strategies</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-correlation-based-factor-based-multi-omic-integration-with-mofa">Part 2: Correlation-Based / Factor-Based Multi-Omic Integration with MOFA</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-mofa-concepts">Core MOFA concepts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mofa-definitions-structure-and-math">MOFA definitions, structure, and math</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-deep-learning-integration-methods-methods">Part 3: Deep Learning Integration Methods Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-deep-learning-concepts">Core Deep-Learning Concepts</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/session-2-multi-omics/concept-glossary.md">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

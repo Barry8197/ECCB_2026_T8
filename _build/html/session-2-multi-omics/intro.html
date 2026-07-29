@@ -1,0 +1,815 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Session 2 &#8212; ECCB 2026 Geneva Tutorial Book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-2-multi-omics/intro';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Part 0 — Data Preparation" href="part-0-data-prep.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="../session-1-intro-networks/concept-glossary.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="/index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="/index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="part-0-data-prep.html">Part 0 — Data Preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-1-linear-methods.html">Part 1 — Linear Methods for Multi-Omic Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-2-correlation-based-methods.html">Part 2 — Correlation-Based / Factor-Based Multi-Omic Integration with MOFA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-3-deep-learning-methods.html">Part 3 — Deep Learning Integration Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions-definitions.html">Custom Function Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concept-glossary.html">Glossary</a></li>
+
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Session 2</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="session-2">
+<h1>Session 2<a class="headerlink" href="#session-2" title="Link to this heading">#</a></h1>
+<section id="creating-multi-omics-profiles">
+<h2>Creating Multi-Omics Profiles<a class="headerlink" href="#creating-multi-omics-profiles" title="Link to this heading">#</a></h2>
+<section id="general">
+<h3>General<a class="headerlink" href="#general" title="Link to this heading">#</a></h3>
+<p>The data are:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">transcriptomics.pkl</span></code></p></td>
+<td><p>Gene-expression features</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">proteomics.pkl</span></code></p></td>
+<td><p>Protein-abundance features</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">methylation.pkl</span></code></p></td>
+<td><p>DNA-methylation features</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Each table is already sample-aligned, has no missing patient data, and uses the patient ID as the index.<br />
+The prediction target is the <code class="docutils literal notranslate"><span class="pre">subtype</span></code> column.</p>
+</section>
+<section id="part-1-linear-integration-methods">
+<h3>Part 1 - Linear Integration Methods<a class="headerlink" href="#part-1-linear-integration-methods" title="Link to this heading">#</a></h3>
+<section id="linear-classifiers">
+<h4>1.1 Linear Classifiers<a class="headerlink" href="#linear-classifiers" title="Link to this heading">#</a></h4>
+<p>Linear classifiers are among the simplest models for making predictions. Consider
+ice cream sales as a function of temperature — we might assume a straightforward
+linear relationship where, for every one degree increase in temperature, 1000
+additional ice creams are sold.</p>
+<p>The same principle can be applied in a biological context, where we aim to model
+the onset of a disease as a function of changes in omic features, such as gene
+transcripts. However, unlike predicting a continuous value like ice cream sales,
+disease onset is a binary outcome — either yes or no.</p>
+<p>To handle this, we use logistic regression rather than classical linear regression.
+Logistic regression works by passing the output of a standard linear model through
+a sigmoid (logistic) function, which maps any value to a range between 0 and 1.</p>
+<p>This produces a probability score that can be interpreted as a binary prediction,
+making it well-suited for classifying disease onset.</p>
+<p><img alt="" src="../_images/logistic_regression.png" /></p>
+</section>
+<section id="concatenation-early-vs-ensemble-late-integration">
+<h4>1.2 Concatenation (Early) vs. Ensemble (Late) Integration<a class="headerlink" href="#concatenation-early-vs-ensemble-late-integration" title="Link to this heading">#</a></h4>
+<p>There are many strategies for integrating multi-omics data to make patient
+predictions. In Part 1, we introduce the two simplest approaches: concatenation
+and ensemble methods.</p>
+<ul class="simple">
+<li><p>Concatenation naively merges datasets by appending features directly, without
+accounting for any relationships between them</p></li>
+<li><p>Ensemble methods average the predictions of individual models, without
+weighting each model by its relative performance or reliability</p></li>
+</ul>
+<p>While these methods have their merits, this section aims to serve a dual purpose
+— demonstrating the potential benefits of multi-omics integration, while also
+prompting critical thinking about the limitations that these simpler approaches
+introduce.</p>
+<p><img alt="images/early_vs_late.png" src="../_images/early_vs_late.png" /></p>
+</section>
+<section id="linear-multi-omic-profiles">
+<h4>1.3 Linear Multi-Omic Profiles<a class="headerlink" href="#linear-multi-omic-profiles" title="Link to this heading">#</a></h4>
+<p>In this part, we treated both concatenation and ensemble methods as forms of
+multi-omic integration. However, concatenation simply combines raw input features
+without any deeper consideration of their relationships, while ensemble methods
+reduce multi-omics to a set of independent predictions.</p>
+<p>In the next part, we will explore more sophisticated approaches that go beyond
+these surface-level integrations, aiming to capture more biologically meaningful
+multi-omic profiles.</p>
+</section>
+<section id="key-takeaways-highlighted-in-part-1">
+<h4>1.4 Key takeaways highlighted in Part 1<a class="headerlink" href="#key-takeaways-highlighted-in-part-1" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Different omics capture different, sometimes complementary, aspects of subtype biology — motivating integration in the first place.</p></li>
+<li><p>Naively combining omics (concatenation or equal-weight averaging) does not guarantee better performance than the best single omic alone.</p></li>
+<li><p>Predictive features are not necessarily independent — correlated features across omics can reflect the same underlying biological signal, risking double-counting in early integration.</p></li>
+<li><p>Learned combination rules (stacking) can outperform both single-omic models and fixed integration strategies by adapting how much each omic contributes, potentially per class.</p></li>
+<li><p>None of the linear methods here explicitly model cross-omic feature relationships — this limitation motivates factor-based methods (e.g., MOFA) covered in Part 2.</p></li>
+</ul>
+</section>
+</section>
+<section id="part-2-correlation-based-factor-based-multi-omic-integration-with-mofa">
+<h3>Part 2 - Correlation-Based / Factor-Based Multi-Omic Integration with MOFA<a class="headerlink" href="#part-2-correlation-based-factor-based-multi-omic-integration-with-mofa" title="Link to this heading">#</a></h3>
+<section id="correlation-based-integration">
+<h4>2.1 Correlation-Based Integration<a class="headerlink" href="#correlation-based-integration" title="Link to this heading">#</a></h4>
+<p>This part introduces the concept of complementary information — specifically, how
+we can identify and capture overlapping structure across different omics layers.</p>
+<p>To do this, we need to consider two types of correlation:</p>
+<ol class="arabic simple">
+<li><p>Within-omic correlation: features within the same omic are related, for
+example, gene transcript 1 and gene transcript 2 are both elevated at
+disease onset</p></li>
+<li><p>Cross-omic correlation: features across different omics are related, for
+example, gene transcript 1 and protein 1 are both elevated at disease onset</p></li>
+</ol>
+<p>Correlation-based methods aim to capture both of these relationships within a
+single unified model. Here, we take a deep dive into one such method — MOFA
+(Multi-Omics Factor Analysis) — and introduce the concept of a biologically
+informed multi-omic profile.</p>
+</section>
+<section id="a-small-mental-model">
+<h4>2.2 A small mental model<a class="headerlink" href="#a-small-mental-model" title="Link to this heading">#</a></h4>
+<p>MOFA approximates each omics matrix using a low-dimensional representation:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>X_view ~= factor_values x view_specific_weights + noise
+</pre></div>
+</div>
+<p>In this Part:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">X_view</span></code> is one molecular table, such as transcriptomics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">factor_values</span></code> are patient coordinates shared across views.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">view_specific_weights</span></code> tell us how each feature in a view contributes to each factor.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">noise</span></code> is variation not captured by the selected factors.</p></li>
+</ul>
+<p>This is related in spirit to PCA, but MOFA is designed for <strong>multiple omics views</strong>. A factor can be shared across views, mostly active in one view, or weak overall. This is why MOFA is useful for integration: it gives one patient-level representation while still preserving view-specific interpretation.</p>
+</section>
+<section id="mofa-overview">
+<h4>2.3 MOFA Overview<a class="headerlink" href="#mofa-overview" title="Link to this heading">#</a></h4>
+<p><img alt="" src="../_images/mofa.png" /></p>
+<p>This schematic summarizes the main idea of the notebook: several omics views are integrated into shared patient-level factor values (<code class="docutils literal notranslate"><span class="pre">Z</span></code>), view-specific feature weights/loadings (<code class="docutils literal notranslate"><span class="pre">W</span></code>), and variance-explained summaries (<code class="docutils literal notranslate"><span class="pre">R2</span></code>).</p>
+</section>
+<section id="multi-omic-profile-what-does-mofa-learn">
+<h4>2.4 Multi-Omic Profile: what does MOFA learn?<a class="headerlink" href="#multi-omic-profile-what-does-mofa-learn" title="Link to this heading">#</a></h4>
+<p>A factor is not automatically a known biological pathway — it is a learned pattern.</p>
+<p>We interpret it after fitting by examining which patients have high factor values and which features carry high weights.</p>
+<p>MOFA works by aggregating shared information, both within a single omic layer and across multiple omics, into a lower-dimensional space.</p>
+<p>This compressed representation can then be used in downstream prediction tasks. However, this raises an important question: what if we could construct factors that capture only the shared, outcome-relevant information, while discarding redundant variation that has no predictive value?</p>
+</section>
+<section id="key-takeaways-highlighted-in-part-2">
+<h4>2.5 Key takeaways highlighted in Part 2<a class="headerlink" href="#key-takeaways-highlighted-in-part-2" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Treating factors as pre-labeled biological pathways or subtypes (they are not — labels are assigned by the analyst after interpretation).</p></li>
+<li><p>Over-interpreting only the first one or two factors; subtype/biological signal can appear in later factors.</p></li>
+<li><p>Ignoring sign ambiguity — the positive/negative direction of a factor is arbitrary.</p></li>
+<li><p>Judging MOFA success purely by downstream prediction accuracy rather than by interpretation diagnostics (R2, eta-squared, weights).</p></li>
+<li><p>Confusing view-level contribution (which view drives a factor) with feature-level interpretation (which specific molecules matter).</p></li>
+</ul>
+</section>
+</section>
+<section id="part-3-deep-learning-integration-methods">
+<h3>Part 3 — Deep Learning Integration Methods<a class="headerlink" href="#part-3-deep-learning-integration-methods" title="Link to this heading">#</a></h3>
+<section id="deep-learning-integration">
+<h4>3.1 Deep Learning Integration<a class="headerlink" href="#deep-learning-integration" title="Link to this heading">#</a></h4>
+<p>Correlation-based methods offer a useful starting point for multi-omics analysis, but they are typically unsupervised. This means that while they can uncover structure in the data, there is no guarantee that the relationships they identify are relevant to the disease outcome you care about.</p>
+<p>Deep learning provides a powerful alternative. By jointly modelling relationships within and between omics layers, and crucially, by supervising the learning process against a clinical outcome of interest, deep learning integration can capture biologically meaningful signals that are directly tied to the phenotype under study.</p>
+</section>
+<section id="multi-layer-perceptron-mlp">
+<h4>3.2 Multi-Layer Perceptron (MLP)<a class="headerlink" href="#multi-layer-perceptron-mlp" title="Link to this heading">#</a></h4>
+<p>A MLP is a type of neural network composed of an input layer, one or more hidden layers, and an output layer. Between each layer, non-linear activation functions are applied, allowing the network to learn complex, non-linear relationships in the data.</p>
+<p>An MLP follows what is known as the <a class="reference external" href="https://medium.com/&#64;ML-STATS/understanding-the-universal-approximation-theorem-8bd55c619e30">Universal Approximation Theorem</a>: <br />
+<code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">sufficiently</span> <span class="pre">wide</span> <span class="pre">(or</span> <span class="pre">deep)</span> <span class="pre">MLP</span> <span class="pre">can</span> <span class="pre">approximate</span> <span class="pre">any</span> <span class="pre">continuous</span> <span class="pre">function</span> <span class="pre">to</span> <span class="pre">an</span> <span class="pre">arbitrary</span> <span class="pre">degree</span> <span class="pre">of</span> <span class="pre">accuracy.</span></code></p>
+<p>In plain terms — no matter how complex the relationship between your inputs and outputs, an MLP can in theory learn to mimic it, given enough neurons and layers.</p>
+<p><strong>Forward Pass</strong></p>
+<p>For an MLP with <span class="math notranslate nohighlight">\( L \)</span> layers, given input <span class="math notranslate nohighlight">\( \mathbf{x} \in \mathbb{R}^{d} \)</span>, set <span class="math notranslate nohighlight">\( \mathbf{a}^{(0)} = \mathbf{x} \)</span>.</p>
+<p>For each hidden layer <span class="math notranslate nohighlight">\( l = 1, \dots, L-1 \)</span>:</p>
+<p><strong>Linear transformation:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{z}^{(l)} = \mathbf{W}^{(l)} \mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}
+\]</div>
+<p><strong>What’s actually happening layer by layer</strong></p>
+<p>Concretely, in a two-hidden-layer network like <code class="docutils literal notranslate"><span class="pre">EarlyIntegrationMLP</span></code>:</p>
+<ol class="arabic simple">
+<li><p><strong>First linear layer</strong> — learns a weighted combination of the raw, concatenated omics features, effectively asking “which of these ~40,000+ columns matter for this task?”</p></li>
+<li><p><strong>First ReLU</strong> — without this step the whole network would collapse into a single linear model, no matter how many layers you stack. This is what lets it capture the kind of non-linear, cross-gene relationships a linear model structurally cannot.</p></li>
+<li><p><strong>Second linear layer</strong> — learns interactions <em>between</em> the features surfaced by the first layer. Here, since all omics were concatenated at the input, this is also where (if anywhere) the model can pick up interactions <em>between</em> transcriptomics, proteomics, and methylation — but nothing forces it to keep those interactions organized by omic.</p></li>
+<li><p><strong>Second ReLU</strong> — adds another layer of non-linearity on top of those interactions.</p></li>
+</ol>
+<p>The output of the last hidden layer (before the final classification layer) is a compressed, low-dimensional vector per patient — the <strong>embedding space</strong>, <code class="docutils literal notranslate"><span class="pre">embedding_dim</span></code> in the code. This is conceptually the same idea as the latent factors from MOFA in Part 2: a small number of numbers per patient standing in for tens of thousands of raw measurements. The difference is <em>how</em> that compression is learned — MOFA finds it in a purely unsupervised way from correlation structure across views, while here the compression is explicitly shaped by the subtype-prediction objective, via backpropagation.</p>
+<p><img alt="" src="../_images/mlp.png" /></p>
+</section>
+<section id="multi-model-encoder">
+<h4>3.3 Multi Model Encoder<a class="headerlink" href="#multi-model-encoder" title="Link to this heading">#</a></h4>
+<p>A multi-modal encoder is a deep learning architecture designed to model relationships both <em>within</em> and <em>between</em> omics inputs, supervised by a clinical outcome of interest.</p>
+<p>The architecture begins with a set of individual MLPs — one per omic — each acting as an independent encoder. Each encoder learns a compact, low-dimensional representation, or embedding, of its respective omic that is informative of the disease outcome. T</p>
+<p>This compression happens <em>before</em> any mixing across omics, therefore, each encoder is free to specialize in the structure of its own data type (e.g. co-expression patterns among genes) without competing against a flood of features from the other two views.</p>
+<p>Because these embeddings are both dimensionality-reduced and outcome-aware, they are far less noisy than raw omics data and can be integrated using simpler strategies — such as concatenation — without the computational burden associated with early integration.</p>
+<p>Once the individual embeddings are produced, they are concatenated and passed into a final shared encoder. This step is key: while the individual encoders capture structure <em>within</em> each omic, this shared encoder explicitly models interactions <em>between</em> omics, learning how different data modalities relate to one another in the context of the outcome.</p>
+<p>Crucially, the entire model — individual encoders and shared encoder alike — is trained end-to-end in a single pipeline. This means that <em>within-omic</em> and <em>between-omic</em> representations are learned simultaneously, each informing the other, resulting in a richer and more coherent model than sequential integration strategies can achieve.</p>
+<p><img alt="" src="../_images/multi_modal_encoder.png" /></p>
+</section>
+<section id="key-takeaways-highlighted-in-part-3">
+<h4>3.4 Key takeaways highlighted in Part 3<a class="headerlink" href="#key-takeaways-highlighted-in-part-3" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>MLP as a non-linear upgrade to Part 1</strong> — <code class="docutils literal notranslate"><span class="pre">EarlyIntegrationMLP</span></code> still concatenates all omics into one vector first, but stacking linear layers with ReLU activations lets it capture non-linear relationships that logistic regression structurally can’t, per the Universal Approximation Theorem.</p></li>
+<li><p><strong>Layer-by-layer intuition</strong> — each linear layer learns a weighted combination of what came before; each ReLU is what prevents the network from collapsing into a single linear model, no matter how many layers are stacked.</p></li>
+<li><p><strong>Embedding space</strong> — the output of the last hidden layer (before the classifier head) is a small, compressed per-patient vector shaped by the subtype-prediction task — conceptually parallel to MOFA’s latent factors from Part 2, but <em>supervised</em> rather than unsupervised.</p></li>
+<li><p><strong>Early integration’s structural weakness</strong> — because everything is concatenated before the first layer, the model has no way to distinguish which raw features come from which omic, so it can’t explicitly organize within-omic vs. cross-omic structure.</p></li>
+<li><p><strong>Multi-modal encoder fixes this</strong> — <code class="docutils literal notranslate"><span class="pre">MultiOmicEncoder</span></code> gives each omic its own small MLP encoder, compressing each view into its own embedding <em>before</em> any mixing, so each encoder can specialize on the structure of its own data type without competing against the other views’ features.</p></li>
+<li><p><strong>Cheaper, cleaner integration</strong> — because the per-omic embeddings are already dimensionality-reduced and outcome-aware, combining them (even by simple concatenation) is far less noisy and less costly than integrating raw, high-dimensional features directly.</p></li>
+<li><p><strong>Shared encoder models cross-omic interactions</strong> — after concatenation, a final shared encoder explicitly learns how the omic-specific embeddings relate to each other, something the early-integration MLP has no dedicated mechanism for.</p></li>
+<li><p><strong>End-to-end training matters</strong> — the per-omic encoders and shared encoder are all trained together from the same labels, so within-omic and between-omic representations are learned jointly rather than in separate stages, producing a more coherent model than a two-step encode-then-integrate pipeline.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-2-multi-omics"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../session-1-intro-networks/concept-glossary.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="part-0-data-prep.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Part 0 — Data Preparation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-multi-omics-profiles">Creating Multi-Omics Profiles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general">General</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-linear-integration-methods">Part 1 - Linear Integration Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-classifiers">1.1 Linear Classifiers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#concatenation-early-vs-ensemble-late-integration">1.2 Concatenation (Early) vs. Ensemble (Late) Integration</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-multi-omic-profiles">1.3 Linear Multi-Omic Profiles</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways-highlighted-in-part-1">1.4 Key takeaways highlighted in Part 1</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-correlation-based-factor-based-multi-omic-integration-with-mofa">Part 2 - Correlation-Based / Factor-Based Multi-Omic Integration with MOFA</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#correlation-based-integration">2.1 Correlation-Based Integration</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-small-mental-model">2.2 A small mental model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mofa-overview">2.3 MOFA Overview</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-omic-profile-what-does-mofa-learn">2.4 Multi-Omic Profile: what does MOFA learn?</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways-highlighted-in-part-2">2.5 Key takeaways highlighted in Part 2</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-deep-learning-integration-methods">Part 3 — Deep Learning Integration Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-integration">3.1 Deep Learning Integration</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layer-perceptron-mlp">3.2 Multi-Layer Perceptron (MLP)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-model-encoder">3.3 Multi Model Encoder</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways-highlighted-in-part-3">3.4 Key takeaways highlighted in Part 3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/session-2-multi-omics/intro.ipynb">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
