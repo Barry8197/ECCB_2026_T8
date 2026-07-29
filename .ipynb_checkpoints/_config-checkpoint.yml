@@ -70,4 +70,6 @@ sphinx:
     add_module_names: True
     html_extra_path: ['_extras']
   local_extensions:
-    helpers : "./session-2-multi-omics"
+    s1_helpers : "./session-1-intro-networks"
+    s2_helpers : "./session-2-multi-omics"
+    s3_helpers : "./session-3-agentic-llm-workflows"

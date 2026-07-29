@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>helpers &#8212; ECCB 2026 Geneva Tutorial Book</title>
+    <title>s2_helpers &#8212; ECCB 2026 Geneva Tutorial Book</title>
   
   
   
@@ -58,7 +58,7 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/helpers';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/s2_helpers';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -192,8 +192,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
     Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3
   </a>
 </li>
 
@@ -309,8 +323,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
     Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3
   </a>
 </li>
 
@@ -374,7 +402,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">helpers</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">s2_helpers</span></li>
   </ul>
 </nav>
 </div>
@@ -391,7 +419,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for helpers</h1><div class="highlight"><pre>
+  <h1>Source code for s2_helpers</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Utilities for *From Multi-Omics to Gene–Disease Discovery: Knowledge Graphs and LLM-Augmented Analysis*</span>
 <span class="sd">tutorial (ECCB 2026, Geneva).</span>
@@ -455,7 +483,7 @@
 <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="build_mofa_matrix_input">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.build_mofa_matrix_input">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.build_mofa_matrix_input">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_mofa_matrix_input</span><span class="p">(</span><span class="n">X_by_omic</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build MOFA input matrices from aligned omics tables.</span>
@@ -510,7 +538,7 @@
 
 
 <div class="viewcode-block" id="fit_mofa">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.fit_mofa">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.fit_mofa">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fit_mofa</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="n">sample_names</span><span class="p">,</span> <span class="n">group_names</span><span class="p">,</span>
              <span class="n">max_factors</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -596,7 +624,7 @@
 
 
 <div class="viewcode-block" id="select_active_factors">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.select_active_factors">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.select_active_factors">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">select_active_factors</span><span class="p">(</span><span class="n">mofa_model_mfx</span><span class="p">,</span> <span class="n">min_total_r2</span><span class="p">,</span> <span class="n">max_factors</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Select &quot;active&quot; MOFA factors using variance explained (R2).</span>
@@ -649,7 +677,7 @@
 
 
 <div class="viewcode-block" id="project_test_patients_to_mofa_factors">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.project_test_patients_to_mofa_factors">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.project_test_patients_to_mofa_factors">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">project_test_patients_to_mofa_factors</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_train_by_view</span><span class="p">,</span> <span class="n">X_test_by_view</span><span class="p">,</span> <span class="n">train_factors</span><span class="p">,</span> <span class="n">view_names</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Project held-out samples into a trained MOFA factor space. </span>
@@ -724,7 +752,7 @@
 
 
 <div class="viewcode-block" id="eta_squared_by_factor">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.eta_squared_by_factor">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.eta_squared_by_factor">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">eta_squared_by_factor</span><span class="p">(</span><span class="n">factor_table</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute one-way ANOVA eta-squared ($ \\\\eta^2 $) for each factor.</span>
@@ -772,7 +800,7 @@
 
 
 <div class="viewcode-block" id="fit_factor_classifier">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.fit_factor_classifier">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.fit_factor_classifier">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fit_factor_classifier</span><span class="p">(</span><span class="n">factors_df</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">test_ids</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Train a logistic regression classifier on factor values and evaluate on a held-out set.</span>
@@ -814,7 +842,7 @@
 
 
 <div class="viewcode-block" id="plot_r2_heatmap">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.plot_r2_heatmap">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.plot_r2_heatmap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_r2_heatmap</span><span class="p">(</span><span class="n">r2_all</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">active_factor_cols</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot an annotated heatmap of MOFA variance explained (R2) and save to disk.</span>
@@ -869,7 +897,7 @@
 
 
 <div class="viewcode-block" id="plot_factor_boxplots_by_subtype">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.plot_factor_boxplots_by_subtype">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.plot_factor_boxplots_by_subtype">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_factor_boxplots_by_subtype</span><span class="p">(</span><span class="n">factors_df</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">top_factors</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot boxplots of selected factors stratified by subtype and save to disk.</span>
@@ -956,7 +984,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 
 <div class="viewcode-block" id="generate_diagnostic_plots">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.generate_diagnostic_plots">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.generate_diagnostic_plots">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_diagnostic_plots</span><span class="p">(</span><span class="n">mofa_model_mfx</span><span class="p">,</span> <span class="n">factors_df</span><span class="p">,</span> <span class="n">factor_r2_summary</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">active_factor_cols</span><span class="p">,</span> <span class="n">factor_subtype_assoc</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">mofa_pred</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">top_view_for_weights</span><span class="o">=</span><span class="s2">&quot;transcriptomics&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate and save the core MOFA diagnostic plots used in the tutorial notebook.</span>
@@ -1041,7 +1069,7 @@
 <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="plot_confusion_matrix">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.plot_confusion_matrix">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.plot_confusion_matrix">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot a confusion matrix for held-out subtype predictions.</span>
@@ -1066,7 +1094,7 @@
 
 
 <div class="viewcode-block" id="evaluate_predictions">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.evaluate_predictions">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.evaluate_predictions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">evaluate_predictions</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute and display common classification metrics.</span>
@@ -1115,7 +1143,7 @@
 
 
 <div class="viewcode-block" id="load_omics">
-<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#helpers.load_omics">[docs]</a>
+<a class="viewcode-back" href="../session-2-multi-omics/functions-definitions.html#s2_helpers.load_omics">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_omics</span><span class="p">(</span>
     <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">omic_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
