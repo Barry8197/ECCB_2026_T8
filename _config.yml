@@ -68,7 +68,7 @@ sphinx:
           icon: fa-brands fa-square-github
           type: fontawesome
     add_module_names: True
-    html_static_path: ['_static']
+    html_extra_path: ['_extras']
   local_extensions:
     s1_helpers : "./session-1-intro-networks"
     s2_helpers : "./session-2-multi-omics"
