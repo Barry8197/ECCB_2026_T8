@@ -58,7 +58,7 @@ sphinx:
       navbar_end: ["theme-switcher"]
       icon_links:
         - name: Home
-          url: ECCB_2026_T8/index.html
+          url: index.html
           icon: fas fa-home
           type: fontawesome
           attributes:
