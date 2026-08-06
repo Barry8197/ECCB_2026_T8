@@ -91,6 +91,55 @@ We have developed a Jupyter Book containing all code and some extra materials to
     <p>I am a student in the HDRUK-Turing Wellcome PhD Programme in Health Data Science, based at the University of Edinburgh. My thesis will focus on patient similarity networks and explainable AI for rare disease diagnosis.</p>
     <p>h.issa@sms.ed.ac.uk</p>
   </div>
+  
+  <div style="flex: 1; min-width: 250px; text-align: center;">
+    <img src="profile_images/juliana_rodriguez.jpeg" alt="Profile Photo 3" style="width: 100px; height: 100px; border-radius: 50%;">
+    <h3>Juliana Rodriguez</h3>
+    <p>I am an EASTBIO PhD student in the School of Biological Sciences at the University of Edinburgh. My research focuses on improving metadata using natural language processing (NLP) and large language models (LLMs). I relish opportunities to share knowledge and skills with collaborators and through public outreach.</p>
+    <p>juliana.rodriguez@ed.ac.uk</p>
+  </div>
 
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+
+  <div style="flex: 1; min-width: 250px; text-align: center;">
+    <img src="profile_images/Elisa_Castagnari.jpg" alt="Profile Photo 1" style="width: 100px; height: 100px; border-radius: 50%;">
+    <h3>Elisa Castagnari</h3>
+    <p>I am a UKRI CDT student in Biomedical AI in Edinburgh. My research focuses on Large Language Models (LLMs) and ontologies for data interoperability. I work in collaboration with Roche. </p>
+    <p>e.castagnari@sms.ed.ac.uk</p>
+  </div>
+
+  <div style="flex: 1; min-width: 250px; text-align: center;">
+    <img src="profile_images/emilia.jpeg" alt="Profile Photo 2" style="width: 100px; height: 100px; border-radius: 50%;">
+    <h3>Emilia Agasi</h3>
+    <p>I am a student in the Biomedical AI cohort at the University of Edinburgh. My research focus is developing network-based multimodal AI approaches to address heterogeneity in ovarian cancer.</p>
+    <p>G.S.E.Agasi@sms.ed.ac.uk</p>
+  </div>
+  
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+
+  <div style="flex: 1; min-width: 250px; text-align: center;">
+    <img src="profile_images/chaimae_ElHoujjaji.jpg" alt="Profile Photo 1" style="width: 100px; height: 100px; border-radius: 50%;">
+    <h3>Sebestyén Kamp</h3>
+    <p>I am a PhD student at EPFL in Jacques Fellay’s lab in Lausanne. My research interests focus on translational discoveries using omics data, with a particular interest in multi-omics and AI. I have worked across oncology, immunology, and rare diseases.</p>
+    <p>chaimae.elhoujjaji@epfl.ch</p>
+  </div>
+
+  <div style="flex: 1; min-width: 250px; text-align: center;">
+    <img src="profile_images/mariam.jpeg" alt="Profile Photo 2" style="width: 100px; height: 100px; border-radius: 50%;">
+    <h3>Mariam Ait Oumelloul</h3>
+    <p>I am a PhD student at EPFL in Jacques Fellay’s lab in Lausanne. My PhD research has focused on multi-omics integration in paediactric sepsis and novel gene-disease network exploration for rare disease.</p>
+    <p>mariam.aitoumelloul@epfl.ch</p>
+  </div>
+  
+  <div style="flex: 1; min-width: 250px; text-align: center;">
+    <img src="profile_images/simona_doneva.jpeg" alt="Profile Photo 3" style="width: 100px; height: 100px; border-radius: 50%;">
+    <h3>Simona Doneva</h3>
+    <p>I am a postdoctoral researcher in Medical Data Science at the University of Bern. My research focuses on using natural language processing to support evidence synthesis and improve animal-to-human translation in drug development.</p>
+    <p>simona.doneva@uzh.ch</p>
+  </div>
 
 </div>
