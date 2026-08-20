@@ -7,6 +7,10 @@ chapters:
 - file: GettingStarted
 - file: session-1-intro-networks/intro
   sections: 
+  - file: session-1-intro-networks/part-0-data-prep
+  - file: session-1-intro-networks/part-1-networks-and-knowledge-graphs
+  - file: session-1-intro-networks/part-2-building-a-knowledge-graph
+  - file: session-1-intro-networks/part-3-querying-the-knowledge-graph
   - file: session-1-intro-networks/functions-definitions
   - file: session-1-intro-networks/concept-glossary
 - file: session-2-multi-omics/intro
@@ -19,6 +23,8 @@ chapters:
   - file: session-2-multi-omics/concept-glossary
 - file: session-3-agentic-llm-workflows/intro
   sections: 
-  - file: session-3-agentic-llm-workflows/functions-definitions
-  - file: session-3-agentic-llm-workflows/concept-glossary
+  - file: session-3-agentic-llm-workflows/notebooks/part-0-data-exploration
+  - file: session-3-agentic-llm-workflows/notebooks/part-1-tools
+  - file: session-3-agentic-llm-workflows/notebooks/part-2-MCPs
+  - file: session-3-agentic-llm-workflows/notebooks/part-3-agent-skills
 #- file: feedback_survey

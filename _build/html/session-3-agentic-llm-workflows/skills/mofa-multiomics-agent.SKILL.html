@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MOFA Multi-Omics Agent Skill &#8212; ECCB 2026 T8</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-3-agentic-llm-workflows/skills/mofa-multiomics-agent.SKILL';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">MOFA Multi-Omics Agent Skill</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="mofa-multi-omics-agent-skill">
+<h1>MOFA Multi-Omics Agent Skill<a class="headerlink" href="#mofa-multi-omics-agent-skill" title="Link to this heading">#</a></h1>
+<section id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Link to this heading">#</a></h2>
+<p>Use this skill when answering questions about a fitted MOFA model of TCGA
+breast-cancer multi-omics data (transcriptomics, proteomics, methylation) with
+PAM50 subtype labels: factor interpretation, factor↔subtype association, factor
+drivers (weights), subtype prediction from factors, and diagnostic plots.</p>
+</section>
+<section id="behaviour">
+<h2>Behaviour<a class="headerlink" href="#behaviour" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Always compute results with the repo’s functions before making quantitative
+claims about factors, R2, associations, weights, or predictions.</p></li>
+<li><p>Load the cached MOFA model; never re-fit. Fitting is expensive and
+non-deterministic. A fitted model is cached under <code class="docutils literal notranslate"><span class="pre">outputs/*.hdf5</span></code>; load it.</p></li>
+<li><p>Refer to factors by name (<code class="docutils literal notranslate"><span class="pre">Factor1</span></code>…<code class="docutils literal notranslate"><span class="pre">Factor10</span></code>) and subtypes by PAM50 label
+(LumA, LumB, Basal, Her2, Normal).</p></li>
+<li><p>Distinguish evidence (numbers from the tools) from interpretation (what
+they suggest biologically).</p></li>
+<li><p>Do not present associations as clinical diagnosis or treatment advice; a
+gene/probe weighting is a statistical loading, not a validated biomarker.</p></li>
+<li><p>Keep answers concise enough for a workshop participant to inspect.</p></li>
+</ul>
+</section>
+<section id="answer-format">
+<h2>Answer Format<a class="headerlink" href="#answer-format" title="Link to this heading">#</a></h2>
+<p>Use this structure for substantive answers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Answer</span>
+<span class="o">&lt;</span><span class="n">short</span> <span class="n">direct</span> <span class="n">answer</span><span class="o">&gt;</span>
+
+<span class="n">Evidence</span> <span class="n">Used</span>
+<span class="o">-</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">/</span><span class="n">result</span> <span class="n">the</span> <span class="n">claim</span> <span class="n">rests</span> <span class="n">on</span><span class="p">,</span> <span class="k">with</span> <span class="n">the</span> <span class="n">key</span> <span class="n">numbers</span><span class="o">&gt;</span>
+
+<span class="n">Interpretation</span>
+<span class="o">&lt;</span><span class="n">brief</span> <span class="n">explanation</span> <span class="n">of</span> <span class="n">what</span> <span class="n">the</span> <span class="n">evidence</span> <span class="n">suggests</span><span class="o">&gt;</span>
+
+<span class="n">Limitations</span>
+<span class="o">&lt;</span><span class="n">missing</span> <span class="n">data</span><span class="p">,</span> <span class="n">weak</span> <span class="n">factors</span><span class="p">,</span> <span class="k">class</span><span class="w"> </span><span class="nc">imbalance</span><span class="p">,</span> <span class="n">out</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">sample</span> <span class="n">caveats</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="querying-the-model-in-this-repository">
+<h2>Querying the model in this repository<a class="headerlink" href="#querying-the-model-in-this-repository" title="Link to this heading">#</a></h2>
+<p>The pipeline is implemented in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>. In a coding-agent setting
+(no pre-registered tools), call these functions yourself by running Python from
+the repository root. Key functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">load_omics_data(data_dir)</span></code> → <code class="docutils literal notranslate"><span class="pre">(X_omics,</span> <span class="pre">y)</span></code> — aligned views + PAM50 labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make_train_test_split(...)</span></code> → shared split + variable-feature selection</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">select_active_factors(model,</span> <span class="pre">MIN_TOTAL_R2,</span> <span class="pre">MAX_FACTORS)</span></code> → active factors + R2</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project_test_patients_to_mofa_factors(...)</span></code> → held-out patients in factor space</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eta_squared_by_factor(factor_table,</span> <span class="pre">labels)</span></code> → factor↔subtype association</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit_factor_classifier(...)</span></code> → logistic regression on factors + held-out metrics</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generate_diagnostic_plots(...)</span></code> → the standard R2 / boxplot / confusion / weights PNGs</p></li>
+</ul>
+<p>The commented <code class="docutils literal notranslate"><span class="pre">main()</span></code> in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code> is the reference end-to-end order.
+Load the cached model with <code class="docutils literal notranslate"><span class="pre">mofax</span></code> instead of calling <code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code>.</p>
+<section id="reference-recipe-load-cached-model-then-analyse">
+<h3>Reference recipe (load cached model, then analyse)<a class="headerlink" href="#reference-recipe-load-cached-model-then-analyse" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span> <span class="o">&lt;&lt;</span><span class="s1">&#39;PY&#39;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">mofax</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mfx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.mofa_tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RANDOM_STATE</span><span class="p">,</span> <span class="n">TEST_SIZE</span><span class="p">,</span> <span class="n">N_TOP_VARIABLE_HIGH_DIM_FEATURES</span><span class="p">,</span>
+    <span class="n">HIGH_DIMENSIONAL_VIEWS</span><span class="p">,</span> <span class="n">MAX_FACTORS</span><span class="p">,</span> <span class="n">MIN_TOTAL_R2</span><span class="p">,</span>
+    <span class="n">load_omics_data</span><span class="p">,</span> <span class="n">make_train_test_split</span><span class="p">,</span> <span class="n">select_active_factors</span><span class="p">,</span>
+    <span class="n">project_test_patients_to_mofa_factors</span><span class="p">,</span> <span class="n">eta_squared_by_factor</span><span class="p">,</span> <span class="n">fit_factor_classifier</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="n">CACHE</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">&quot;outputs&quot;</span> <span class="o">/</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;trained_mofaplus_train_var</span><span class="si">{</span><span class="n">N_TOP_VARIABLE_HIGH_DIM_FEATURES</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;_max</span><span class="si">{</span><span class="n">MAX_FACTORS</span><span class="si">}</span><span class="s2">_ard_model.hdf5&quot;</span><span class="p">)</span>
+
+<span class="n">X_omics</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_omics_data</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="n">X_tr</span><span class="p">,</span> <span class="n">X_te</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_te</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">te</span> <span class="o">=</span> <span class="n">make_train_test_split</span><span class="p">(</span>
+    <span class="n">X_omics</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">TEST_SIZE</span><span class="p">,</span> <span class="n">RANDOM_STATE</span><span class="p">,</span> <span class="n">HIGH_DIMENSIONAL_VIEWS</span><span class="p">,</span> <span class="n">N_TOP_VARIABLE_HIGH_DIM_FEATURES</span><span class="p">)</span>
+<span class="n">views</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X_tr</span><span class="o">.</span><span class="n">keys</span><span class="p">());</span> <span class="n">tr</span><span class="p">,</span> <span class="n">te</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">te</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">mfx</span><span class="o">.</span><span class="n">mofa_model</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">CACHE</span><span class="p">))</span>                       <span class="c1"># LOAD — do not fit</span>
+<span class="n">train_f</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_factors</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span> <span class="n">train_f</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">train_f</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">test_f</span> <span class="o">=</span> <span class="n">project_test_patients_to_mofa_factors</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_te</span><span class="p">,</span> <span class="n">train_f</span><span class="p">,</span> <span class="n">views</span><span class="p">)</span>
+<span class="n">factors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">train_f</span><span class="p">,</span> <span class="n">test_f</span><span class="p">]);</span> <span class="n">factors</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">factors</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">factors</span> <span class="o">=</span> <span class="n">factors</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="n">active</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">select_active_factors</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">MIN_TOTAL_R2</span><span class="p">,</span> <span class="n">MAX_FACTORS</span><span class="p">)</span>
+
+<span class="n">assoc</span> <span class="o">=</span> <span class="n">eta_squared_by_factor</span><span class="p">(</span><span class="n">factors</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tr</span><span class="p">,</span> <span class="n">active</span><span class="p">],</span> <span class="n">y_tr</span><span class="p">)</span>   <span class="c1"># factor&lt;-&gt;subtype</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">fit_factor_classifier</span><span class="p">(</span><span class="n">factors</span><span class="p">[</span><span class="n">active</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">te</span><span class="p">,</span> <span class="s2">&quot;MOFA+LR&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;top subtype-associated factor:&quot;</span><span class="p">,</span> <span class="n">assoc</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;held-out metrics:&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+<span class="n">PY</span>
+</pre></div>
+</div>
+<p>To generate the diagnostic PNGs, call <code class="docutils literal notranslate"><span class="pre">generate_diagnostic_plots(...)</span></code> with the
+fitted <code class="docutils literal notranslate"><span class="pre">model</span></code>, <code class="docutils literal notranslate"><span class="pre">factors</span></code>, the active factors, the <code class="docutils literal notranslate"><span class="pre">assoc</span></code> table, the train ids,
+<code class="docutils literal notranslate"><span class="pre">y_train</span></code>, <code class="docutils literal notranslate"><span class="pre">y_test</span></code>, and the classifier predictions, writing to <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>.</p>
+<p>Always run the functions first and base Evidence Used on their real output,
+never invent factor numbers, R2 values, associations, or metrics.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-3-agentic-llm-workflows/skills"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#purpose">Purpose</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behaviour">Behaviour</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-format">Answer Format</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#querying-the-model-in-this-repository">Querying the model in this repository</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-recipe-load-cached-model-then-analyse">Reference recipe (load cached model, then analyse)</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/session-3-agentic-llm-workflows/skills/mofa-multiomics-agent.SKILL.md">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

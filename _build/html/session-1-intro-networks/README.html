@@ -208,7 +208,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -343,7 +343,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -423,28 +423,87 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="session-1-introduction-to-biological-networks-and-knowledge-graphs">
 <h1>Session 1: Introduction to Biological Networks and Knowledge Graphs<a class="headerlink" href="#session-1-introduction-to-biological-networks-and-knowledge-graphs" title="Link to this heading">#</a></h1>
+<p><strong>New here?</strong> <a class="reference internal" href="#session-story.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">session-story.md</span></code></span></a> is a one-page narrative of what
+this session does and what it finds — read that first, then the notebooks.</p>
 <section id="learning-goals">
 <h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Understand core network concepts and graph terminology</p></li>
-<li><p>Understand what a biomedical knowledge graph is</p></li>
-<li><p>Build a simple knowledge graph using NetworkX</p></li>
+<li><p>Understand what a biomedical knowledge graph is, and how it differs from an
+inferred network — by building one of each over the same genes</p></li>
+<li><p>Build and query a knowledge graph using NetworkX</p></li>
+<li><p>Recognise annotation sparsity and identifier mismatches — the two failure modes
+that matter most in practice</p></li>
+<li><p>Combine curated and inferred evidence to separate corroboration from candidates</p></li>
 </ul>
 </section>
-<section id="suggested-materials">
-<h2>Suggested Materials<a class="headerlink" href="#suggested-materials" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">slides/</span></code> for lecture slides</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">notebooks/</span></code> for guided coding walkthroughs</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">data/</span></code> for ICD-10 sample inputs</p></li>
-</ul>
+<section id="notebooks">
+<h2>Notebooks<a class="headerlink" href="#notebooks" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Notebook</p></th>
+<th class="head"><p>Agenda slot</p></th>
+<th class="head"><p>Contents</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">part-1-networks-and-knowledge-graphs.ipynb</span></code></span></a></p></td>
+<td><p>09:10–09:40</p></td>
+<td><p>Graph vocabulary, inferred vs curated networks, the schema, data sources and licences, and building a co-expression network alongside the graph (§7)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="part-2-building-a-knowledge-graph.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">part-2-building-a-knowledge-graph.ipynb</span></code></span></a></p></td>
+<td><p>09:40–10:10</p></td>
+<td><p>Building the graph in NetworkX, degree and hubs, association scores, sparsification, annotation sparsity</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="part-3-querying-the-knowledge-graph.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">part-3-querying-the-knowledge-graph.ipynb</span></code></span></a></p></td>
+<td><p>10:10–10:45</p></td>
+<td><p><strong>Practical.</strong> ICD-10 coverage and ontology climbing (§A), shared-gene projection, separating cause from treatment, community detection (§B), bridging to the Session 2 omics data (§C, stretch), curated and inferred networks together (§D, closing)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Participant (“fill in the blanks”) copies live in <code class="docutils literal notranslate"><span class="pre">participant/</span></code> and are generated
+from the solution notebooks — never edit them by hand:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>../../tools/make_participant_version.py<span class="w"> </span><span class="s2">&quot;part-*.ipynb&quot;</span>
+</pre></div>
+</div>
 </section>
-<section id="deliverables">
-<h2>Deliverables<a class="headerlink" href="#deliverables" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Intro slides on graph fundamentals</p></li>
-<li><p>Example notebook for constructing a graph in NetworkX</p></li>
-</ul>
+<section id="layout">
+<h2>Layout<a class="headerlink" href="#layout" title="Link to this heading">#</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>session-story.md the one-page narrative of the session
+data/            generated data files (committed, small)
+data-prep/       developer scripts - build_kg_data.py,
+                 build_coexpression_data.py, make_images.py
+images/          diagrams used by the notebooks
+participant/     generated fill-in-the-blanks notebooks
+s1_helpers.py    graph utilities, mostly adapted from co-expression material
+concept-glossary.md
+</pre></div>
+</div>
+</section>
+<section id="data">
+<h2>Data<a class="headerlink" href="#data" title="Link to this heading">#</a></h2>
+<p><strong>The knowledge graph.</strong> Breast-cancer-focused, with 24 comparison diseases
+spanning cancers, autoimmune, neurological and cardiometabolic conditions:
+<strong>881 nodes</strong> (760 gene, 90 disease, 31 ICD-10) and <strong>1,768 edges</strong>
+(<code class="docutils literal notranslate"><span class="pre">associated_with</span></code>, <code class="docutils literal notranslate"><span class="pre">is_a</span></code>, <code class="docutils literal notranslate"><span class="pre">maps_to</span></code>), plus <strong>3,422 evidence rows</strong> splitting
+each gene–disease edge by kind of evidence. Built from
+<a class="reference external" href="https://platform.opentargets.org/">Open Targets</a> (CC0) and the
+<a class="reference external" href="https://mondo.monarchinitiative.org/">MONDO Disease Ontology</a> (CC BY 4.0).</p>
+<p><strong>The expression matrix.</strong> <code class="docutils literal notranslate"><span class="pre">coexpr_expression.csv.gz</span></code> — 500 patients × 737 genes
+of TCGA-BRCA transcriptomics, subset to genes that are already graph nodes. Part 1
+§7 builds an inferred co-expression network from it, and Part 3 §D puts the two
+networks together. 1.1 MB, so it needs no external download.</p>
+<p>See <a class="reference internal" href="#data/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">data/README.md</span></code></span></a> for provenance and licences.</p>
+<p>Genes are keyed by Ensembl gene ID, matching the TCGA-BRCA matrix used in
+Session 2, so the two join natively.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pandas</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">networkx</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code> (see the
+repository <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>). Everything runs from the committed data except
+Section C of Part 3, which needs the full Session 2 omics pickle; it is optional
+and the notebook skips it cleanly if the file is absent.</p>
 </section>
 </section>
 
@@ -496,8 +555,10 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suggested-materials">Suggested Materials</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">Deliverables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebooks">Notebooks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layout">Layout</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 </ul>
   </nav></div>
 

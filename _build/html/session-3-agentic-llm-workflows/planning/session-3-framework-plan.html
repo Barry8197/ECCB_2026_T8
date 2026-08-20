@@ -1,0 +1,838 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Session 3 — Framework Plan &amp; TODO &#8212; ECCB 2026 T8</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-3-agentic-llm-workflows/planning/session-3-framework-plan';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Session 3 — Framework Plan &amp; TODO</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="session-3-framework-plan-todo">
+<h1>Session 3 — Framework Plan &amp; TODO<a class="headerlink" href="#session-3-framework-plan-todo" title="Link to this heading">#</a></h1>
+<p>The three notebook tracks all answer the <strong>same task</strong> against the same<br />
+<code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code> backend:</p>
+<blockquote>
+<div><p>For profile <code class="docutils literal notranslate"><span class="pre">P001</span></code>, which genes connected to autism spectrum disorder<br />
+should we prioritize, and why? → <code class="docutils literal notranslate"><span class="pre">SHANK3,</span> <span class="pre">SCN2A,</span> <span class="pre">CHD8</span></code></p>
+</div></blockquote>
+<hr class="docutils" />
+<section id="layer-1-tool-calling-notebook-01">
+<h2>Layer 1 — Tool calling (notebook 01)<a class="headerlink" href="#layer-1-tool-calling-notebook-01" title="Link to this heading">#</a></h2>
+<p>How the LLM is given Python functions and decides when to call them.</p>
+<p><strong>Agent frameworks</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Notes</p></th>
+<th class="head"><p>Link</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>LangChain / LangGraph</strong></p></td>
+<td><p>De-facto standard; <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code> + <code class="docutils literal notranslate"><span class="pre">bind_tools</span></code>. Most participants will have seen it. LangGraph adds explicit graph control flow.</p></td>
+<td><p>https://www.langchain.com · https://langchain-ai.github.io/langgraph/</p></td>
+</tr>
+<tr class="row-odd"><td><p>LlamaIndex (Workflows)</p></td>
+<td><p>Strong for RAG/retrieval-centric agents; heavier than we need here.</p></td>
+<td><p>https://www.llamaindex.ai</p></td>
+</tr>
+<tr class="row-even"><td><p>Pydantic AI</p></td>
+<td><p>Type-safe, clean API, lighter than LangChain; smaller ecosystem.</p></td>
+<td><p>https://ai.pydantic.dev</p></td>
+</tr>
+<tr class="row-odd"><td><p>Smolagents (Hugging Face)</p></td>
+<td><p>Minimal, code-writing agents; very lightweight.</p></td>
+<td><p>https://github.com/huggingface/smolagents</p></td>
+</tr>
+<tr class="row-even"><td><p>CrewAI</p></td>
+<td><p>Role/crew-oriented multi-agent orchestration; more than we need for one task.</p></td>
+<td><p>https://www.crewai.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>AG2 (AutoGen fork)</p></td>
+<td><p>Conversational multi-agent framework.</p></td>
+<td><p>https://github.com/ag2ai/ag2</p></td>
+</tr>
+<tr class="row-even"><td><p>Microsoft Agent Framework</p></td>
+<td><p>MS’s unified agent stack (Semantic Kernel + AutoGen lineage).</p></td>
+<td><p>https://github.com/microsoft/agent-framework</p></td>
+</tr>
+<tr class="row-odd"><td><p>Haystack</p></td>
+<td><p>deepset’s pipeline/agent framework, retrieval-strong.</p></td>
+<td><p>https://haystack.deepset.ai</p></td>
+</tr>
+<tr class="row-even"><td><p>Letta / MemGPT</p></td>
+<td><p>Memory-centric stateful agents.</p></td>
+<td><p>https://www.letta.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>DSPy</p></td>
+<td><p>Programmatic prompt/program optimization rather than a tool-loop per se.</p></td>
+<td><p>https://dspy.ai</p></td>
+</tr>
+<tr class="row-even"><td><p>Mastra (TS)</p></td>
+<td><p>TypeScript agent framework — only if we go JS.</p></td>
+<td><p>https://mastra.ai</p></td>
+</tr>
+<tr class="row-odd"><td><p>Vercel AI SDK (TS)</p></td>
+<td><p>TypeScript tool-calling SDK — only if we go JS.</p></td>
+<td><p>https://sdk.vercel.ai</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Vendor / lab SDKs</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Notes</p></th>
+<th class="head"><p>Link</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Raw provider SDKs (no framework)</p></td>
+<td><p>Call tool-use directly — maximum transparency, most boilerplate.</p></td>
+<td><p><a class="reference external" href="https://docs.claude.com/en/api">Anthropic</a> · <a class="reference external" href="https://platform.openai.com/docs">OpenAI</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Claude Agent SDK</p></td>
+<td><p>Anthropic’s agent loop; also does Skills (see Layer 3).</p></td>
+<td><p>https://docs.claude.com/en/api/agent-sdk</p></td>
+</tr>
+<tr class="row-even"><td><p>OpenAI Agents SDK</p></td>
+<td><p>Tidy agent loop; OpenAI-leaning, less neutral for teaching.</p></td>
+<td><p>https://openai.github.io/openai-agents-python/</p></td>
+</tr>
+<tr class="row-odd"><td><p>Google ADK</p></td>
+<td><p>Google’s Agent Development Kit; Google-leaning.</p></td>
+<td><p>https://google.github.io/adk-docs/</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>➡️ Tentative choice: LangChain.</strong> Minimal surprise for participants, <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code><br />
+wraps our existing <code class="docutils literal notranslate"><span class="pre">mofa_tools.py</span></code> functions, and<br />
+it keeps notebook 01 the simplest possible “LLM calls a Python function” demo.</p>
+</section>
+<hr class="docutils" />
+<section id="layer-2-mcp-server-client-notebook-02">
+<h2>Layer 2 — MCP server + client (notebook 02)<a class="headerlink" href="#layer-2-mcp-server-client-notebook-02" title="Link to this heading">#</a></h2>
+<p>How the same functions get exposed over the Model Context Protocol, then<br />
+pulled back into the agent.</p>
+<p><strong>Options  — server side</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Notes</p></th>
+<th class="head"><p>Link</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>FastMCP</strong></p></td>
+<td><p>Pythonic, decorator-per-tool; least plumbing. We already have a scaffold under <code class="docutils literal notranslate"><span class="pre">server/</span></code>.</p></td>
+<td><p>https://github.com/PrefectHQ/fastmcp · https://gofastmcp.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>Official MCP Python SDK (low-level)</p></td>
+<td><p>More control, more boilerplate; FastMCP is the high-level layer on top of it.</p></td>
+<td><p>https://github.com/modelcontextprotocol/python-sdk</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Options — client side</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Notes</p></th>
+<th class="head"><p>Link</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>langchain-mcp-adapters</strong></p></td>
+<td><p>Loads MCP tools back into the <em>same</em> LangChain agent shape as notebook 01.</p></td>
+<td><p>https://github.com/langchain-ai/langchain-mcp-adapters</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raw MCP client SDK</p></td>
+<td><p>Direct protocol calls; loses the “agent code barely changes” payoff.</p></td>
+<td><p>https://github.com/modelcontextprotocol/python-sdk</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>➡️ Tentative choice: FastMCP server + langchain-mcp-adapters client.</strong><br />
+FastMCP exposes the same <code class="docutils literal notranslate"><span class="pre">mofa_tools.py</span></code> functions with a decorator each;<br />
+langchain-mcp-adapters then loads them into the identical agent shape from<br />
+notebook 01.</p>
+</section>
+<hr class="docutils" />
+<section id="layer-3-coding-agent-skills-notebook-03">
+<h2>Layer 3 — Coding Agent Skills (notebook 03)<a class="headerlink" href="#layer-3-coding-agent-skills-notebook-03" title="Link to this heading">#</a></h2>
+<p>How reusable skill instructions (<code class="docutils literal notranslate"><span class="pre">skills/biomedical-kg-agent.SKILL.md</span></code>) get<br />
+loaded and change model behaviour. The skill file itself is harness-agnostic. (Agent Skill Standard: https://agentskills.io)</p>
+<p>There are two sub-families here: full <strong>coding-agent harnesses/CLIs</strong> (load<br />
+the <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code> and run a real agent loop) and <strong>library/DIY</strong> approaches<br />
+(inject the skill yourself). The skill file is the same either way.</p>
+<p><strong>Coding-agent harnesses / CLIs</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Notes</p></th>
+<th class="head"><p>Link</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Pi</strong></p></td>
+<td><p>Minimal harness (Mario Zechner); first-class Skills, very token-efficient, lightweight. Our tentative pick.</p></td>
+<td><p>https://github.com/earendil-works/pi · https://pi.dev</p></td>
+</tr>
+<tr class="row-odd"><td><p>Claude Code</p></td>
+<td><p>Anthropic’s CLI; native Agent Skills (<code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code>) support, well documented. Heavier, opinionated.</p></td>
+<td><p>https://github.com/anthropics/claude-code</p></td>
+</tr>
+<tr class="row-even"><td><p>OpenHands (ex-OpenDevin)</p></td>
+<td><p>Full software-agent platform with a public Skills registry; powerful but heavy for a notebook session.</p></td>
+<td><p>https://github.com/OpenHands/OpenHands</p></td>
+</tr>
+<tr class="row-odd"><td><p>OpenCode</p></td>
+<td><p>Open-source terminal agent, multi-provider TUI. Note: original <code class="docutils literal notranslate"><span class="pre">opencode-ai</span></code> repo archived Sep 2025; active at opencode.ai.</p></td>
+<td><p>https://opencode.ai</p></td>
+</tr>
+<tr class="row-even"><td><p>OpenAI Codex CLI</p></td>
+<td><p>OpenAI’s terminal coding agent; OpenAI-leaning.</p></td>
+<td><p>https://github.com/openai/codex</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gemini CLI</p></td>
+<td><p>Google’s terminal agent; Google-leaning.</p></td>
+<td><p>https://github.com/google-gemini/gemini-cli</p></td>
+</tr>
+<tr class="row-even"><td><p>Goose</p></td>
+<td><p>Block’s extensible local agent (MCP-native extensions).</p></td>
+<td><p>https://github.com/block/goose</p></td>
+</tr>
+<tr class="row-odd"><td><p>Aider</p></td>
+<td><p>Mature pair-programming CLI; git-centric, no formal “skills” concept.</p></td>
+<td><p>https://github.com/Aider-AI/aider</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Library / DIY (no separate CLI)</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Notes</p></th>
+<th class="head"><p>Link</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Claude Agent SDK</p></td>
+<td><p>Native Skills support as a Python library; more control than a CLI.</p></td>
+<td><p>https://github.com/anthropics/claude-agent-sdk-python</p></td>
+</tr>
+<tr class="row-odd"><td><p>LangChain + skill-as-system-prompt</p></td>
+<td><p>Reuse Layer 1; inject skill text into the system message (already sketched in nb03). Lowest new-dependency cost, most notebook-native.</p></td>
+<td><p>https://github.com/langchain-ai/langchain</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>➡️ Tentative choice: Pi.</strong> Of the harnesses it’s the lightest, Skills are a<br />
+first-class concept, and it’s not tied to one model provider.</p>
+</section>
+<hr class="docutils" />
+<section id="decision-summary">
+<h2>Decision summary<a class="headerlink" href="#decision-summary" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Layer</p></th>
+<th class="head"><p>Choice</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Tool calling (NB 01)</p></td>
+<td><p><strong>LangChain</strong></p></td>
+<td><p>✅ tentative</p></td>
+</tr>
+<tr class="row-odd"><td><p>MCP (NB 02)</p></td>
+<td><p><strong>FastMCP</strong> server + <strong>langchain-mcp-adapters</strong> client</p></td>
+<td><p>✅ tentative</p></td>
+</tr>
+<tr class="row-even"><td><p>Skills (NB 03)</p></td>
+<td><p><strong>Pi</strong></p></td>
+<td><p>✅ tentative</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="general-plan-build-order">
+<h2>General plan / build order<a class="headerlink" href="#general-plan-build-order" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Finalise</strong> <code class="docutils literal notranslate"><span class="pre">**mofa_tools.py**</span></code> as the single shared backend<br />
+(confirm tool set with Session 1 folks — current tools are dummies).</p></li>
+<li><p><strong>Notebook 01 — LangChain tool calling</strong><br />
+- Wrap <code class="docutils literal notranslate"><span class="pre">search_nodes</span></code>, <code class="docutils literal notranslate"><span class="pre">get_neighbors</span></code>, <code class="docutils literal notranslate"><span class="pre">rank_profile_features</span></code>,<br />
+<code class="docutils literal notranslate"><span class="pre">rank_candidate_genes</span></code> with <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>.<br />
+- Bind to a Claude chat model, run the agent loop on the shared task.<br />
+- Keep the existing “call functions ourselves” cells as the no-LLM<br />
+fallback.</p></li>
+<li><p><strong>Notebook 02 — MCP</strong><br />
+- Stand up FastMCP server in <code class="docutils literal notranslate"><span class="pre">server/</span></code> exposing the same functions.<br />
+- Load via langchain-mcp-adapters into the same agent shape as 01.<br />
+- Show the ranking matches notebook 01 (trace stub already there).</p></li>
+<li><p><strong>Notebook 03 — Skills (Pi)</strong><br />
+- Load <code class="docutils literal notranslate"><span class="pre">biomedical-kg-agent.SKILL.md</span></code> into the Pi harness.<br />
+- Demo without-skill vs with-skill behaviour (evidence discipline).</p></li>
+<li><p><strong>Fallback mode</strong> — notebooks should work without API keys via direct<br />
+calls / replayed traces (already required in <code class="docutils literal notranslate"><span class="pre">notebooks/README.md</span></code>).</p></li>
+<li><p><strong>Slides</strong> — finalise concept deck (tools → MCP → skills).</p></li>
+</ol>
+</section>
+<section id="still-open-decisions-not-framework-related">
+<h2>Still-open decisions (not framework-related)<a class="headerlink" href="#still-open-decisions-not-framework-related" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Confirm final tool set with Session 1 &amp; 2 groups.</p></li>
+<li><p>Model access options for participants (shared key vs bring-your-own vs<br />
+local vLLM instance).</p></li>
+<li><p>Whether participants run MCP locally or only watch the instructor demo.</p></li>
+<li><p>Confirm Session 1 graph + Session 2 MOFA outputs can be reused directly.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-3-agentic-llm-workflows/planning"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-1-tool-calling-notebook-01">Layer 1 — Tool calling (notebook 01)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-2-mcp-server-client-notebook-02">Layer 2 — MCP server + client (notebook 02)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-3-coding-agent-skills-notebook-03">Layer 3 — Coding Agent Skills (notebook 03)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-summary">Decision summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-plan-build-order">General plan / build order</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#still-open-decisions-not-framework-related">Still-open decisions (not framework-related)</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/session-3-agentic-llm-workflows/planning/session-3-framework-plan.md">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

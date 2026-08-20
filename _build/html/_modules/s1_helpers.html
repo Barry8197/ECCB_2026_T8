@@ -1,0 +1,1512 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>s1_helpers &#8212; ECCB 2026 T8</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/s1_helpers';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">s1_helpers</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for s1_helpers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Session 1 helper functions.</span>
+
+<span class="sd">Most of these are adapted from an earlier gene co-expression network workshop,</span>
+<span class="sd">keeping the same names so they stay recognisable. The originals were written for</span>
+<span class="sd">co-expression networks - one node type, every edge carrying a</span>
+<span class="sd">correlation weight, always undirected. A curated knowledge graph breaks all</span>
+<span class="sd">three of those assumptions, so the ported versions here additionally handle:</span>
+
+<span class="sd">  * several node types (gene / disease / icd10) rather than just genes</span>
+<span class="sd">  * edges that carry no weight at all (`is_a`, `maps_to`)</span>
+<span class="sd">  * directed graphs, where connected components and clustering differ</span>
+
+<span class="sd">Deliberately lightweight: matplotlib, pandas, networkx, numpy and seaborn only</span>
+<span class="sd">(numpy arrives with pandas anyway). The original module pulled in torch, dgl and</span>
+<span class="sd">astropy at import time, which is a slow and fragile thing to ask of a workshop</span>
+<span class="sd">room.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpatches</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;../../data_tmp/session-1-data/&quot;</span>
+
+<span class="c1"># Node types get fixed colours so a gene is the same colour in every figure of</span>
+<span class="c1"># the session. Anything unrecognised falls through to grey.</span>
+<span class="n">TYPE_COLOURS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="s2">&quot;#4C72B0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;disease&quot;</span><span class="p">:</span> <span class="s2">&quot;#DD8452&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;icd10&quot;</span><span class="p">:</span> <span class="s2">&quot;#55A868&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">DEFAULT_COLOUR</span> <span class="o">=</span> <span class="s2">&quot;#BBBBBB&quot;</span>
+
+<span class="n">MARKER_SHAPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Loading</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="load_kg">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.load_kg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_kg</span><span class="p">(</span><span class="n">data_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DATA_DIR</span><span class="p">,</span> <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build the Session 1 knowledge graph from the generated CSVs.</span>
+
+<span class="sd">    Node attributes: `type`, `name`, `extra`.</span>
+<span class="sd">    Edge attributes: `type`, and `weight` / `evidence` on `associated_with` only.</span>
+
+<span class="sd">    The underlying edges are directional (gene -&gt; disease, disease -&gt; parent,</span>
+<span class="sd">    disease -&gt; icd10). Undirected is the default because degree, hubs and</span>
+<span class="sd">    connected components all behave more intuitively that way; pass</span>
+<span class="sd">    `directed=True` when the direction is the point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;kg_nodes.csv&quot;</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;kg_edges.csv&quot;</span><span class="p">)</span>
+
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span> <span class="k">if</span> <span class="n">directed</span> <span class="k">else</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">nodes</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">else</span> <span class="n">row</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">extra</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">extra</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">extra</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">edges</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">type</span><span class="p">}</span>
+        <span class="c1"># An undirected graph does not remember which way round an edge was</span>
+        <span class="c1"># added, so record the parent explicitly. Without this, climbing the</span>
+        <span class="c1"># ontology silently walks downwards for some edges and upwards for</span>
+        <span class="c1"># others, depending on networkx&#39;s internal adjacency order.</span>
+        <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;is_a&quot;</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">target</span>
+        <span class="c1"># is_a and maps_to edges are unweighted; leave the attribute off entirely</span>
+        <span class="c1"># rather than inventing a 0, which would distort every weight plot.</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">weight</span><span class="p">):</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">evidence</span><span class="p">):</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;evidence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">evidence</span><span class="p">)</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">G</span></div>
+
+
+
+<div class="viewcode-block" id="nodes_of_type">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.nodes_of_type">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">node_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;All node ids of a given `type`.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">node_type</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="edges_of_type">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.edges_of_type">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">edges_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">edge_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;All edges of a given `type`, as (u, v) pairs.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">edge_type</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="gene_by_symbol">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.gene_by_symbol">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gene_by_symbol</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find a gene node&#39;s Ensembl id from its symbol, e.g. &quot;BRCA1&quot; -&gt; ENSG00000012048.</span>
+
+<span class="sd">    Participants think in symbols and the graph is keyed by Ensembl id, so this</span>
+<span class="sd">    saves a manual lookup every time. Raises rather than returning None: a typo</span>
+<span class="sd">    should stop the cell, not silently produce an empty result further down.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+               <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;gene&quot;</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">symbol</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No gene node with symbol </span><span class="si">{</span><span class="n">symbol</span><span class="si">!r}</span><span class="s2"> in this graph.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Inferred (co-expression) networks</span>
+<span class="c1">#</span>
+<span class="c1"># The counterpart to load_kg. Everything above builds a graph by reading recorded</span>
+<span class="c1"># facts; everything here builds one by computing correlations from measurements.</span>
+<span class="c1"># Part 1 puts the two side by side, which is the whole reason this file exists.</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="load_expression">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.load_expression">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_expression</span><span class="p">(</span><span class="n">data_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DATA_DIR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the committed expression matrix: patients (rows) x genes (columns).</span>
+
+<span class="sd">    This is the TCGA-BRCA transcriptomics view used in Session 2, cut down to the</span>
+<span class="sd">    genes that are also nodes in the knowledge graph (737 of 760) so that both</span>
+<span class="sd">    networks describe the same genes. Values are log2-scale and already</span>
+<span class="sd">    library-size normalised, so correlations can be taken directly.</span>
+
+<span class="sd">    Generated by `data-prep/build_coexpression_data.py`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;coexpr_expression.csv.gz&quot;</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="correlation_matrix">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.correlation_matrix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">correlation_matrix</span><span class="p">(</span><span class="n">expression</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gene x gene Pearson correlation, with the diagonal zeroed.</span>
+
+<span class="sd">    The diagonal is every gene&#39;s perfect correlation with itself. Left in, it</span>
+<span class="sd">    dominates any &quot;strongest partners&quot; ranking, so it goes to zero here once</span>
+<span class="sd">    rather than being special-cased at every call site.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">correlations</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">correlations</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="n">correlations</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">gene</span><span class="p">,</span> <span class="n">gene</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="n">correlations</span></div>
+
+
+
+<div class="viewcode-block" id="coexpression_network">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.coexpression_network">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">coexpression_network</span><span class="p">(</span><span class="n">expression</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                         <span class="n">absolute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                         <span class="n">correlations</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build an inferred network: an edge wherever two genes correlate above `threshold`.</span>
+
+<span class="sd">    Every node is a gene - one node type, unlike the knowledge graph - and every</span>
+<span class="sd">    edge carries the correlation as its `weight`. Nodes are added for all genes,</span>
+<span class="sd">    including ones that end up with no edges, because &quot;which genes dropped out at</span>
+<span class="sd">    this threshold?&quot; is a question worth being able to ask.</span>
+
+<span class="sd">    `absolute` thresholds on |r|, so strong anti-correlation counts as a</span>
+<span class="sd">    relationship. Pass `correlations` to reuse a matrix already computed - it is</span>
+<span class="sd">    by far the expensive part, and the threshold sweep calls this repeatedly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">correlations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">correlations</span> <span class="o">=</span> <span class="n">correlation_matrix</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+
+    <span class="n">genes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">correlations</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes</span><span class="p">:</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">gene</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;gene&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">gene</span><span class="p">)</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="n">correlations</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="c1"># Upper triangle only: the matrix is symmetric, so the lower half would just</span>
+    <span class="c1"># re-add every edge. Done with numpy rather than a double loop because the</span>
+    <span class="c1"># threshold sweep rebuilds the network once per threshold, and 271,000 pairs</span>
+    <span class="c1"># in Python is a visible pause in a live session.</span>
+    <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu_indices</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">genes</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">]</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="k">if</span> <span class="n">absolute</span> <span class="k">else</span> <span class="n">scores</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">threshold</span>
+
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">genes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">genes</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;coexpressed_with&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)})</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">cols</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">scores</span><span class="p">[</span><span class="n">keep</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">G</span></div>
+
+
+
+<div class="viewcode-block" id="coexpression_threshold_sweep">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.coexpression_threshold_sweep">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">coexpression_threshold_sweep</span><span class="p">(</span><span class="n">expression</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">,</span>
+                                 <span class="n">correlations</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rebuild the network at several thresholds and report what survives each one.</span>
+
+<span class="sd">    The point of the table is that there is no principled place to stop. Every row</span>
+<span class="sd">    is a defensible network built from identical data, and the choice of row is</span>
+<span class="sd">    the analyst&#39;s, not the data&#39;s.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">correlations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">correlations</span> <span class="o">=</span> <span class="n">correlation_matrix</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">:</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">coexpression_network</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">correlations</span><span class="o">=</span><span class="n">correlations</span><span class="p">)</span>
+        <span class="n">connected</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">degree</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">()</span> <span class="k">if</span> <span class="n">degree</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">,</span>
+            <span class="s2">&quot;edges&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">(),</span>
+            <span class="s2">&quot;connected_genes&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">connected</span><span class="p">),</span>
+            <span class="s2">&quot;isolated_genes&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">connected</span><span class="p">),</span>
+            <span class="s2">&quot;largest_component&quot;</span><span class="p">:</span> <span class="nb">max</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="coexpression_partners">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.coexpression_partners">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">coexpression_partners</span><span class="p">(</span><span class="n">correlations</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">gene_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The genes most strongly co-expressed with one gene, strongest |r| first.</span>
+
+<span class="sd">    Pass the knowledge graph as `G` to get gene symbols alongside the Ensembl ids</span>
+<span class="sd">    - the ranking is unreadable without them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">gene_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">correlations</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gene_id</span><span class="si">}</span><span class="s2"> has no expression measured in this matrix.&quot;</span><span class="p">)</span>
+
+    <span class="n">ranked</span> <span class="o">=</span> <span class="n">correlations</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gene_id</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[{</span>
+        <span class="s2">&quot;gene_id&quot;</span><span class="p">:</span> <span class="n">partner</span><span class="p">,</span>
+        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">partner</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">G</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">partner</span> <span class="ow">in</span> <span class="n">G</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">correlations</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">gene_id</span><span class="p">,</span> <span class="n">partner</span><span class="p">]),</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">}</span> <span class="k">for</span> <span class="n">partner</span> <span class="ow">in</span> <span class="n">ranked</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Description</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="print_graph_info">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.print_graph_info">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_graph_info</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Print basic information about a graph.</span>
+
+<span class="sd">    Unlike the co-expression original this is safe on directed graphs, and it breaks</span>
+<span class="sd">    the counts down by node and edge type - on a typed graph the totals alone</span>
+<span class="sd">    hide most of what is interesting.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">directed</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">is_directed</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of nodes: </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of edges: </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph type: </span><span class="si">{</span><span class="s1">&#39;directed&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">directed</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;undirected&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">node_types</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;untyped&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_types</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Nodes by type:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">node_types</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">&gt;6,</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">edge_types</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;untyped&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_types</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Edges by type:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">edge_types</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">&gt;6,</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">self_loops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">selfloop_edges</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Self-loops: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">self_loops</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph density: </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">directed</span><span class="p">:</span>
+        <span class="n">n_components</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_weakly_connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Weakly connected components: </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_components</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected components: </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_components</span><span class="p">:</span>
+            <span class="n">largest</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Largest component: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">largest</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> nodes &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">largest</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> of the graph)&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Average clustering coefficient: </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">average_clustering</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_highest_degree_nodes">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.get_highest_degree_nodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_highest_degree_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The `top_n` highest-degree nodes.</span>
+
+<span class="sd">    Returns a DataFrame rather than the original&#39;s list of tuples, so that the</span>
+<span class="sd">    readable `name` sits next to the opaque id - `ENSG00000012048` means</span>
+<span class="sd">    little, `BRCA1` means a lot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">degree</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">top_n</span><span class="p">]:</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">node</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">node</span><span class="p">),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;untyped&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;degree&quot;</span><span class="p">:</span> <span class="n">degree</span><span class="p">,</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Cleaning and sparsification</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="clean_graph">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.clean_graph">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_graph</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">degree_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">keep_largest_component</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove self-loops, isolates and low-degree nodes; optionally keep only the</span>
+<span class="sd">    largest component. Directed graphs use weakly connected components.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">selfloop_edges</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">isolates</span><span class="p">(</span><span class="n">G</span><span class="p">)))</span>
+
+    <span class="n">low_degree</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">())</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">degree_threshold</span><span class="p">]</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">(</span><span class="n">low_degree</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">keep_largest_component</span> <span class="ow">and</span> <span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">():</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">weakly_connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">)</span> <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">is_directed</span><span class="p">()</span>
+                      <span class="k">else</span> <span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">))</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">G</span></div>
+
+
+
+<div class="viewcode-block" id="remove_by_degree">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.remove_by_degree">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_by_degree</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">min_degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop nodes whose degree is below `min_degree`.&quot;&quot;&quot;</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">([</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">())</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">min_degree</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">G</span></div>
+
+
+
+<div class="viewcode-block" id="threshold_sparsification">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.threshold_sparsification">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">threshold_sparsification</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                             <span class="n">keep_unweighted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Drop edges whose weight is below `threshold`.</span>
+
+<span class="sd">    `keep_unweighted` is the knowledge-graph-specific part: `is_a` and</span>
+<span class="sd">    `maps_to` edges carry no weight, and silently deleting them (which the</span>
+<span class="sd">    co-expression version would, by treating a missing weight as 0) would tear the</span>
+<span class="sd">    disease hierarchy out of the graph. Keep them by default.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;weight&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">keep_unweighted</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="top_percentage_sparsification">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.top_percentage_sparsification">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">top_percentage_sparsification</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">top_percentage</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                  <span class="n">keep_unweighted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Keep only the top `top_percentage` % of weighted edges.&quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="n">weighted</span><span class="p">,</span> <span class="n">unweighted</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">weighted</span> <span class="k">if</span> <span class="s2">&quot;weight&quot;</span> <span class="ow">in</span> <span class="n">d</span> <span class="k">else</span> <span class="n">unweighted</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+
+    <span class="n">weighted</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weighted</span><span class="p">)</span> <span class="o">*</span> <span class="n">top_percentage</span> <span class="o">/</span> <span class="mi">100</span><span class="p">))</span> <span class="k">if</span> <span class="n">weighted</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">weighted</span><span class="p">[:</span><span class="n">keep</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">keep_unweighted</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">unweighted</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Visualisation</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="visualise_graph">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.visualise_graph">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">visualise_graph</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Knowledge Graph&quot;</span><span class="p">,</span>
+                    <span class="n">colour_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quick look at a graph, nodes coloured by an attribute.</span>
+
+<span class="sd">    The co-expression version drew every node the same blue, which is the right call</span>
+<span class="sd">    for a co-expression network and the wrong one here - node type is the</span>
+<span class="sd">    first thing we want to see.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">colour_by</span><span class="p">:</span>
+        <span class="n">colours</span> <span class="o">=</span> <span class="p">[</span><span class="n">TYPE_COLOURS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">colour_by</span><span class="p">),</span> <span class="n">DEFAULT_COLOUR</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">colours</span> <span class="o">=</span> <span class="n">DEFAULT_COLOUR</span>
+
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">colours</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">colour_by</span><span class="p">:</span>
+        <span class="n">present</span> <span class="o">=</span> <span class="p">{</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">colour_by</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()}</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">TYPE_COLOURS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">DEFAULT_COLOUR</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">present</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="draw_network_with_node_attrs">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.draw_network_with_node_attrs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_network_with_node_attrs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">node_attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">communities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Network Visualization&quot;</span><span class="p">,</span> <span class="n">color_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">shape_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;spring&quot;</span><span class="p">,</span>
+                                 <span class="n">cmap_name</span><span class="o">=</span><span class="s2">&quot;tab20&quot;</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">node_size</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw a graph with nodes coloured and/or shaped by attribute.</span>
+
+<span class="sd">    Adapted from the co-expression original with two fixes and one signature change:</span>
+
+<span class="sd">    * The original grouped nodes for drawing by shape, but built that grouping</span>
+<span class="sd">      from `shape_attr`. Called with a `color_attr` and no `shape_attr` the</span>
+<span class="sd">      grouping came out empty and *no nodes were drawn at all* - only edges.</span>
+<span class="sd">      Colour-only calls now work.</span>
+<span class="sd">    * Attributes are read from the graph itself by default. The original</span>
+<span class="sd">      required a separate `node_attributes` dict of the shape</span>
+<span class="sd">      {attr_name: {node: value}}, which had to be kept in sync by hand. Pass</span>
+<span class="sd">      one to override to colour by something not on the graph.</span>
+<span class="sd">    * An empty attribute no longer divides by zero when building the colormap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">G</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The graph is empty or not defined.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">attr_value</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node_attributes</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">node_attributes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">node_attributes</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+
+    <span class="n">lookup</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">node_attributes</span><span class="p">)</span> <span class="k">if</span> <span class="n">node_attributes</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">communities</span><span class="p">:</span>
+        <span class="n">lookup</span><span class="p">[</span><span class="s2">&quot;community&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">communities</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">c</span><span class="p">}</span>
+        <span class="n">node_attributes</span> <span class="o">=</span> <span class="n">lookup</span>
+        <span class="n">color_attr</span> <span class="o">=</span> <span class="n">color_attr</span> <span class="ow">or</span> <span class="s2">&quot;community&quot;</span>
+
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+
+    <span class="n">colour_values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">attr_value</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">color_attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">},</span> <span class="n">key</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span> <span class="k">if</span> <span class="n">color_attr</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="c1"># Node types keep their fixed colour from TYPE_COLOURS so that a gene is the</span>
+    <span class="c1"># same blue in every figure of the session. Falling back to a colormap here</span>
+    <span class="c1"># would recolour by position instead, so a disease-only subgraph would come</span>
+    <span class="c1"># out blue - the colour genes use everywhere else.</span>
+    <span class="k">if</span> <span class="n">colour_values</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">v</span> <span class="ow">in</span> <span class="n">TYPE_COLOURS</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">colour_values</span><span class="p">):</span>
+        <span class="n">colour_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">TYPE_COLOURS</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">colour_values</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap_name</span><span class="p">)</span>
+        <span class="n">colour_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">v</span><span class="p">:</span> <span class="n">cmap</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">colour_values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">colour_values</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="n">node_colours</span> <span class="o">=</span> <span class="p">([</span><span class="n">colour_map</span><span class="p">[</span><span class="n">attr_value</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">color_attr</span><span class="p">)]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">color_attr</span> <span class="k">else</span> <span class="p">[</span><span class="n">DEFAULT_COLOUR</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
+
+    <span class="n">shape_values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">attr_value</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">shape_attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">},</span> <span class="n">key</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span> <span class="k">if</span> <span class="n">shape_attr</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">shape_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">MARKER_SHAPES</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">MARKER_SHAPES</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shape_values</span><span class="p">)}</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">layout_fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layout</span><span class="si">}</span><span class="s2">_layout&quot;</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">layout_fn</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>  <span class="c1"># layouts such as circular_layout take no seed</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">layout_fn</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+    <span class="c1"># Group by shape so each marker can be drawn in its own pass. With no</span>
+    <span class="c1"># shape_attr this is a single group containing every node, which is the</span>
+    <span class="c1"># bug the original had.</span>
+    <span class="k">if</span> <span class="n">shape_attr</span><span class="p">:</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span> <span class="k">if</span> <span class="n">shape_map</span><span class="p">[</span><span class="n">attr_value</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">shape_attr</span><span class="p">)]</span> <span class="o">==</span> <span class="n">s</span><span class="p">]</span>
+                  <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shape_map</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;o&quot;</span><span class="p">:</span> <span class="n">nodes</span><span class="p">}</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nodes</span><span class="p">)}</span>
+    <span class="k">for</span> <span class="n">shape</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">group</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span>
+            <span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span>
+            <span class="n">nodelist</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="p">[</span><span class="n">node_colours</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="n">n</span><span class="p">]]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">group</span><span class="p">],</span>
+            <span class="n">node_shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span>
+            <span class="n">edgecolors</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+            <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">with_labels</span><span class="p">:</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">legends</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">shape_attr</span><span class="p">:</span>
+        <span class="n">legends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+            <span class="n">handles</span><span class="o">=</span><span class="p">[</span><span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="n">shape_map</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+                            <span class="n">markerfacecolor</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shape_values</span><span class="p">],</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">shape_attr</span><span class="si">}</span><span class="s2"> (shape)&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span>
+            <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">color_attr</span><span class="p">:</span>
+        <span class="n">legends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+            <span class="n">handles</span><span class="o">=</span><span class="p">[</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="n">colour_map</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+                     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">colour_values</span><span class="p">],</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">color_attr</span><span class="si">}</span><span class="s2"> (colour)&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span>
+            <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">extra</span> <span class="ow">in</span> <span class="n">legends</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="gen_graph_legend">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.gen_graph_legend">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_graph_legend</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Legend patches for a graph coloured by `attr`.</span>
+
+<span class="sd">    The original took a parallel series of colours and zipped it against</span>
+<span class="sd">    the attribute values, which relied on the two being in the same order.</span>
+<span class="sd">    This derives both from the graph, so they cannot disagree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)},</span> <span class="n">key</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">TYPE_COLOURS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">DEFAULT_COLOUR</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="plot_degree_distribution">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.plot_degree_distribution">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_degree_distribution</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">by_type</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Degree distribution, optionally split by node type.&quot;&quot;&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">by_type</span><span class="p">:</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+            <span class="p">{</span><span class="s2">&quot;degree&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;untyped&quot;</span><span class="p">)}</span>
+            <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">()</span>
+        <span class="p">])</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+                     <span class="n">palette</span><span class="o">=</span><span class="n">TYPE_COLOURS</span><span class="p">,</span> <span class="n">multiple</span><span class="o">=</span><span class="s2">&quot;stack&quot;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">([</span><span class="n">d</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">()],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Degree Distribution&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Degree&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Frequency&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="visualise_edge_weight_distribution">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.visualise_edge_weight_distribution">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">visualise_edge_weight_distribution</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Distribution of edge weights.</span>
+
+<span class="sd">    Only edges that actually carry a weight are plotted; the original</span>
+<span class="sd">    indexed `G[u][v][&#39;weight&#39;]` directly and would raise a KeyError on the</span>
+<span class="sd">    first `is_a` edge it met.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;weight&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">weights</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No weighted edges in this graph.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">unweighted</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distribution of Edge Weights  &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> weighted, </span><span class="si">{</span><span class="n">unweighted</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> unweighted edges)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Edge Weight&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Frequency&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Bipartite projection</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="genes_for_disease">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.genes_for_disease">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">disease_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The set of gene nodes linked to a disease by an `associated_with` edge.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">disease_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">disease_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;gene&quot;</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="shared_gene_projection">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.shared_gene_projection">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shared_gene_projection</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">disease_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">min_shared</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Project the bipartite gene-disease graph down onto diseases alone.</span>
+
+<span class="sd">    Two diseases are joined if they share at least `min_shared` genes. The edge</span>
+<span class="sd">    carries both the raw count (`n_shared`) and the Jaccard index (`weight`),</span>
+<span class="sd">    because the two tell different stories: a well-studied disease shares many</span>
+<span class="sd">    genes with everything simply by having many genes.</span>
+
+<span class="sd">    This is the standard way to turn a two-mode network into a one-mode one,</span>
+<span class="sd">    and it is where &quot;which diseases resemble each other?&quot; becomes a question</span>
+<span class="sd">    about graph structure rather than about biology directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">disease_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">disease_ids</span> <span class="o">=</span> <span class="n">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;disease&quot;</span><span class="p">)</span>
+
+    <span class="n">gene_sets</span> <span class="o">=</span> <span class="p">{</span><span class="n">d</span><span class="p">:</span> <span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">disease_ids</span><span class="p">}</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">disease</span> <span class="ow">in</span> <span class="n">disease_ids</span><span class="p">:</span>
+        <span class="n">P</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">disease</span><span class="p">,</span> <span class="o">**</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">disease</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">disease_ids</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">shared</span> <span class="o">=</span> <span class="n">gene_sets</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">gene_sets</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shared</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_shared</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">union</span> <span class="o">=</span> <span class="n">gene_sets</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">|</span> <span class="n">gene_sets</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+            <span class="n">P</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span>
+                       <span class="n">n_shared</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">shared</span><span class="p">),</span>
+                       <span class="n">weight</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">shared</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">union</span><span class="p">)</span> <span class="k">if</span> <span class="n">union</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span>
+                       <span class="n">shared_genes</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">shared</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">P</span></div>
+
+
+
+<div class="viewcode-block" id="shared_genes_between">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.shared_genes_between">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shared_genes_between</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gene symbols shared by two diseases, for eyeballing a single pair.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Ontology traversal</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parent_map</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;child -&gt; {parents}, read from the `parent` stamped on each is_a edge.&quot;&quot;&quot;</span>
+    <span class="n">parents</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;is_a&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parent&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">child</span> <span class="o">=</span> <span class="n">u</span> <span class="k">if</span> <span class="n">parent</span> <span class="o">==</span> <span class="n">v</span> <span class="k">else</span> <span class="n">v</span>
+        <span class="n">parents</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parents</span>
+
+
+<div class="viewcode-block" id="ancestors_of">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.ancestors_of">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ancestors_of</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">with_depth</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    All ancestors reachable by following `is_a` edges upwards, nearest first.</span>
+
+<span class="sd">    Breadth-first and alphabetically ordered within each level, so the result is</span>
+<span class="sd">    identical on every machine and every run. That matters more than it sounds:</span>
+<span class="sd">    a disease can have several parents, and iterating a set gives a different</span>
+<span class="sd">    order in each Python process, so an un-sorted version prints a different</span>
+<span class="sd">    answer every time the notebook is run.</span>
+
+<span class="sd">    With `with_depth`, yields (ancestor, depth) where depth is the number of</span>
+<span class="sd">    `is_a` hops from `node` - a real distance up the tree, not a position in a</span>
+<span class="sd">    traversal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="n">_parent_map</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">}</span>
+    <span class="n">order</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">frontier</span> <span class="o">=</span> <span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">()))]</span>
+
+    <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
+        <span class="n">current</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+        <span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">current</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span> <span class="k">if</span> <span class="n">with_depth</span> <span class="k">else</span> <span class="n">current</span><span class="p">)</span>
+        <span class="n">frontier</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="p">())))</span>
+
+    <span class="k">return</span> <span class="n">order</span></div>
+
+
+
+<div class="viewcode-block" id="icd10_for_disease">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.icd10_for_disease">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">icd10_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">disease_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find an ICD-10 code for a disease, climbing the ontology if necessary.</span>
+
+<span class="sd">    Returns a dict with the code, the node it was actually found on, and how</span>
+<span class="sd">    many `is_a` steps that took. `steps == 0` means the disease carries the</span>
+<span class="sd">    code itself; anything higher means we inherited it from an ancestor, which</span>
+<span class="sd">    is a weaker claim and should be reported as such.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">direct</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;icd10&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">G</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="n">own</span> <span class="o">=</span> <span class="n">direct</span><span class="p">(</span><span class="n">disease_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">own</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;disease&quot;</span><span class="p">:</span> <span class="n">disease_id</span><span class="p">,</span> <span class="s2">&quot;icd10&quot;</span><span class="p">:</span> <span class="n">own</span><span class="p">,</span> <span class="s2">&quot;found_on&quot;</span><span class="p">:</span> <span class="n">disease_id</span><span class="p">,</span> <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+    <span class="c1"># Breadth-first, so the first hit is the *closest* coded ancestor rather than</span>
+    <span class="c1"># whichever one the traversal happened to reach first.</span>
+    <span class="k">for</span> <span class="n">ancestor</span><span class="p">,</span> <span class="n">depth</span> <span class="ow">in</span> <span class="n">ancestors_of</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">disease_id</span><span class="p">,</span> <span class="n">with_depth</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">codes</span> <span class="o">=</span> <span class="n">direct</span><span class="p">(</span><span class="n">ancestor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">codes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;disease&quot;</span><span class="p">:</span> <span class="n">disease_id</span><span class="p">,</span> <span class="s2">&quot;icd10&quot;</span><span class="p">:</span> <span class="n">codes</span><span class="p">,</span>
+                    <span class="s2">&quot;found_on&quot;</span><span class="p">:</span> <span class="n">ancestor</span><span class="p">,</span> <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="n">depth</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;disease&quot;</span><span class="p">:</span> <span class="n">disease_id</span><span class="p">,</span> <span class="s2">&quot;icd10&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;found_on&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Bridge to the Session 2 omics data</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<span class="c1"># The PAM50 subtype labels used in Session 2 are themselves diseases in this</span>
+<span class="c1"># knowledge graph. That is what lets a patient&#39;s molecular subtype be looked up</span>
+<span class="c1"># as a graph node rather than treated as an opaque string.</span>
+<span class="n">PAM50_TO_MONDO</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;LumA&quot;</span><span class="p">:</span> <span class="s2">&quot;MONDO_0021116&quot;</span><span class="p">,</span>    <span class="c1"># luminal A breast carcinoma</span>
+    <span class="s2">&quot;LumB&quot;</span><span class="p">:</span> <span class="s2">&quot;MONDO_0021115&quot;</span><span class="p">,</span>    <span class="c1"># luminal B breast carcinoma</span>
+    <span class="s2">&quot;Basal&quot;</span><span class="p">:</span> <span class="s2">&quot;MONDO_0004984&quot;</span><span class="p">,</span>   <span class="c1"># basal-like breast carcinoma</span>
+    <span class="s2">&quot;Her2&quot;</span><span class="p">:</span> <span class="s2">&quot;MONDO_0006244&quot;</span><span class="p">,</span>    <span class="c1"># HER2 positive breast carcinoma</span>
+    <span class="s2">&quot;Normal&quot;</span><span class="p">:</span> <span class="s2">&quot;MONDO_0006324&quot;</span><span class="p">,</span>  <span class="c1"># normal breast-like subtype of breast carcinoma</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="strip_ensembl_version">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.strip_ensembl_version">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">strip_ensembl_version</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Turn versioned Ensembl ids into bare ones: ENSG00000012048.23 -&gt; ENSG00000012048.</span>
+
+<span class="sd">    The TCGA matrices carry the version suffix; Open Targets does not. Joining</span>
+<span class="sd">    the two without this step matches exactly nothing, silently.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="load_omics">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.load_omics">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_omics</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;transcriptomics&quot;</span><span class="p">,)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the Session 2 omics pickle, keeping only the layers asked for.</span>
+
+<span class="sd">    The full file is ~900 MB, most of it the 200,000-probe methylation matrix,</span>
+<span class="sd">    so the default keeps transcriptomics only. `meta` (the PAM50 subtype per</span>
+<span class="sd">    patient) is always returned.</span>
+
+<span class="sd">    Returns (dict_of_layers, meta_series).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;No omics file at </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">. This section is optional - the rest of &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;the notebook runs without it.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">blob</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;meta&quot;</span><span class="p">)</span>
+    <span class="n">kept</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">blob</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">layers</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">blob</span><span class="p">}</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">layers</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">blob</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;warning: layers not in the file: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">kept</span><span class="p">,</span> <span class="n">meta</span></div>
+
+
+
+<div class="viewcode-block" id="map_genes_to_kg">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.map_genes_to_kg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">map_genes_to_kg</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">gene_ids</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Look a list of gene ids up in the knowledge graph.</span>
+
+<span class="sd">    Accepts versioned or unversioned Ensembl ids. Returns one row per input id</span>
+<span class="sd">    with whether it was found and, if so, its symbol and degree - so an omics</span>
+<span class="sd">    gene list becomes an entry point into the graph.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stripped</span> <span class="o">=</span> <span class="n">strip_ensembl_version</span><span class="p">(</span><span class="n">gene_ids</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">gene_id</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gene_ids</span><span class="p">,</span> <span class="n">stripped</span><span class="p">):</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">gene_id</span> <span class="ow">in</span> <span class="n">G</span> <span class="ow">and</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">gene_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;gene&quot;</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;input_id&quot;</span><span class="p">:</span> <span class="n">original</span><span class="p">,</span>
+            <span class="s2">&quot;ensembl_id&quot;</span><span class="p">:</span> <span class="n">gene_id</span><span class="p">,</span>
+            <span class="s2">&quot;in_kg&quot;</span><span class="p">:</span> <span class="n">found</span><span class="p">,</span>
+            <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">gene_id</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">found</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;degree&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">gene_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">found</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="diseases_for_genes">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.diseases_for_genes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">diseases_for_genes</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">gene_ids</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a gene list, which diseases does it touch?</span>
+
+<span class="sd">    This is the smallest useful knowledge-graph query: one hop out from a set</span>
+<span class="sd">    of genes, counting where we land. It is the same shape as the queries an</span>
+<span class="sd">    LLM agent will be asked to plan in Sessions 3 and 4.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stripped</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">strip_ensembl_version</span><span class="p">(</span><span class="n">gene_ids</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">G</span> <span class="ow">and</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;gene&quot;</span><span class="p">]</span>
+
+    <span class="n">hits</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">stripped</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">neighbour</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">gene</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">neighbour</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;disease&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">hits</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">neighbour</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;genes&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;scores&quot;</span><span class="p">:</span> <span class="p">[]})</span>
+            <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;genes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">gene</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[{</span>
+        <span class="s2">&quot;disease_id&quot;</span><span class="p">:</span> <span class="n">disease</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">disease</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;n_genes&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;genes&quot;</span><span class="p">]),</span>
+        <span class="s2">&quot;mean_score&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">])</span>
+                       <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s2">&quot;genes&quot;</span><span class="p">:</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;genes&quot;</span><span class="p">])[:</span><span class="mi">6</span><span class="p">]),</span>
+    <span class="p">}</span> <span class="k">for</span> <span class="n">disease</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">hits</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">frame</span>
+    <span class="k">return</span> <span class="n">frame</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;n_genes&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1"># Evidence types</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<span class="c1"># What each Open Targets evidence type actually claims. The distinction that</span>
+<span class="c1"># matters most for teaching is the first two: genetic_association is a claim</span>
+<span class="c1"># about cause, known_drug is a claim about treatment, and the overall</span>
+<span class="c1"># association score adds them together as though they were the same thing.</span>
+<span class="n">DATATYPE_MEANING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;genetic_association&quot;</span><span class="p">:</span> <span class="s2">&quot;inherited variants linked to the disease (cause)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;somatic_mutation&quot;</span><span class="p">:</span> <span class="s2">&quot;mutations acquired in the tumour (cause)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;known_drug&quot;</span><span class="p">:</span> <span class="s2">&quot;a drug hitting this target is used for the disease (treatment)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;affected_pathway&quot;</span><span class="p">:</span> <span class="s2">&quot;the gene sits in a pathway implicated in the disease&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rna_expression&quot;</span><span class="p">:</span> <span class="s2">&quot;the gene is differentially expressed in the disease&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;literature&quot;</span><span class="p">:</span> <span class="s2">&quot;co-mentioned in publications (text mining)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;genetic_literature&quot;</span><span class="p">:</span> <span class="s2">&quot;genetic claims extracted from publications&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;animal_model&quot;</span><span class="p">:</span> <span class="s2">&quot;a model organism with this gene disrupted shows the phenotype&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># Evidence types that support a claim about *causation* rather than treatment,</span>
+<span class="c1"># co-mention or correlation. Filtering to these is what separates BRCA2 from</span>
+<span class="c1"># a tubulin in Part 3.</span>
+<span class="n">CAUSAL_DATATYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;genetic_association&quot;</span><span class="p">,</span> <span class="s2">&quot;somatic_mutation&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="load_evidence">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.load_evidence">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_evidence</span><span class="p">(</span><span class="n">data_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DATA_DIR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The gene-disease edges split by kind of evidence.</span>
+
+<span class="sd">    One row per (gene, disease, datatype). The `weight` column is the</span>
+<span class="sd">    association score contributed by that evidence type alone, so the same</span>
+<span class="sd">    gene-disease pair appears once per datatype supporting it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;kg_evidence.csv&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="evidence_for_pair">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.evidence_for_pair">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">evidence_for_pair</span><span class="p">(</span><span class="n">evidence</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">gene_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">disease_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                      <span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Break a single gene-disease edge down into the evidence behind it.&quot;&quot;&quot;</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">evidence</span><span class="p">[(</span><span class="n">evidence</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">gene_id</span><span class="p">)</span>
+                    <span class="o">&amp;</span> <span class="p">(</span><span class="n">evidence</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">disease_id</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">rows</span><span class="p">[</span><span class="s2">&quot;means&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="s2">&quot;datatype&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">DATATYPE_MEANING</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">G</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">gene_id</span> <span class="ow">in</span> <span class="n">G</span><span class="p">:</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;gene&quot;</span><span class="p">,</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">gene_id</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">rows</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="filter_by_datatype">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.filter_by_datatype">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">filter_by_datatype</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">evidence</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">datatypes</span><span class="p">,</span>
+                       <span class="n">min_score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Keep only the `associated_with` edges supported by particular evidence types.</span>
+
+<span class="sd">    Structural edges (`is_a`, `maps_to`) are always kept - they are not the sort</span>
+<span class="sd">    of claim evidence types apply to, and dropping them would tear out the</span>
+<span class="sd">    hierarchy exactly as an over-eager threshold does.</span>
+
+<span class="sd">    Pass `CAUSAL_DATATYPES` to keep the edges that assert the gene has something</span>
+<span class="sd">    to do with causing the disease, and watch how many disappear.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">datatypes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">datatypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">datatypes</span><span class="p">,)</span>
+
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">evidence</span><span class="p">[</span><span class="n">evidence</span><span class="p">[</span><span class="s2">&quot;datatype&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">datatypes</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">min_score</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_score</span><span class="p">]</span>
+    <span class="n">supported</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span> <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]))</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;associated_with&quot;</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">supported</span> <span class="ow">or</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span> <span class="ow">in</span> <span class="n">supported</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="datatype_summary">
+<a class="viewcode-back" href="../session-1-intro-networks/functions-definitions.html#s1_helpers.datatype_summary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">datatype_summary</span><span class="p">(</span><span class="n">evidence</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;How much of each kind of evidence the graph rests on.&quot;&quot;&quot;</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">evidence</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;datatype&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">edges</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">),</span> <span class="n">mean_score</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;edges&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;means&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;datatype&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">DATATYPE_MEANING</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">summary</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

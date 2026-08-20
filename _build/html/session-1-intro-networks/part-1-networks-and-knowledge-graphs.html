@@ -1,0 +1,1532 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Part 1 — What is a Network, and What is a Knowledge Graph? &#8212; ECCB 2026 T8</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-1-intro-networks/part-1-networks-and-knowledge-graphs';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Part 2 — Building a Knowledge Graph with NetworkX" href="part-2-building-a-knowledge-graph.html" />
+    <link rel="prev" title="Session 1" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 1 — What is a Network, and What is a Knowledge Graph?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-2-building-a-knowledge-graph.html">Part 2 — Building a Knowledge Graph with NetworkX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-3-querying-the-knowledge-graph.html">Part 3 — Practical: Querying the Knowledge Graph</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="functions-definitions.html">Custom Function Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concept-glossary.html">Glossary</a></li>
+
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="intro.html" class="nav-link">Session 1</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 1 — What is a Network, and What is a Knowledge Graph?</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="part-1-what-is-a-network-and-what-is-a-knowledge-graph">
+<h1>Part 1 — What is a Network, and What is a Knowledge Graph?<a class="headerlink" href="#part-1-what-is-a-network-and-what-is-a-knowledge-graph" title="Link to this heading">#</a></h1>
+<p>This notebook covers the vocabulary for the rest of the day. It is deliberately
+light on code: the point is to be able to look at a biological question and say
+what the nodes are, what the edges are, and <em>where the edges came from</em> — because
+that last question turns out to matter more than anything else.</p>
+<p>We then meet the specific knowledge graph used in Sessions 1, 3 and 4: a
+breast-cancer-focused graph built from <a class="reference external" href="https://platform.opentargets.org/">Open Targets</a>
+and the <a class="reference external" href="https://mondo.monarchinitiative.org/">MONDO Disease Ontology</a>.</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this notebook we will be able to:</p>
+<ul class="simple">
+<li><p>Name the parts of a graph: vertex, edge, degree, path, component.</p></li>
+<li><p>Distinguish a <strong>directed</strong> from an <strong>undirected</strong> graph, and say why it matters here.</p></li>
+<li><p>Build a small graph by hand in NetworkX and inspect it.</p></li>
+<li><p>Explain the difference between an <strong>inferred</strong> network and a <strong>curated</strong> knowledge graph.</p></li>
+<li><p><strong>Build one of each over the same 737 genes, and say why they disagree.</strong></p></li>
+<li><p>Say what makes a graph a <em>knowledge</em> graph: typed nodes, typed edges, and provenance.</p></li>
+<li><p>Describe where our data comes from and under what licence.</p></li>
+</ul>
+</section>
+<section id="networks-in-the-smallest-possible-terms">
+<h2>1. Networks, in the smallest possible terms<a class="headerlink" href="#networks-in-the-smallest-possible-terms" title="Link to this heading">#</a></h2>
+<p>A <strong>network</strong> (or <strong>graph</strong>) is two things:</p>
+<ul class="simple">
+<li><p>a set of <strong>vertices</strong> (also called <strong>nodes</strong>) — the objects</p></li>
+<li><p>a set of <strong>edges</strong> — the pairs of objects that are related</p></li>
+</ul>
+<p>That is all. Everything else is vocabulary built on top:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Term</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Degree</strong></p></td>
+<td><p>How many edges a node has. A high-degree node is a <strong>hub</strong>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Path</strong></p></td>
+<td><p>A sequence of edges we can follow from one node to another.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Component</strong></p></td>
+<td><p>A group of nodes all reachable from each other.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Self-loop</strong></p></td>
+<td><p>An edge from a node to itself.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Isolated vertex</strong></p></td>
+<td><p>A node with no edges at all.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Directed</strong></p></td>
+<td><p>Edges have a direction (A → B is not B → A).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Undirected</strong></p></td>
+<td><p>Edges are symmetric (A — B).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img alt="Graph terminology" src="../_images/vertex_types.png" /></p>
+<p><em>Diagram reused from earlier gene co-expression network teaching material.</em></p>
+<section id="why-directedness-matters-for-us">
+<h3>Why directedness matters for us<a class="headerlink" href="#why-directedness-matters-for-us" title="Link to this heading">#</a></h3>
+<p>It is tempting to treat this as a technicality. It is not. Our graph contains edges like:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">triple-negative</span> <span class="pre">breast</span> <span class="pre">carcinoma</span></code> <strong>is_a</strong> <code class="docutils literal notranslate"><span class="pre">breast</span> <span class="pre">carcinoma</span></code></p>
+</div></blockquote>
+<p>That is emphatically <em>not</em> symmetric — every triple-negative breast carcinoma is a
+breast carcinoma, but not the reverse. If we throw the direction away we can still
+draw the graph, but we can no longer <em>climb</em> it, and climbing it is exactly what we
+do in Part 3.</p>
+<p>We will mostly work <strong>undirected</strong>, because degree, hubs and components are more
+intuitive that way, and keep the direction as an edge attribute so nothing is lost.</p>
+</section>
+</section>
+<section id="building-a-graph-by-hand">
+<h2>2. Building a graph by hand<a class="headerlink" href="#building-a-graph-by-hand" title="Link to this heading">#</a></h2>
+<p>Before loading anything real, here is the whole NetworkX API we need.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ── Imports ──────────────────────────────────────────────────────────────────</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># A graph starts empty.</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+
+<span class="c1"># Nodes can carry arbitrary attributes - here, what kind of thing the node is.</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;BRCA1&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;gene&quot;</span><span class="p">)</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;BRCA2&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;gene&quot;</span><span class="p">)</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;breast cancer&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;disease&quot;</span><span class="p">)</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;ovarian cancer&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;disease&quot;</span><span class="p">)</span>
+
+<span class="c1"># Edges can carry attributes too. `weight` is just a name; it has no special</span>
+<span class="c1"># meaning to NetworkX beyond a few algorithms that look for it by default.</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;BRCA1&quot;</span><span class="p">,</span> <span class="s2">&quot;breast cancer&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;associated_with&quot;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.92</span><span class="p">)</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;BRCA2&quot;</span><span class="p">,</span> <span class="s2">&quot;breast cancer&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;associated_with&quot;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.89</span><span class="p">)</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;BRCA1&quot;</span><span class="p">,</span> <span class="s2">&quot;ovarian cancer&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;associated_with&quot;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Graph with 4 nodes and 3 edges
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Degree: how many edges each node has.</span>
+<span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">degree</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node</span><span class="si">:</span><span class="s2">16s</span><span class="si">}</span><span class="s2"> degree=</span><span class="si">{</span><span class="n">degree</span><span class="si">}</span><span class="s2">  type=</span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BRCA1            degree=2  type=gene
+breast cancer    degree=2  type=disease
+BRCA2            degree=1  type=gene
+ovarian cancer   degree=1  type=disease
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that <code class="docutils literal notranslate"><span class="pre">ovarian</span> <span class="pre">cancer</span></code> has degree 1 and <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> has degree 2. In a graph this
+small that is trivia. In a graph of 100,000 nodes, degree is the first thing we
+look at — it tells us which entities the underlying literature has paid attention
+to. Keep that phrasing in mind: <strong>degree measures attention, not importance.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Neighbours and paths - the two operations that make a graph useful.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neighbours of BRCA1:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="s2">&quot;BRCA1&quot;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Path from ovarian cancer to BRCA2:&quot;</span><span class="p">,</span>
+      <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;ovarian cancer&quot;</span><span class="p">,</span> <span class="s2">&quot;BRCA2&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Neighbours of BRCA1: [&#39;breast cancer&#39;, &#39;ovarian cancer&#39;]
+Path from ovarian cancer to BRCA2: [&#39;ovarian cancer&#39;, &#39;BRCA1&#39;, &#39;breast cancer&#39;, &#39;BRCA2&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>That path — <code class="docutils literal notranslate"><span class="pre">ovarian</span> <span class="pre">cancer</span> <span class="pre">→</span> <span class="pre">BRCA1</span> <span class="pre">→</span> <span class="pre">breast</span> <span class="pre">cancer</span> <span class="pre">→</span> <span class="pre">BRCA2</span></code> — is a <em>tiny</em> example
+of the thing this whole day is building towards. Nobody recorded a fact linking
+ovarian cancer to BRCA2 directly. The graph produced it by composition.</p>
+<p>That is what a knowledge graph is <em>for</em>: answering questions nobody explicitly
+stored the answer to.</p>
+</section>
+<section id="two-very-different-ways-to-get-a-network">
+<h2>3. Two very different ways to get a network<a class="headerlink" href="#two-very-different-ways-to-get-a-network" title="Link to this heading">#</a></h2>
+<p>Both of the pictures below are networks. They are built from opposite directions,
+and confusing them is the most common mistake in this field.</p>
+<p><img alt="Inferred vs curated" src="../_images/curated_vs_inferred.png" /></p>
+<p><strong>Inferred networks</strong> are <em>computed from measurements</em>. In gene co-expression work
+we take a gene expression matrix, correlate every gene against every other gene,
+and draw an edge wherever the correlation clears a threshold. The edges are a
+<strong>statistical claim about our data</strong>.</p>
+<ul class="simple">
+<li><p>One node type (genes, or patients).</p></li>
+<li><p>Edge weights are correlations.</p></li>
+<li><p>Change the threshold and we get a different network. There is no “true” one.</p></li>
+<li><p>The network can contain relationships nobody has ever described before. That is
+the point of building it — it is a hypothesis generator.</p></li>
+</ul>
+<p><strong>Curated knowledge graphs</strong> are <em>read out of a database of recorded facts</em>. Somebody
+asserted that this gene is associated with that disease, and the graph records it.</p>
+<ul class="simple">
+<li><p>Several node types (genes, diseases, drugs, phenotypes, codes…).</p></li>
+<li><p>Edges are typed: <em>this kind</em> of relationship, not just “related”.</p></li>
+<li><p>Edges carry <strong>provenance</strong>: which study, which database, how much evidence.</p></li>
+<li><p>The graph can only contain what somebody already knew. It is a knowledge
+<em>retrieval</em> structure, not a discovery one.</p></li>
+</ul>
+<p>A knowledge graph is often described as a <strong>specialised class of network</strong>, and
+that is exactly right — the specialisation is those three bullets. Section 7
+builds both kinds over the same genes so the specialisation is something we can
+see rather than something we are told.</p>
+<section id="who-is-the-somebody">
+<h3>Who is the “somebody”?<a class="headerlink" href="#who-is-the-somebody" title="Link to this heading">#</a></h3>
+<p>Usually a <strong>curator</strong> — a biologist employed by a database to read the published
+literature and turn its findings into structured entries a computer can use.
+Reading a paper that reports a BRCA1 mutation in a breast cancer family, and
+writing a row that says <em>gene BRCA1, disease breast cancer, evidence PMID 12345</em>,
+is curation. The word covers automated sources too: text-mining pipelines and
+genome-wide association studies contribute entries the same way.</p>
+<p>The consequence matters more than the definition. <strong>Every edge exists because a
+person or a pipeline put it there</strong> — which is why a knowledge graph can only ever
+tell us what has already been written down.</p>
+<details>
+<summary><b>Why does this distinction matter so much?</b> (click to expand)</summary>
+<p>Because the two answer different questions, and the failure modes are opposite.</p>
+<p>If we ask an <strong>inferred</strong> network “are these two genes related?” and it says yes,
+the risk is that the correlation is an artefact — batch effect, cell-type
+composition, a confounder.</p>
+<p>If we ask a <strong>curated</strong> knowledge graph the same question and it says <em>no</em>, the
+risk is completely different: the absence of an edge does not mean the absence of
+a relationship. It very often means <strong>nobody has looked yet</strong>.</p>
+<p>We see this concretely in Part 2, where the disease with the most genes in
+our graph is not the most important disease — it is the most <em>studied</em> one. And in
+Part 3, where a major breast cancer subtype turns out to have no gene associations
+at all, not because it has no genes, but because the evidence was filed under a
+different name.</p>
+<p>An inferred network is biased towards what we measured. A knowledge graph is
+biased towards what somebody published. Neither bias is fixable by better code.</p>
+</details></section>
+</section>
+<section id="what-makes-it-a-knowledge-graph">
+<h2>4. What makes it a <em>knowledge</em> graph<a class="headerlink" href="#what-makes-it-a-knowledge-graph" title="Link to this heading">#</a></h2>
+<p>A plain graph says <em>A relates to B</em>. A knowledge graph says <strong>who</strong> A and B are,
+<strong>how</strong> they relate, and <strong>on what basis</strong> we should believe it.</p>
+<p>In practice that means three things:</p>
+<ol class="arabic simple">
+<li><p><strong>Typed nodes</strong> — every node declares what kind of entity it is.</p></li>
+<li><p><strong>Typed edges</strong> — every edge declares what kind of relationship it is.</p></li>
+<li><p><strong>Provenance</strong> — the edge carries evidence: a score, a source, a count.</p></li>
+</ol>
+<p>That third one is easy to nod along to and hard to take seriously. We take it
+seriously in Part 3, where the <em>kind</em> of evidence behind an edge turns out to
+decide whether the edge means what we think it means.</p>
+<p>Here is the schema of the graph we will use all day:</p>
+<p><img alt="Knowledge graph schema" src="../_images/kg_schema.png" /></p>
+<p>Three node types and three edge types:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Edge type</p></th>
+<th class="head"><p>From → To</p></th>
+<th class="head"><p>Meaning</p></th>
+<th class="head"><p>Weighted?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">associated_with</span></code></p></td>
+<td><p>gene → disease</p></td>
+<td><p>This gene is implicated in this disease</p></td>
+<td><p>Yes — an Open Targets association score, 0–1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">is_a</span></code></p></td>
+<td><p>disease → disease</p></td>
+<td><p>This disease is a subtype of that one</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maps_to</span></code></p></td>
+<td><p>disease → icd10</p></td>
+<td><p>This disease corresponds to this clinical billing code</p></td>
+<td><p>No</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">is_a</span></code> edges are what make this an <strong>ontology</strong>-backed graph rather than a flat
+one, and they do a lot of work in Part 3.</p>
+</section>
+<section id="where-the-data-comes-from">
+<h2>5. Where the data comes from<a class="headerlink" href="#where-the-data-comes-from" title="Link to this heading">#</a></h2>
+<p>Two public sources, both redistributable, which is why they can ship inside this
+teaching repository.</p>
+<section id="open-targets-platform">
+<h3><a class="reference external" href="https://platform.opentargets.org/">Open Targets Platform</a><a class="headerlink" href="#open-targets-platform" title="Link to this heading">#</a></h3>
+<p>A drug-target discovery platform that aggregates gene–disease evidence from
+genetics, somatic mutations, drugs, pathways, RNA expression and the literature.
+We take three things from it:</p>
+<ul class="simple">
+<li><p><strong>Gene entities</strong> — Ensembl gene IDs and their approved symbols.</p></li>
+<li><p><strong>Disease entities and the ontology hierarchy</strong> — the <code class="docutils literal notranslate"><span class="pre">is_a</span></code> structure.</p></li>
+<li><p><strong>Association scores</strong> — a 0–1 summary of how much evidence links a gene to a disease.</p></li>
+</ul>
+<p>Licence: <a class="reference external" href="https://platform-docs.opentargets.org/licence">CC0 1.0</a> — public domain.
+Data downloads: <a class="reference external" href="https://platform.opentargets.org/downloads">https://platform.opentargets.org/downloads</a></p>
+</section>
+<section id="mondo-disease-ontology">
+<h3><a class="reference external" href="https://mondo.monarchinitiative.org/">MONDO Disease Ontology</a><a class="headerlink" href="#mondo-disease-ontology" title="Link to this heading">#</a></h3>
+<p>A unified disease ontology that merges several older vocabularies and, crucially
+for us, records <strong>cross-references</strong> to other coding systems — including ICD-10.</p>
+<p>Licence: <a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> — attribution required.
+Mapping file: <a class="reference external" href="https://github.com/monarch-initiative/mondo/blob/master/src/ontology/mappings/mondo.sssom.tsv"><code class="docutils literal notranslate"><span class="pre">mondo.sssom.tsv</span></code></a></p>
+</section>
+<section id="why-not-disgenet">
+<h3>Why not DisGeNET?<a class="headerlink" href="#why-not-disgenet" title="Link to this heading">#</a></h3>
+<p>It is the obvious third option and it appears in a lot of papers. As of 2024
+it moved to commercial licensing: the free academic licence does not permit
+downloading the full database, and requires per-user registration with roughly a
+week’s approval. That makes it impossible to ship in a public teaching repo.</p>
+</section>
+<section id="one-design-decision-worth-flagging">
+<h3>One design decision worth flagging<a class="headerlink" href="#one-design-decision-worth-flagging" title="Link to this heading">#</a></h3>
+<p>Open Targets keys genes by <strong>Ensembl gene ID</strong> (<code class="docutils literal notranslate"><span class="pre">ENSG00000012048</span></code>), which is the
+same identifier space as the TCGA-BRCA transcriptomics matrix used in Session 2.</p>
+<p>That is not a coincidence — it was chosen for it. It means a gene list produced by
+the multi-omics work in Session 2 can be looked up in this graph directly, without
+a symbol-mapping step that would silently lose 10–20% of the genes. We use that
+bridge at the end of Part 3.</p>
+<p>(There is still one gotcha in that join, which we hit and fix in Part 3.)</p>
+</section>
+</section>
+<section id="the-data-files">
+<h2>6. The data files<a class="headerlink" href="#the-data-files" title="Link to this heading">#</a></h2>
+<p>The graph ships as four small files in <code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/</span></code>, generated by the <strong>developer</strong>
+scripts in <code class="docutils literal notranslate"><span class="pre">data-prep/</span></code> — <code class="docutils literal notranslate"><span class="pre">build_kg_data.py</span></code> downloads about 1.1 GB from Open
+Targets and cuts it down, and <code class="docutils literal notranslate"><span class="pre">build_coexpression_data.py</span></code> subsets the workshop
+expression matrix. We do not need to run either.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Contents</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kg_nodes.csv</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">extra</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kg_edges.csv</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">target</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">weight</span></code>, <code class="docutils literal notranslate"><span class="pre">evidence</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kg_evidence.csv</span></code></p></td>
+<td><p>the same gene–disease edges split by <em>kind</em> of evidence</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">icd10_map.csv</span></code></p></td>
+<td><p>MONDO id → ICD-10 code and label</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">coexpr_expression.csv.gz</span></code></p></td>
+<td><p>500 patients × 737 genes of TCGA-BRCA expression, for Section 7</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A first look:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">nodes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../data/session-1-data/kg_nodes.csv&quot;</span><span class="p">)</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../data/session-1-data/kg_edges.csv&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> edges</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="n">display</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>881 nodes, 1,768 edges
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>type</th>
+      <th>name</th>
+      <th>extra</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>EFO_0009443</td>
+      <td>disease</td>
+      <td>BRCAX breast cancer</td>
+      <td>OTAR_0000017; MONDO_0045024</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>EFO_0009649</td>
+      <td>disease</td>
+      <td>susceptibility to breast cancer</td>
+      <td>OTAR_0000017; MONDO_0045024</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>EFO_0009782</td>
+      <td>disease</td>
+      <td>progesterone-receptor positive breast cancer</td>
+      <td>OTAR_0000017; MONDO_0045024</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>EFO_0022984</td>
+      <td>disease</td>
+      <td>bilateral breast cancer</td>
+      <td>OTAR_0000017; MONDO_0045024</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>MONDO_0000552</td>
+      <td>disease</td>
+      <td>breast lobular carcinoma</td>
+      <td>MONDO_0002051; MONDO_0045024; OTAR_0000017</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>source</th>
+      <th>target</th>
+      <th>type</th>
+      <th>weight</th>
+      <th>evidence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>EFO_0009443</td>
+      <td>MONDO_0004989</td>
+      <td>is_a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>EFO_0009649</td>
+      <td>MONDO_0004989</td>
+      <td>is_a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>EFO_0009782</td>
+      <td>MONDO_0004989</td>
+      <td>is_a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>EFO_0022984</td>
+      <td>MONDO_0007254</td>
+      <td>is_a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>MONDO_0000552</td>
+      <td>MONDO_0004988</td>
+      <td>is_a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># What is actually in there?</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Node types:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Edge types:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Node types:
+type
+gene       760
+disease     90
+icd10       31
+
+Edge types:
+type
+associated_with    1656
+is_a                 81
+maps_to              31
+</pre></div>
+</div>
+</div>
+</div>
+<p>Two things to notice already, both of which we come back to:</p>
+<ul class="simple">
+<li><p>The graph is <strong>mostly genes</strong> (760 of 881 nodes). That is normal for a
+gene–disease graph and it shapes what the visualisations look like.</p></li>
+<li><p>There are only <strong>31 ICD-10 nodes</strong> for <strong>90 diseases</strong> — and the gap is not
+spread evenly. Working out where it falls is the first exercise in Part 3.</p></li>
+</ul>
+</section>
+<section id="the-same-genes-two-networks">
+<h2>7. The same genes, two networks<a class="headerlink" href="#the-same-genes-two-networks" title="Link to this heading">#</a></h2>
+<p>Section 3 described inferred and curated networks as opposites. Here we build one
+of each and look at them, because the difference is much easier to believe once
+seen.</p>
+<p><code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/coexpr_expression.csv.gz</span></code> is the TCGA-BRCA transcriptomics matrix used in
+Session 2, cut down to <strong>the genes that are already nodes in our graph</strong> — 737 of
+760; the other 23 simply were not measured. Same genes, same identifier space,
+two completely different ways of drawing edges between them.</p>
+<p>Values are log2-scale and library-size normalised, so we can correlate them
+directly without any further processing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">s1_helpers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">h</span>
+
+<span class="n">expression</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">load_expression</span><span class="p">()</span>          <span class="c1"># patients x genes</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">expression</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> patients x </span><span class="si">{</span><span class="n">expression</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> genes&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">expression</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>500 patients x 737 genes
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ENSG00000002745</th>
+      <th>ENSG00000004779</th>
+      <th>ENSG00000004948</th>
+      <th>ENSG00000005339</th>
+    </tr>
+    <tr>
+      <th>patient_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>TCGA-AQ-A1H2</th>
+      <td>3.2972</td>
+      <td>12.2881</td>
+      <td>3.8422</td>
+      <td>13.3841</td>
+    </tr>
+    <tr>
+      <th>TCGA-A1-A0SF</th>
+      <td>3.6419</td>
+      <td>11.4859</td>
+      <td>4.8838</td>
+      <td>12.9395</td>
+    </tr>
+    <tr>
+      <th>TCGA-AR-A255</th>
+      <td>4.3158</td>
+      <td>10.9620</td>
+      <td>5.3796</td>
+      <td>13.3025</td>
+    </tr>
+    <tr>
+      <th>TCGA-E2-A1BD</th>
+      <td>4.8753</td>
+      <td>11.6689</td>
+      <td>5.0083</td>
+      <td>13.3188</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="correlate-everything-against-everything">
+<h3>7.1 Correlate everything against everything<a class="headerlink" href="#correlate-everything-against-everything" title="Link to this heading">#</a></h3>
+<p>An inferred network is one line of statistics and one arbitrary decision.</p>
+<p>The statistics: correlate all 737 genes pairwise, giving 271,216 gene pairs. The
+arbitrary decision: pick a threshold, and keep the pairs above it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: correlate every gene against every other gene</span>
+<span class="c1">### YOUR CODE HERE ###</span>
+
+<span class="n">coexpr</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">coexpression_network</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">correlations</span><span class="o">=</span><span class="n">correlations</span><span class="p">)</span>
+<span class="n">h</span><span class="o">.</span><span class="n">print_graph_info</span><span class="p">(</span><span class="n">coexpr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="there-is-no-true-network">
+<h3>7.2 There is no “true” network<a class="headerlink" href="#there-is-no-true-network" title="Link to this heading">#</a></h3>
+<p>Section 3 claimed that changing the threshold gives a different network and that
+none of them is the right one. That is easy to say and easy to nod along to, so
+here it is as a table.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sweep</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">coexpression_threshold_sweep</span><span class="p">(</span>
+    <span class="n">expression</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="n">correlations</span><span class="o">=</span><span class="n">correlations</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">sweep</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>threshold</th>
+      <th>edges</th>
+      <th>connected_genes</th>
+      <th>isolated_genes</th>
+      <th>largest_component</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.3</td>
+      <td>39593</td>
+      <td>721</td>
+      <td>16</td>
+      <td>721</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.4</td>
+      <td>16797</td>
+      <td>637</td>
+      <td>100</td>
+      <td>635</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.5</td>
+      <td>6537</td>
+      <td>528</td>
+      <td>209</td>
+      <td>520</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.6</td>
+      <td>2458</td>
+      <td>367</td>
+      <td>370</td>
+      <td>348</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.7</td>
+      <td>803</td>
+      <td>203</td>
+      <td>534</td>
+      <td>102</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.8</td>
+      <td>200</td>
+      <td>90</td>
+      <td>647</td>
+      <td>45</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Every row is built from <strong>identical data</strong>. At <code class="docutils literal notranslate"><span class="pre">|r|</span> <span class="pre">≥</span> <span class="pre">0.3</span></code> almost every gene is
+connected to almost every other and the network says nothing; at <code class="docutils literal notranslate"><span class="pre">|r|</span> <span class="pre">≥</span> <span class="pre">0.8</span></code> only
+90 genes have any edge at all and we have thrown away most of the biology. Nothing
+in the data tells us where to stop — the choice is the analyst’s, and it changes
+every downstream result.</p>
+<p>Compare this with <code class="docutils literal notranslate"><span class="pre">kg_edges.csv</span></code>, which has exactly 1,768 edges whatever we think
+about them. <strong>The curated graph has no threshold to choose.</strong> Its edges were fixed
+by whoever curated them, which removes this problem and introduces a different one:
+we cannot loosen the criteria to see more, however much we would like to.</p>
+</section>
+<section id="the-same-gene-in-both-networks">
+<h3>7.3 The same gene, in both networks<a class="headerlink" href="#the-same-gene-in-both-networks" title="Link to this heading">#</a></h3>
+<p>The sharpest way to feel the difference is to pick one gene and ask each network
+for its neighbours.</p>
+<p>We use <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code>, the gene the whole session keeps coming back to.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">load_kg</span><span class="p">()</span>
+<span class="n">brca1</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">gene_by_symbol</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;BRCA1&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;INFERRED — genes whose expression tracks BRCA1 across 500 patients:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">coexpression_partners</span><span class="p">(</span><span class="n">correlations</span><span class="p">,</span> <span class="n">brca1</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># TODO: one hop out from BRCA1, keeping disease neighbours</span>
+<span class="c1">### YOUR CODE HERE ###</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CURATED — the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">curated</span><span class="p">)</span><span class="si">}</span><span class="s2"> diseases somebody recorded BRCA1 against:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">curated</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Neither answer is wrong, and they have almost nothing to do with each other.</p>
+<p>The <strong>curated</strong> side returns diseases: breast cancer, ovarian cancer, hereditary
+breast and ovarian cancer syndrome. That is what BRCA1 is <em>known for</em>, because
+that is what people published about it.</p>
+<p>The <strong>inferred</strong> side returns genes, and they split into two groups:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PALB2</span></code> and <code class="docutils literal notranslate"><span class="pre">FANCD2</span></code> are genuine partners — BRCA1 works with both in homologous
+recombination repair. The correlation found real biology that the curated graph
+does not record, because our graph has no gene–gene edges at all.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TOP2A</span></code>, <code class="docutils literal notranslate"><span class="pre">KNL1</span></code>, <code class="docutils literal notranslate"><span class="pre">BUB1B</span></code>, <code class="docutils literal notranslate"><span class="pre">HMMR</span></code>, <code class="docutils literal notranslate"><span class="pre">PRIM1</span></code>, <code class="docutils literal notranslate"><span class="pre">RRM1</span></code> and <code class="docutils literal notranslate"><span class="pre">DHFR</span></code> are cell-cycle,
+replication and nucleotide-synthesis genes. They correlate with BRCA1 because
+BRCA1 is expressed in dividing cells, and in a tumour cohort <em>everything
+proliferative correlates with everything else proliferative</em>. This is a
+confound, not a discovery — and it outranks the real partners.</p></li>
+</ul>
+<p>That mixture is the honest character of an inferred network: real relationships
+and a dominant confound, arriving in the same list with the same scores, and no
+label distinguishing them. The curated graph would never make this mistake — and
+would also never have found <code class="docutils literal notranslate"><span class="pre">PALB2</span></code>.</p>
+</section>
+<section id="when-the-inferred-network-says-nothing-at-all">
+<h3>7.4 When the inferred network says nothing at all<a class="headerlink" href="#when-the-inferred-network-says-nothing-at-all" title="Link to this heading">#</a></h3>
+<p>Now the same query for <code class="docutils literal notranslate"><span class="pre">TP53</span></code>, which by any measure is the most studied gene in
+cancer.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tp53</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">gene_by_symbol</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;TP53&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TP53 has </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">tp53</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges in the knowledge graph.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Its strongest co-expression partner: &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;|r| = </span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">coexpression_partners</span><span class="p">(</span><span class="n">correlations</span><span class="p">,</span><span class="w"> </span><span class="n">tp53</span><span class="p">,</span><span class="w"> </span><span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="n">top_n</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">coexpression_partners</span><span class="p">(</span><span class="n">correlations</span><span class="p">,</span> <span class="n">tp53</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TP53 has 27 edges in the knowledge graph.
+Its strongest co-expression partner: |r| = 0.177
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gene_id</th>
+      <th>symbol</th>
+      <th>r</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>ENSG00000171094</td>
+      <td>ALK</td>
+      <td>-0.177</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ENSG00000179295</td>
+      <td>PTPN11</td>
+      <td>-0.160</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ENSG00000146232</td>
+      <td>NFKBIE</td>
+      <td>0.157</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ENSG00000048392</td>
+      <td>RRM2B</td>
+      <td>-0.154</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>ENSG00000112964</td>
+      <td>GHR</td>
+      <td>-0.153</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">TP53</span></code> is a <strong>hub</strong> in the curated graph — 27 diseases — and essentially <strong>invisible</strong>
+in the inferred one. Its strongest correlation with any of the other 736 genes is
+about 0.18, well below any threshold we would use.</p>
+<p>Both facts are correct and both are about the method, not about TP53:</p>
+<ul class="simple">
+<li><p>It is a curated hub because TP53 is mutated in most cancers and therefore
+written about constantly. Remember the phrasing from Section 2 — <strong>degree
+measures attention</strong>.</p></li>
+<li><p>It is invisible to co-expression because TP53 is regulated by protein
+stability, not transcription. Its mRNA barely moves while the protein does all
+the work. A method that only reads mRNA cannot see it.</p></li>
+</ul>
+<p>So a gene can be central to one network and absent from the other purely because
+of how each network was built. <strong>Neither absence means “not important”.</strong> In the
+inferred network absence means <em>not transcriptionally variable</em>; in the curated
+network absence means <em>nobody wrote it down</em>. Part 2 and Part 3 are largely about
+the second kind of silence.</p>
+</section>
+<section id="what-this-sets-up">
+<h3>7.5 What this sets up<a class="headerlink" href="#what-this-sets-up" title="Link to this heading">#</a></h3>
+<p>Two networks over the same genes is also a <em>method</em>, not just a contrast. Roughly:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Co-expression says</p></th>
+<th class="head"><p>Knowledge graph says</p></th>
+<th class="head"><p>Reading</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>correlated</p></td>
+<td><p>already an edge</p></td>
+<td><p>corroboration — two independent routes to the same claim</p></td>
+</tr>
+<tr class="row-odd"><td><p>correlated</p></td>
+<td><p>nothing</p></td>
+<td><p><strong>candidate</strong> — a relationship the data supports and nobody has recorded</p></td>
+</tr>
+<tr class="row-even"><td><p>not correlated</p></td>
+<td><p>already an edge</p></td>
+<td><p>curated on evidence that is not transcriptional (like TP53)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The middle row is where gene–disease <em>discovery</em> lives, and the third row is why
+we cannot just trust correlation. We come back to this in Part 3, once we can
+filter curated edges by the <strong>kind</strong> of evidence behind them.</p>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A graph is nodes plus edges; degree, paths and components are all derived from those.</p></li>
+<li><p><strong>Inferred</strong> networks are computed from measurements; <strong>curated</strong> knowledge graphs
+are read from recorded facts. Their biases are opposite and neither is fixable by code.</p></li>
+<li><p>A <em>knowledge</em> graph adds typed nodes, typed edges and provenance — that is the
+“specialised” in <em>a specialised class of networks</em>.</p></li>
+<li><p>Ours has 3 node types (gene, disease, icd10) and 3 edge types (<code class="docutils literal notranslate"><span class="pre">associated_with</span></code>,
+<code class="docutils literal notranslate"><span class="pre">is_a</span></code>, <code class="docutils literal notranslate"><span class="pre">maps_to</span></code>), built from Open Targets (CC0) and MONDO (CC BY 4.0).</p></li>
+<li><p>Every gene–disease edge also has an evidence breakdown in <code class="docutils literal notranslate"><span class="pre">kg_evidence.csv</span></code>.</p></li>
+<li><p>Genes are keyed by Ensembl ID so the graph joins to the Session 2 omics data —
+which is how Section 7 could build both networks over the same 737 genes.</p></li>
+<li><p>An inferred network has a <strong>threshold to choose</strong> and a curated one does not;
+a curated one has <strong>silences</strong> an inferred one does not. <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> and <code class="docutils literal notranslate"><span class="pre">TP53</span></code> show
+both failure modes in opposite directions.</p></li>
+</ul>
+<p><strong>Next:</strong> in Part 2 we build the graph in NetworkX and look at what it is shaped like.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-1-intro-networks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Session 1</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="part-2-building-a-knowledge-graph.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Part 2 — Building a Knowledge Graph with NetworkX</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#networks-in-the-smallest-possible-terms">1. Networks, in the smallest possible terms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-directedness-matters-for-us">Why directedness matters for us</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-graph-by-hand">2. Building a graph by hand</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-very-different-ways-to-get-a-network">3. Two very different ways to get a network</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#who-is-the-somebody">Who is the “somebody”?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-it-a-knowledge-graph">4. What makes it a <em>knowledge</em> graph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-the-data-comes-from">5. Where the data comes from</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#open-targets-platform">Open Targets Platform</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mondo-disease-ontology">MONDO Disease Ontology</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-not-disgenet">Why not DisGeNET?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-design-decision-worth-flagging">One design decision worth flagging</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-data-files">6. The data files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-same-genes-two-networks">7. The same genes, two networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlate-everything-against-everything">7.1 Correlate everything against everything</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#there-is-no-true-network">7.2 There is no “true” network</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-same-gene-in-both-networks">7.3 The same gene, in both networks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-the-inferred-network-says-nothing-at-all">7.4 When the inferred network says nothing at all</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-sets-up">7.5 What this sets up</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/session-1-intro-networks/part-1-networks-and-knowledge-graphs.ipynb">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

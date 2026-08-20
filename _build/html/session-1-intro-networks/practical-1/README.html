@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Practical 1 Template: Phenotype Knowledge Graph from ICD-10 Codes &#8212; ECCB 2026 T8</title>
+    <title>Practical 1: Querying a Phenotype Knowledge Graph &#8212; ECCB 2026 T8</title>
   
   
   
@@ -208,7 +208,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../session-3-agentic-llm-workflows/intro.html">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -343,7 +343,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../session-3-agentic-llm-workflows/intro.html">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -404,7 +404,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Practical 1 Template: Phenotype Knowledge Graph from ICD-10 Codes</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Practical 1: Querying a Phenotype Knowledge Graph</span></li>
   </ul>
 </nav>
 </div>
@@ -421,33 +421,38 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="practical-1-template-phenotype-knowledge-graph-from-icd-10-codes">
-<h1>Practical 1 Template: Phenotype Knowledge Graph from ICD-10 Codes<a class="headerlink" href="#practical-1-template-phenotype-knowledge-graph-from-icd-10-codes" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="practical-1-querying-a-phenotype-knowledge-graph">
+<h1>Practical 1: Querying a Phenotype Knowledge Graph<a class="headerlink" href="#practical-1-querying-a-phenotype-knowledge-graph" title="Link to this heading">#</a></h1>
+<p>The practical is delivered as
+<a class="reference internal" href="../part-3-querying-the-knowledge-graph.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">../part-3-querying-the-knowledge-graph.ipynb</span></code></span></a>.
+Work through the participant copy in
+<a class="reference internal" href="#../participant/"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">../participant/</span></code></span></a> and fill in the <code class="docutils literal notranslate"><span class="pre">###</span> <span class="pre">YOUR</span> <span class="pre">CODE</span> <span class="pre">HERE</span> <span class="pre">###</span></code> blocks.</p>
 <section id="objective">
 <h2>Objective<a class="headerlink" href="#objective" title="Link to this heading">#</a></h2>
-<p>Create a phenotype-focused knowledge graph from ICD-10 code examples.</p>
+<p>Start from ICD-10 codes — the vocabulary a hospital actually uses — and get from
+there to genes. Discover why that only partly works, recover what we can by
+traversing the disease ontology, and then ask the question the graph is genuinely
+good at: which diseases share genes?</p>
 </section>
-<section id="inputs">
-<h2>Inputs<a class="headerlink" href="#inputs" title="Link to this heading">#</a></h2>
+<section id="what-we-will-do">
+<h2>What we will do<a class="headerlink" href="#what-we-will-do" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>ICD-10 code list (CSV/TSV)</p></li>
-<li><p>Mapping file to phenotype labels (optional)</p></li>
-</ul>
-</section>
-<section id="tasks">
-<h2>Tasks<a class="headerlink" href="#tasks" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>[ ] Load ICD-10 data</p></li>
-<li><p>[ ] Convert rows into graph nodes and edges</p></li>
-<li><p>[ ] Annotate node types (disease category, phenotype)</p></li>
-<li><p>[ ] Export graph (GraphML or edge list)</p></li>
+<li><p>[ ] Measure ICD-10 coverage across the graph’s 71 diseases (spoiler: 7 of them)</p></li>
+<li><p>[ ] Diagnose <em>why</em> — a granularity mismatch, not a missing data source</p></li>
+<li><p>[ ] Climb the <code class="docutils literal notranslate"><span class="pre">is_a</span></code> hierarchy to raise coverage from 7 to 70</p></li>
+<li><p>[ ] Project the bipartite gene–disease graph onto diseases alone</p></li>
+<li><p>[ ] Recover hereditary breast-ovarian cancer syndrome from shared genes</p></li>
+<li><p>[ ] Spot the shared genes that are pharmacological rather than biological</p></li>
+<li><p>[ ] Join the graph to the Session 2 transcriptomics matrix without silently
+matching nothing</p></li>
 </ul>
 </section>
 <section id="stretch-goals">
-<h2>Stretch Goals<a class="headerlink" href="#stretch-goals" title="Link to this heading">#</a></h2>
+<h2>Stretch goals<a class="headerlink" href="#stretch-goals" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>[ ] Add centrality or community metrics</p></li>
-<li><p>[ ] Visualize subgraphs for selected phenotype groups</p></li>
+<li><p>[ ] Compare Jaccard against raw shared-gene counts — which diseases change rank, and why?</p></li>
+<li><p>[ ] Find the disease pairs whose similarity is carried entirely by promiscuous genes</p></li>
+<li><p>[ ] Export a subgraph to GraphML and open it in <a class="reference external" href="https://cytoscape.org/">Cytoscape</a></p></li>
 </ul>
 </section>
 </section>
@@ -500,9 +505,8 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objective">Objective</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inputs">Inputs</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stretch-goals">Stretch Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-will-do">What we will do</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stretch-goals">Stretch goals</a></li>
 </ul>
   </nav></div>
 

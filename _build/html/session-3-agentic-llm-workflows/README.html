@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs &#8212; ECCB 2026 T8</title>
+    <title>ECCB 2026 Tutorial T08 Session3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs &#8212; ECCB 2026 T8</title>
   
   
   
@@ -208,7 +208,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="intro.html">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -343,7 +343,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="intro.html">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -404,7 +404,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">ECCB 2026 Tutorial T08 Session3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs</span></li>
   </ul>
 </nav>
 </div>
@@ -421,30 +421,75 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="session-3-building-agentic-llm-workflows-for-biomedical-knowledge-graphs">
-<h1>Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs<a class="headerlink" href="#session-3-building-agentic-llm-workflows-for-biomedical-knowledge-graphs" title="Link to this heading">#</a></h1>
-<section id="learning-goals">
-<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Link to this heading">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="eccb-2026-tutorial-t08-session3-building-agentic-llm-workflows-for-biomedical-knowledge-graphs">
+<h1>ECCB 2026 Tutorial T08 Session3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs<a class="headerlink" href="#eccb-2026-tutorial-t08-session3-building-agentic-llm-workflows-for-biomedical-knowledge-graphs" title="Link to this heading">#</a></h1>
+<section id="session-shape">
+<h2>Session Shape<a class="headerlink" href="#session-shape" title="Link to this heading">#</a></h2>
+<p>Brief theoretical reviews on concepts -&gt; hands-on practice session</p>
+</section>
+<section id="repository-structure">
+<h2>Repository Structure<a class="headerlink" href="#repository-structure" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ECCB2026</span><span class="o">/</span>
+  <span class="n">assets</span><span class="o">/</span>       <span class="n">Internal</span> <span class="n">assets</span>
+  <span class="n">data</span><span class="o">/</span>         <span class="n">As</span> <span class="n">of</span> <span class="n">now</span> <span class="n">just</span> <span class="n">mock</span> <span class="n">test</span> <span class="n">data</span>
+  <span class="n">notebooks</span><span class="o">/</span>    <span class="n">Jupyter</span> <span class="n">notebooks</span> <span class="k">for</span> <span class="n">guided</span> <span class="n">practice</span> <span class="n">session</span>
+  <span class="n">planning</span><span class="o">/</span>     <span class="n">Schedules</span><span class="p">,</span> <span class="n">proposal</span> <span class="n">notes</span><span class="p">,</span> <span class="n">task</span> <span class="n">lists</span>
+  <span class="n">server</span><span class="o">/</span>       <span class="n">MCP</span> <span class="n">server</span> <span class="ow">or</span> <span class="n">tool</span><span class="o">-</span><span class="n">hosting</span> <span class="n">demo</span> <span class="n">code</span>
+  <span class="n">skills</span><span class="o">/</span>       <span class="n">Example</span> <span class="n">Skill</span><span class="o">.</span><span class="n">md</span><span class="o">-</span><span class="n">style</span> <span class="n">reusable</span> <span class="n">instructions</span>
+  <span class="n">slides</span><span class="o">/</span>       <span class="n">Slide</span> <span class="n">outlines</span> <span class="ow">and</span> <span class="n">generated</span> <span class="n">slide</span> <span class="n">decks</span>
+  <span class="n">src</span><span class="o">/</span>          <span class="n">Shared</span> <span class="n">Python</span> <span class="n">utilities</span>
+</pre></div>
+</div>
+</section>
+<section id="current-priorities">
+<h2>Current Priorities<a class="headerlink" href="#current-priorities" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Understand LLM agents in a biomedical workflow context</p></li>
-<li><p>Understand tool-use patterns and MCP-enabled workflows</p></li>
-<li><p>Prepare molecular profile inputs for agent-driven querying</p></li>
+<li><p>Decide the Session 3 structure.</p></li>
+<li><p>Choose model access strategy for participants.</p></li>
+<li><p>Build a small MCP/tool server around Session 1 and 2 outputs.</p>
+<ul>
+<li><p>we can create python function signatures and ask Session 1 &amp; 2 groups to help with implementation?</p></li>
+</ul>
+</li>
+<li><p>Draft a concept slide deck for LLM agents, tools, MCP, and skills.</p></li>
+<li><p>Create participant-facing Markdown instructions.</p></li>
+<li><p>Can we ask ECCB to send participants some pre-tutorial setup instructions?</p></li>
 </ul>
 </section>
-<section id="suggested-materials">
-<h2>Suggested Materials<a class="headerlink" href="#suggested-materials" title="Link to this heading">#</a></h2>
+<section id="mcp-server-setup">
+<h2>MCP Server Setup<a class="headerlink" href="#mcp-server-setup" title="Link to this heading">#</a></h2>
+<p>The repository includes a starter MCP server for Session 3:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">slides/</span></code> for agent concepts and MCP overview</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">notebooks/</span></code> for prompt/tool orchestration examples</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">data/</span></code> for molecular profile datasets</p></li>
+<li><p><a class="reference internal" href="#server/toy_kg_mcp_server.py"><span class="xref myst">Toy MCP server</span></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/fe9f42fdcbba6252b6a77b74c0cee5ed/mofa_tools.py"><span class="xref download myst">Underlying graph tools</span></a></p></li>
+</ul>
+<p>This is designed as an instructor demo first and an optional participant extension. The main practical can still be notebook-first so the workshop does not depend on everyone configuring an MCP client during the session.</p>
+</section>
+<section id="local-setup">
+<h2>Local Setup<a class="headerlink" href="#local-setup" title="Link to this heading">#</a></h2>
+<p>Install the starter Python dependencies with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>The first scaffold includes a tiny toy graph in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code> so the LLM-agent workflow can be prototyped before the final Session 1 and Session 2 outputs are ready.</p>
+</section>
+<section id="model-access-options">
+<h2>Model Access Options<a class="headerlink" href="#model-access-options" title="Link to this heading">#</a></h2>
+<p>The practical should be model-agnostic where possible. Some options:</p>
+<ul class="simple">
+<li><p>Hosted API model with shared tutorial credits or participant keys.</p></li>
+<li><p>Local lightweight model for fallback demos.</p></li>
 </ul>
 </section>
-<section id="deliverables">
-<h2>Deliverables<a class="headerlink" href="#deliverables" title="Link to this heading">#</a></h2>
+<section id="session-3-comparison-materials">
+<h2>Session 3 Comparison Materials<a class="headerlink" href="#session-3-comparison-materials" title="Link to this heading">#</a></h2>
+<p>The agentic workflow materials are split into three notebooks that solve largely the same biomedical task with different interfaces:</p>
 <ul class="simple">
-<li><p>Intro materials for agent architecture and tool use</p></li>
-<li><p>Starter workflow examples for querying biomedical knowledge graphs</p></li>
+<li><p><a class="reference internal" href="#notebooks/01_tools.ipynb"><span class="xref myst">01 · Direct tools</span></a>: locally implemented Python functions exposed to an LLM via LangChain <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code> (or called directly in the notebook).</p></li>
+<li><p><a class="reference internal" href="#notebooks/02_MCP.ipynb"><span class="xref myst">02 · MCP-hosted tools</span></a>: the same functions exposed through a portable FastMCP server and loaded with langchain-mcp-adapters.</p></li>
+<li><p><a class="reference internal" href="#notebooks/03_agent_skills.ipynb"><span class="xref myst">03 · Agent skills</span></a>: reusable behavioral instructions (a <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code>) that guide how the agent uses tools and reports evidence, run with the Pi harness.</p></li>
 </ul>
+<p>See <a class="reference internal" href="notebooks/README.html"><span class="std std-doc">notebooks/README.md</span></a> for more on the three tracks.</p>
 </section>
 </section>
 
@@ -495,9 +540,13 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suggested-materials">Suggested Materials</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">Deliverables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-shape">Session Shape</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-structure">Repository Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-priorities">Current Priorities</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mcp-server-setup">MCP Server Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#local-setup">Local Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-access-options">Model Access Options</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-3-comparison-materials">Session 3 Comparison Materials</a></li>
 </ul>
   </nav></div>
 

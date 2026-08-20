@@ -1,0 +1,809 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Session 3 — API Cost Estimation Notes &#8212; ECCB 2026 T8</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-3-agentic-llm-workflows/outputs/cost_estimation_notes';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Session 3 — API Cost Estimation Notes</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="session-3-api-cost-estimation-notes">
+<h1>Session 3 — API Cost Estimation Notes<a class="headerlink" href="#session-3-api-cost-estimation-notes" title="Link to this heading">#</a></h1>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Item</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Model</strong></p></td>
+<td><p><a class="reference external" href="https://www.anthropic.com/claude/haiku"><code class="docutils literal notranslate"><span class="pre">claude-haiku-4-5</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Per person, one clean pass</strong> (measured 2026-08-17)</p></td>
+<td><p><strong>$0.22</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Per person, realistic</strong> (room for 2–3× cell re-runs + 03 run-length variance)</p></td>
+<td><p><strong>~$1.00</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>50-person audience</strong></p></td>
+<td><p><strong>~<span class="math notranslate nohighlight">\(50 expected; set a \)</span>100 workspace spend cap</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Details, evidence, and reproduction instructions below.</p>
+<hr class="docutils" />
+<p>Per-participant cost estimate for running the Session 3 notebooks
+(00 data → 01 tools → 02 MCP → 03 skills/Pi), plus how the numbers were
+measured so a fresh session can reproduce or extend them.</p>
+</section>
+<section id="model-used-for-this-estimate">
+<h2>Model used for this estimate<a class="headerlink" href="#model-used-for-this-estimate" title="Link to this heading">#</a></h2>
+<p><strong>All numbers below are for <code class="docutils literal notranslate"><span class="pre">claude-haiku-4-5</span></code></strong> (<span class="math notranslate nohighlight">\(1.00/1M input, \)</span>5.00/1M
+output, cache read <span class="math notranslate nohighlight">\(0.10/1M, cache write \)</span>1.25/1M). The notebooks set this
+model in 01/02 (<code class="docutils literal notranslate"><span class="pre">MODEL</span> <span class="pre">=</span> <span class="pre">&quot;claude-haiku-4-5&quot;</span></code>) and 03
+(<code class="docutils literal notranslate"><span class="pre">MODEL</span> <span class="pre">=</span> <span class="pre">&quot;anthropic/claude-haiku-4-5&quot;</span></code> for Pi).</p>
+<p>Other model runs (e.g. Sonnet) to be added later for comparison — repeat the
+measurement below with the model string swapped and pricing adjusted.</p>
+<section id="is-haiku-good-enough-qualitative-review-of-the-agent-outputs">
+<h3>Is Haiku good enough? (qualitative review of the agent outputs)<a class="headerlink" href="#is-haiku-good-enough-qualitative-review-of-the-agent-outputs" title="Link to this heading">#</a></h3>
+<p>Yes, good enough for this workshop — with one caveat.</p>
+<p>What Haiku did well, which is most of what the notebooks need:</p>
+<ul class="simple">
+<li><p><strong>Tool selection was flawless.</strong> Every query in 01 picked the right tool(s)
+first try, no flailing — Q5 correctly chained <code class="docutils literal notranslate"><span class="pre">factor_subtype_association</span></code> →
+<code class="docutils literal notranslate"><span class="pre">top_features_for_factor</span></code>, Q7 pulled both rankings and compared them. That’s
+the pedagogical core (watch an agent choose and chain tools), and it works.</p></li>
+<li><p><strong>Grounding held.</strong> Numbers in the answers matched tool outputs; nothing
+invented. The system prompt’s “cite which tool” discipline was followed.</p></li>
+<li><p><strong>03/Pi was genuinely solid</strong> — it explored the repo, loaded the cached model
+(didn’t try to re-fit), followed the skill’s
+Answer/Evidence/Interpretation/Limitations format, generated the plots.
+25 tool calls of competent coding-agent behavior on Haiku is honestly
+impressive per dollar.</p></li>
+</ul>
+<p>The caveat: <strong>interpretation depth is where you feel the model tier.</strong> The
+biology narrative is correct but thin — e.g. it reports “Factor2 has η²=0.74
+and separates subtypes” but won’t spontaneously connect the top transcriptomic
+drivers to known basal/luminal biology, or discuss why LumA↔LumB confusion is
+biologically expected. Q7 (the “explain the mismatch” reasoning query) got the
+right facts but a fairly mechanical explanation.</p>
+<p><strong>Recommendation:</strong> keep Haiku as the workshop default (fast, cheap, reliable
+mechanics). Optionally pre-run the flagship Q5 / 03 interpretation once on a
+bigger model (Sonnet) and include it as a “same query, bigger model”
+comparison cell — a teaching moment paid for once, not ×50.</p>
+</section>
+</section>
+<section id="measured-cost-clean-passes">
+<h2>Measured cost — clean passes<a class="headerlink" href="#measured-cost-clean-passes" title="Link to this heading">#</a></h2>
+<p>Two full clean passes were run, three weeks apart:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Part</p></th>
+<th class="head text-right"><p>2026-07-27 pass</p></th>
+<th class="head text-right"><p>2026-08-17 pass (locked)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>00 data exploration (no LLM)</p></td>
+<td class="text-right"><p>$0</p></td>
+<td class="text-right"><p>$0</p></td>
+</tr>
+<tr class="row-odd"><td><p>01 — all 8 agent queries</p></td>
+<td class="text-right"><p>$0.038 (17 calls)</p></td>
+<td class="text-right"><p>$0.038 (17 calls)</p></td>
+</tr>
+<tr class="row-even"><td><p>02 — MCP flagship query</p></td>
+<td class="text-right"><p>$0.008 (3 calls)</p></td>
+<td class="text-right"><p>$0.008 (3 calls)</p></td>
+</tr>
+<tr class="row-odd"><td><p>03 — Pi coding agent, 3 runs (Q9, Q10, no-skill)</p></td>
+<td class="text-right"><p>$0.315 (48 calls)</p></td>
+<td class="text-right"><p>$0.172 (27 calls)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Total, one clean pass</strong></p></td>
+<td class="text-right"><p><strong>$0.36</strong></p></td>
+<td class="text-right"><p><strong>$0.22</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>2026-08-17 pass detail (Haiku 4.5):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Part</p></th>
+<th class="head text-right"><p>Calls</p></th>
+<th class="head text-right"><p>Input</p></th>
+<th class="head text-right"><p>Output</p></th>
+<th class="head text-right"><p>CacheR</p></th>
+<th class="head text-right"><p>CacheW</p></th>
+<th class="head text-right"><p>Cost</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>01 + 02</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>27,504</p></td>
+<td class="text-right"><p>3,739</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>$0.046</p></td>
+</tr>
+<tr class="row-odd"><td><p>03 (Pi, 3 runs)</p></td>
+<td class="text-right"><p>27</p></td>
+<td class="text-right"><p>14,376</p></td>
+<td class="text-right"><p>15,426</p></td>
+<td class="text-right"><p>221,826</p></td>
+<td class="text-right"><p>46,416</p></td>
+<td class="text-right"><p>$0.172</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Per-query breakdown for 01/02 is in <code class="docutils literal notranslate"><span class="pre">token_cost_estimate.md</span></code>.</p>
+<p>Observations:</p>
+<ul class="simple">
+<li><p><strong>01/02 are near-deterministic</strong>: token counts matched across the two passes
+to within ~1% (same tool choices, same call counts).</p></li>
+<li><p><strong>03 (Pi) varies run to run</strong> — the coding agent’s number of turns is
+nondeterministic (48 calls / <span class="math notranslate nohighlight">\(0.315 in July vs 27 calls / \)</span>0.172 in August
+for the same three prompts). Budget for the <em>upper</em> observed value.</p></li>
+<li><p>03 dominates cost either way: large outputs + heavy prompt-cache traffic
+(Pi caches aggressively; cache reads are cheap but hundreds of thousands of
+them add up).</p></li>
+<li><p>01/02 use no prompt caching (independent short conversations).</p></li>
+<li><p><strong>Working figure for one clean pass: $0.25–0.40.</strong></p></li>
+</ul>
+</section>
+<section id="evidence-provenance-for-the-numbers-above">
+<h2>Evidence / provenance for the numbers above<a class="headerlink" href="#evidence-provenance-for-the-numbers-above" title="Link to this heading">#</a></h2>
+<p><strong>2026-08-17 pass (the locked numbers) — raw evidence in this repo:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs/usage_0102_haiku_fresh.json</span></code> — per-query token counts + cost for
+01/02, dumped directly from each response’s <code class="docutils literal notranslate"><span class="pre">response_metadata[&quot;usage&quot;]</span></code>
+during the run.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs/usage_03_pi_haiku_fresh.json</span></code> — per-run token counts + cost for
+the three Pi runs, summed from Pi’s own session logs.</p></li>
+<li><p>Pi’s raw session logs (the ultimate source for 03) are at:
+<code class="docutils literal notranslate"><span class="pre">~/.pi/agent/sessions/--Users-chaeeunlee-Documents-VSC_workspaces-ECCB2026_TEST-sessions-session-3-agentic-llm-workflows--/2026-08-17T*.jsonl</span></code>
+— sum <code class="docutils literal notranslate"><span class="pre">message.usage.cost.total</span></code> over assistant messages to recompute.</p></li>
+</ul>
+<p><strong>2026-07-27 pass:</strong></p>
+<ul class="simple">
+<li><p>03: same Pi log directory, the <code class="docutils literal notranslate"><span class="pre">2026-07-27T09-*.jsonl</span></code> files
+(probe <span class="math notranslate nohighlight">\(0.0027, Q9 \)</span>0.0776, Q10 <span class="math notranslate nohighlight">\(0.0872, no-skill \)</span>0.1496).</p></li>
+<li><p>01/02: transcribed from live API usage during the run; the raw dump went to
+a temp scratchpad that was cleaned up, so no on-disk file for that pass —
+superseded by the 2026-08-17 in-repo evidence anyway (the two passes agree
+to ~1% on 01/02).</p></li>
+</ul>
+<p><strong>The executed notebooks</strong> (<code class="docutils literal notranslate"><span class="pre">notebooks/01_tools_v1.ipynb</span></code>, <code class="docutils literal notranslate"><span class="pre">02_MCP_v1.ipynb</span></code>,
+<code class="docutils literal notranslate"><span class="pre">03_agent_skills_v1.ipynb</span></code>) contain the saved agent outputs (03’s cells are
+from the 2026-08-17 run) — evidence the runs happened, though cell outputs
+don’t include token counts.</p>
+</section>
+<section id="per-participant-estimate-50-person-audience">
+<h2>Per-participant estimate (50-person audience)<a class="headerlink" href="#per-participant-estimate-50-person-audience" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scenario</p></th>
+<th class="head text-right"><p>Per person</p></th>
+<th class="head text-right"><p>50 people</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>One clean pass (upper of two measured passes)</p></td>
+<td class="text-right"><p>$0.36</p></td>
+<td class="text-right"><p>$18</p></td>
+</tr>
+<tr class="row-odd"><td><p>Realistic (2–3× re-runs of agent cells, esp. 03)</p></td>
+<td class="text-right"><p>$0.75–1.10</p></td>
+<td class="text-right"><p>$38–55</p></td>
+</tr>
+<tr class="row-even"><td><p>Safe cap</p></td>
+<td class="text-right"><p>$2.00</p></td>
+<td class="text-right"><p>$100</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Main source of deviation: participants re-running cells.</p>
+<p><strong>Recommendation:</strong> dedicated Console <em>workspace</em> for the workshop with a
+~$100 spend cap; one shared key (or a few keys to split blast radius);
+revoke after the session.</p>
+</section>
+<section id="how-the-numbers-were-measured-reproduce-in-a-fresh-session">
+<h2>How the numbers were measured (reproduce in a fresh session)<a class="headerlink" href="#how-the-numbers-were-measured-reproduce-in-a-fresh-session" title="Link to this heading">#</a></h2>
+<section id="langchain">
+<h3>01 / 02 (LangChain)<a class="headerlink" href="#langchain" title="Link to this heading">#</a></h3>
+<p>Each <code class="docutils literal notranslate"><span class="pre">AIMessage</span></code> returned by <code class="docutils literal notranslate"><span class="pre">ChatAnthropic</span></code> carries exact usage in
+<code class="docutils literal notranslate"><span class="pre">ai.response_metadata[&quot;usage&quot;]</span></code> — keys <code class="docutils literal notranslate"><span class="pre">input_tokens</span></code>, <code class="docutils literal notranslate"><span class="pre">output_tokens</span></code>,
+<code class="docutils literal notranslate"><span class="pre">cache_read_input_tokens</span></code>, <code class="docutils literal notranslate"><span class="pre">cache_creation_input_tokens</span></code>. Accumulate across
+every call of the agent loop (one API call per tool round-trip) and multiply
+by pricing.</p>
+</section>
+<section id="pi-coding-agent-where-to-find-usage">
+<h3>03 (Pi coding agent) — where to find usage<a class="headerlink" href="#pi-coding-agent-where-to-find-usage" title="Link to this heading">#</a></h3>
+<p>Pi does <strong>not</strong> print usage on stdout, but it logs everything per session:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/.</span><span class="n">pi</span><span class="o">/</span><span class="n">agent</span><span class="o">/</span><span class="n">sessions</span><span class="o">/&lt;</span><span class="n">cwd</span><span class="o">-</span><span class="n">slug</span><span class="o">&gt;/&lt;</span><span class="n">timestamp</span><span class="o">&gt;</span><span class="n">_</span><span class="o">&lt;</span><span class="nb">id</span><span class="o">&gt;.</span><span class="n">jsonl</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;cwd-slug&gt;</span></code> is the working directory Pi ran in, with <code class="docutils literal notranslate"><span class="pre">/</span></code> → <code class="docutils literal notranslate"><span class="pre">-</span></code>
+(e.g. <code class="docutils literal notranslate"><span class="pre">--Users-...-ECCB2026_TEST-sessions-session-3-agentic-llm-workflows--</span></code>).</p></li>
+<li><p>One file per <code class="docutils literal notranslate"><span class="pre">pi</span> <span class="pre">-p</span> <span class="pre">...</span></code> invocation; match files to runs by mtime.</p></li>
+<li><p>Each line is a JSON record. Records with <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">==</span> <span class="pre">&quot;message&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">message.role</span> <span class="pre">==</span> <span class="pre">&quot;assistant&quot;</span></code> carry a <code class="docutils literal notranslate"><span class="pre">message.usage</span></code> dict:</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;usage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;input&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2155</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">166</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cacheRead&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cacheWrite&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;totalTokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;input&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002155</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00083</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002985</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>⚠️ Note the key names: <code class="docutils literal notranslate"><span class="pre">input</span></code> / <code class="docutils literal notranslate"><span class="pre">output</span></code> / <code class="docutils literal notranslate"><span class="pre">cacheRead</span></code> / <code class="docutils literal notranslate"><span class="pre">cacheWrite</span></code> —
+<strong>not</strong> the Anthropic-style <code class="docutils literal notranslate"><span class="pre">input_tokens</span></code> etc. (a previous parse failed for
+exactly this reason). Pi also self-computes <code class="docutils literal notranslate"><span class="pre">cost.total</span></code> at the model’s
+prices — summing <code class="docutils literal notranslate"><span class="pre">cost.total</span></code> over all assistant messages in the session
+files gives the run cost directly.</p>
+</section>
+<section id="optional-console-cross-check">
+<h3>Optional Console cross-check<a class="headerlink" href="#optional-console-cross-check" title="Link to this heading">#</a></h3>
+<p>Create a project-named API key (e.g. <code class="docutils literal notranslate"><span class="pre">eccb-session3-estimate</span></code>), put it in
+<code class="docutils literal notranslate"><span class="pre">.env</span></code>, run one clean pass, then read that key’s usage line in the Anthropic
+Console — an independent billing-side verification (~$0.40 on Haiku).</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-3-agentic-llm-workflows/outputs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-used-for-this-estimate">Model used for this estimate</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#is-haiku-good-enough-qualitative-review-of-the-agent-outputs">Is Haiku good enough? (qualitative review of the agent outputs)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#measured-cost-clean-passes">Measured cost — clean passes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evidence-provenance-for-the-numbers-above">Evidence / provenance for the numbers above</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#per-participant-estimate-50-person-audience">Per-participant estimate (50-person audience)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-the-numbers-were-measured-reproduce-in-a-fresh-session">How the numbers were measured (reproduce in a fresh session)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langchain">01 / 02 (LangChain)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pi-coding-agent-where-to-find-usage">03 (Pi coding agent) — where to find usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-console-cross-check">Optional Console cross-check</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/session-3-agentic-llm-workflows/outputs/cost_estimation_notes.md">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

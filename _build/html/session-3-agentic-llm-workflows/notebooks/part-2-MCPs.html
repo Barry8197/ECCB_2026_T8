@@ -1,0 +1,1148 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters) &#8212; ECCB 2026 T8</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-3-agentic-llm-workflows/notebooks/part-2-MCPs';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Part 3 — Agent Skills: teaching an agent how, not just what" href="part-3-agent-skills.html" />
+    <link rel="prev" title="Part 1 — MOFA tools for an LLM agent (LangChain @tool)" href="part-1-tools.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="part-0-data-exploration.html">Part 0 — Data exploration &amp; building <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-1-tools.html">Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">@tool</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-3-agent-skills.html">Part 3 — Agent Skills: teaching an agent how, not just what</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../intro.html" class="nav-link">Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="part-2-mofa-tools-over-mcp-fastmcp-langchain-mcp-adapters">
+<h1>Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)<a class="headerlink" href="#part-2-mofa-tools-over-mcp-fastmcp-langchain-mcp-adapters" title="Link to this heading">#</a></h1>
+<p>In this notebook, we learn about <strong>MCP (the Model Context Protocol)</strong>: a standard way to serve tools from a server so that any agent can call them without needing your code.</p>
+<p>In this notebook, we’ll cover two things:</p>
+<ol class="arabic simple">
+<li><p><strong>Calling LLM tools through the MCP</strong>: We’ll take the exact same tools from Part 1 and serve them through an MCP server (<code class="docutils literal notranslate"><span class="pre">server/mofa_mcp_server.py</span></code>). This shows the mechanics: how tools move from local to a shared server.</p></li>
+<li><p><strong>Bringing in an external MCP server — BioMCP</strong>: We’ll then connect to BioMCP, a community-built MCP server that queries over 40 biomedical data sources (PubMed, UniProt, ClinVar, and others) through a single interface, showing how MCPs eliminate the need to learn different APIs—one standard protocol connects you to many tools.</p></li>
+</ol>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this notebook you should be able to:</p>
+<ul class="simple">
+<li><p>Explain what MCP is, and why it changes where a tool lives and who can reach it, not what the tool can do.</p></li>
+<li><p>Serve the same tools from Part 1 through an MCP server, and confirm Claude gets the identical answer through it.</p></li>
+<li><p>Explain the two reasons MCP is worth the extra layer: keeping data and logic in one controlled place, and reusing tools other people have already built and published.</p></li>
+<li><p>Connect to a public MCP server (BioMCP) alongside your own, and write a system prompt that tells Claude when to use which.</p></li>
+</ul>
+<section id="model-backend-bring-your-own-key">
+<h3>Model backend: bring your own key<a class="headerlink" href="#model-backend-bring-your-own-key" title="Link to this heading">#</a></h3>
+<p>Reads <code class="docutils literal notranslate"><span class="pre">ANTHROPIC_API_KEY</span></code> from <code class="docutils literal notranslate"><span class="pre">.env</span></code>; run with the <code class="docutils literal notranslate"><span class="pre">eccb</span></code> kernel. Only the agent-run cells later in the notebook spend API tokens — everything above them is local: the server subprocess loads the cached model, no LLM involved.</p>
+</section>
+<section id="why-mcp-here">
+<h3>Why MCP here?<a class="headerlink" href="#why-mcp-here" title="Link to this heading">#</a></h3>
+<p>For this practical, the MCP server buys little over the plain functions in Part 1, and that is the point: the task is identical, so the only thing that changes is the interface. MCP starts to pay off when the tools front something you do not want inside every notebook process — here, that is a 1.1 GB <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code> and a fitted model. The server loads that once at startup and exposes only small, audited, read-only operations; many clients can reuse it without ever loading that data themselves.</p>
+</section>
+</section>
+<section id="environment-api-key">
+<h2>0. Environment &amp; API key<a class="headerlink" href="#environment-api-key" title="Link to this heading">#</a></h2>
+<p>Load the key, and point the notebook at the project root and the MCP server script.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># claude_notebooks/ sits one level deeper than notebooks/ (notebooks/claude_notebooks/),</span>
+<span class="c1"># so it needs to climb two levels instead of one to reach the project root.</span>
+<span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span><span class="p">:</span>
+    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">))</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY not found. Add it to a .env in the project root.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY loaded:&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">)))</span>
+
+<span class="n">SERVER_PATH</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;server&quot;</span> <span class="o">/</span> <span class="s2">&quot;mofa_mcp_server.py&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MCP server:&quot;</span><span class="p">,</span> <span class="n">SERVER_PATH</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-mcp-server">
+<h2>1. The MCP server<a class="headerlink" href="#the-mcp-server" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">server/mofa_mcp_server.py</span></code> uses <strong>FastMCP</strong> (a Python library for building MCP servers with minimal boilerplate) to expose three MCP primitives, all backed by the cached MOFA model:</p>
+<ul class="simple">
+<li><p><strong>Tools</strong> (model-callable, read-only): <code class="docutils literal notranslate"><span class="pre">data_summary</span></code>, <code class="docutils literal notranslate"><span class="pre">split_summary</span></code>, <code class="docutils literal notranslate"><span class="pre">active_factors</span></code>, <code class="docutils literal notranslate"><span class="pre">factor_view_r2</span></code>, <code class="docutils literal notranslate"><span class="pre">factor_subtype_association</span></code>, <code class="docutils literal notranslate"><span class="pre">top_features_for_factor</span></code>, <code class="docutils literal notranslate"><span class="pre">classify_subtype_from_factors</span></code>, <code class="docutils literal notranslate"><span class="pre">train_vs_test_subtype_association</span></code></p></li>
+<li><p><strong>Resource</strong>: <code class="docutils literal notranslate"><span class="pre">mofa://summary</span></code> — a compact model/cohort summary to read into context</p></li>
+<li><p><strong>Prompt</strong>: <code class="docutils literal notranslate"><span class="pre">interpret_factor(factor)</span></code> — a reusable interpretation template</p></li>
+</ul>
+<p>The server loads the aligned omics and fitted model once at startup; <code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code> is not exposed here either, for the same reason as Part 1. The clients below launch it as a <code class="docutils literal notranslate"><span class="pre">stdio</span></code> subprocess — a subprocess your notebook talks to over its standard input/output, the same way you would pipe data between two command-line programs.</p>
+</section>
+<section id="under-the-hood-talk-to-mcp-directly-no-adapter">
+<h2>2. Under the hood: talk to MCP directly (no adapter)<a class="headerlink" href="#under-the-hood-talk-to-mcp-directly-no-adapter" title="Link to this heading">#</a></h2>
+<p>Before bringing in the LangChain adapter, we connect with MCP’s own client library directly, to see what MCP actually is underneath the convenience wrapper: open a <code class="docutils literal notranslate"><span class="pre">ClientSession</span></code> over <code class="docutils literal notranslate"><span class="pre">stdio</span></code>, ask the server what it offers (<em>handshake</em>), then call one tool over the wire. No LLM involved, this costs nothing to run.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="n">StdioServerParameters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp.client.stdio</span><span class="w"> </span><span class="kn">import</span> <span class="n">stdio_client</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">server_params</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">SERVER_PATH</span><span class="p">)])</span>
+
+<span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to: </span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">serverInfo</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">caps</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">capabilities</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Server advertises:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tools&quot;</span> <span class="k">if</span> <span class="n">caps</span><span class="o">.</span><span class="n">tools</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span> <span class="k">if</span> <span class="n">caps</span><span class="o">.</span><span class="n">resources</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prompts&quot;</span> <span class="k">if</span> <span class="n">caps</span><span class="o">.</span><span class="n">prompts</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> TOOLS (the model may choose to call these)&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">inputSchema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+            <span class="n">ro</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">annotations</span><span class="p">,</span> <span class="s2">&quot;readOnlyHint&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)   readOnlyHint=</span><span class="si">{</span><span class="n">ro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> RESOURCES (data to read into context) &quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_resources</span><span class="p">())</span><span class="o">.</span><span class="n">resources</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">uri</span><span class="si">}</span><span class="s2">  (</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">read_resource</span><span class="p">(</span><span class="s2">&quot;mofa://summary&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  read mofa://summary -&gt;&quot;</span><span class="p">,</span> <span class="n">summary</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> PROMPTS (server-provided templates) &quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_prompts</span><span class="p">())</span><span class="o">.</span><span class="n">prompts</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">arguments</span> <span class="ow">or</span> <span class="p">[]))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> tools/call factor_subtype_association&quot;</span><span class="p">)</span>
+        <span class="n">called</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">&quot;factor_subtype_association&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">,</span> <span class="n">called</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">120</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The block above never imported LangChain — that was MCP directly.</p>
+<p>MCP messages travel as <strong>JSON-RPC</strong> (a simple request/response message format) over a transport — here that is <code class="docutils literal notranslate"><span class="pre">stdio</span></code>, though it could be HTTP instead. On that wire, MCP defines a fixed set of methods: <code class="docutils literal notranslate"><span class="pre">initialize</span></code>, <code class="docutils literal notranslate"><span class="pre">tools/list</span></code>, <code class="docutils literal notranslate"><span class="pre">tools/call</span></code>, <code class="docutils literal notranslate"><span class="pre">resources/list</span></code>, <code class="docutils literal notranslate"><span class="pre">resources/read</span></code>, <code class="docutils literal notranslate"><span class="pre">prompts/list</span></code>, <code class="docutils literal notranslate"><span class="pre">prompts/get</span></code>.</p>
+<p>Tools are only one of several things a server can offer:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Primitive</p></th>
+<th class="head"><p>Driven by</p></th>
+<th class="head"><p>What it is</p></th>
+<th class="head"><p>In our server</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Tools</strong></p></td>
+<td><p>the model</p></td>
+<td><p>functions the model may choose to call</p></td>
+<td><p>the 8 analysis functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Resources</strong></p></td>
+<td><p>the app/user</p></td>
+<td><p>data to read into context</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mofa://summary</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Prompts</strong></p></td>
+<td><p>the user</p></td>
+<td><p>reusable, parameterized templates</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">interpret_factor</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sampling</strong></p></td>
+<td><p>the server</p></td>
+<td><p>server asks the client’s LLM to generate</p></td>
+<td><p>(not used)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Elicitation</strong></p></td>
+<td><p>the server</p></td>
+<td><p>server asks the human mid-call</p></td>
+<td><p>(not used)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Roots</strong></p></td>
+<td><p>the client</p></td>
+<td><p>filesystem/scope boundaries</p></td>
+<td><p>(not used)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Each tool also carried <code class="docutils literal notranslate"><span class="pre">readOnlyHint=True</span></code> — metadata a client could use to auto-run a tool instead of pausing for human approval, which matters specifically because the caller here is a model, not a fixed script. A generic remote-procedure-call setup has no equivalent notion.</p>
+<p>One more useful pattern before we bring in the adapter: wrap a single call in a small reusable function, the way <code class="docutils literal notranslate"><span class="pre">MCPTool</span></code> will do more fully further down.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_resource</span><span class="p">(</span><span class="n">uri</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">read_resource</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;mofa://summary&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="framework-adaptation-langchain-mcp-adapters">
+<h2>3. Framework adaptation: <code class="docutils literal notranslate"><span class="pre">langchain-mcp-adapters</span></code><a class="headerlink" href="#framework-adaptation-langchain-mcp-adapters" title="Link to this heading">#</a></h2>
+<p>We call <code class="docutils literal notranslate"><span class="pre">get_tools()</span></code>, so only the <em>tools</em> primitive flows into the agent. The same client also exposes <code class="docutils literal notranslate"><span class="pre">get_resources()</span></code> and <code class="docutils literal notranslate"><span class="pre">get_prompt()</span></code>. Nothing about MCP is thrown away here — the adapter <strong>is</strong> itself an MCP client, speaking the identical wire protocol shown above; <code class="docutils literal notranslate"><span class="pre">get_tools()</span></code> just converts the one primitive a tool-calling loop actually needs.</p>
+</section>
+<section id="sanity-check-one-tool-no-llm">
+<h2>4. Sanity-check one tool (no LLM)<a class="headerlink" href="#sanity-check-one-tool-no-llm" title="Link to this heading">#</a></h2>
+<p>Call a tool straight through the adapter’s building blocks so the structured evidence is visible before involving the model at all.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">parse_mcp</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MCP tools return text content blocks; json.loads each back to a dict/list.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">block</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">text</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_unwrap</span><span class="p">(</span><span class="n">parsed</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">out</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">_unwrap</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_unwrap</span><span class="p">(</span><span class="n">parsed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Undo the {&quot;result&quot;: [...]} auto-wrapping MCP applies to non-object tool outputs.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">list</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">parsed</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MCPTool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+                <span class="n">parsed</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">]</span>
+                <span class="c1"># if the tool returns a single object rather than a list of records,</span>
+                <span class="c1"># collapse back down to that one object instead of a 1-item list</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">parsed</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tools_by_name</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;factor_subtype_association&quot;</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">(</span><span class="s2">&quot;factor_subtype_association&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;classify_subtype_from_factors&quot;</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">(</span><span class="s2">&quot;classify_subtype_from_factors&quot;</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">assoc</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="s2">&quot;factor_subtype_association&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">({})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;factor_subtype_association (top 3):&quot;</span><span class="p">,</span> <span class="n">assoc</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="bp">cls</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="s2">&quot;classify_subtype_from_factors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">({})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;classify_subtype_from_factors    :&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="bind-the-mcp-tools-to-claude">
+<h2>5. Bind the MCP tools to Claude<a class="headerlink" href="#bind-the-mcp-tools-to-claude" title="Link to this heading">#</a></h2>
+<p>Identical to Part 1: <code class="docutils literal notranslate"><span class="pre">bind_tools</span></code> does not care where the tools came from. Binding does not call the API.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructuredTool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_list_mcp_tools</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span><span class="o">.</span><span class="n">tools</span>
+
+<span class="n">mcp_tool_specs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_list_mcp_tools</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_langchain_tool</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">mcp_tool</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">mcp_tool</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">StructuredTool</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
+        <span class="n">coroutine</span><span class="o">=</span><span class="n">_run</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">args_schema</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># LangChain will infer a permissive schema; fine for demo use</span>
+    <span class="p">)</span>
+
+<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">_make_langchain_tool</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">MCPTool</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">mcp_tool_specs</span>
+<span class="p">]</span>
+<span class="n">tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MODEL</span> <span class="o">=</span> <span class="s2">&quot;claude-haiku-4-5&quot;</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">MODEL</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">llm_with_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">),</span> <span class="s2">&quot;MCP tools to&quot;</span><span class="p">,</span> <span class="n">MODEL</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-the-agent-loop-async">
+<h2>6. Run the agent loop (async)<a class="headerlink" href="#run-the-agent-loop-async" title="Link to this heading">#</a></h2>
+<p>Same loop as Part 1, but <code class="docutils literal notranslate"><span class="pre">await</span></code>-ing the model and the tools, since MCP tools are asynchronous here.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+
+<span class="n">SYSTEM</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You are a computational-biology assistant analysing a fitted MOFA model of &quot;</span>
+          <span class="s2">&quot;TCGA breast-cancer multi-omics data. Use the tools to gather evidence; ground &quot;</span>
+          <span class="s2">&quot;every quantitative claim in tool results and name which tool you used. Factors &quot;</span>
+          <span class="s2">&quot;are &#39;Factor1&#39;..&#39;Factor10&#39;; subtypes are PAM50 (LumA, LumB, Basal, Her2, Normal).&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_agent</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">SYSTEM</span><span class="p">),</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">question</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
+        <span class="n">ai</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm_with_tools</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ai</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ai</span>
+        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">])</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
+                                        <span class="n">tool_call_id</span><span class="o">=</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent did not finish within </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> steps.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The tool wrapping above is deliberately loose — <code class="docutils literal notranslate"><span class="pre">args_schema=None</span></code> means LangChain has to guess how to validate Claude’s arguments. The version below fixes that by converting each tool’s real MCP schema into a proper Pydantic model, so a bad argument gets caught before it ever reaches the server.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_json_schema_to_pydantic</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Turn an MCP tool&#39;s JSON schema into a Pydantic model LangChain can use.&quot;&quot;&quot;</span>
+    <span class="n">props</span> <span class="o">=</span> <span class="n">input_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">input_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+    <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;integer&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;boolean&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">}</span>
+
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">prop_name</span><span class="p">,</span> <span class="n">prop_spec</span> <span class="ow">in</span> <span class="n">props</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prop_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span> <span class="n">Any</span><span class="p">)</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="o">...</span> <span class="k">if</span> <span class="n">prop_name</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">else</span> <span class="n">prop_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">fields</span><span class="p">[</span><span class="n">prop_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">py_type</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">create_model</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_Args&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_langchain_tool</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">mcp_tool</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">):</span>
+    <span class="n">ArgsModel</span> <span class="o">=</span> <span class="n">_json_schema_to_pydantic</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">inputSchema</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">mcp_tool</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">StructuredTool</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
+        <span class="n">coroutine</span><span class="o">=</span><span class="n">_run</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">args_schema</span><span class="o">=</span><span class="n">ArgsModel</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">_make_langchain_tool</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">MCPTool</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">))</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">mcp_tool_specs</span><span class="p">]</span>
+<span class="n">tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">}</span>
+<span class="n">llm_with_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent</span><span class="p">(</span>
+    <span class="s2">&quot;Which MOFA factor is most associated with breast-cancer subtype, and which &quot;</span>
+    <span class="s2">&quot;transcriptomic features most strongly drive it?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">final</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="same-answer-as-the-direct-tools-track">
+<h2>7. Same answer as the direct-tools track<a class="headerlink" href="#same-answer-as-the-direct-tools-track" title="Link to this heading">#</a></h2>
+<p>The flagship answer should match Part 1 — same backend and cached model, different transport. Compare the factor Claude picked against the direct evidence:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Direct evidence (top subtype-associated factors):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">assoc</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;factor&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: eta_squared = </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;eta_squared&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="reflection">
+<h2>Reflection<a class="headerlink" href="#reflection" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Primitives: name the three this server exposes. Which adapter calls load the resource and the prompt instead of the tools? (<code class="docutils literal notranslate"><span class="pre">get_resources()</span></code>, <code class="docutils literal notranslate"><span class="pre">get_prompt()</span></code>)</p></li>
+<li><p>Did the adapter throw MCP away? No — it is an MCP client speaking the Section 2 protocol. What actually differs between Sections 2 and 5? (convenience and object model, not capability.)</p></li>
+<li><p>Layering: MCP rode on <code class="docutils literal notranslate"><span class="pre">stdio</span></code> + JSON-RPC. What changes if the transport is HTTP? (the primitives do not.)</p></li>
+<li><p>Annotations: every tool was <code class="docutils literal notranslate"><span class="pre">readOnlyHint=True</span></code>. How would a client use that? What changes for a tool that <em>writes</em>?</p></li>
+<li><p>Same answer: it matched Part 1. So what did MCP buy here, and when does it pay off? (big/private data behind an audited server, reuse across clients.)</p></li>
+</ul>
+</section>
+<section id="bringing-in-an-external-mcp-server-biomcp">
+<h2>8. Bringing in an external MCP server: BioMCP<a class="headerlink" href="#bringing-in-an-external-mcp-server-biomcp" title="Link to this heading">#</a></h2>
+<p>So far our only MCP server has been our own: a private, local server fronting our own fitted model and data. That is one end of the spectrum. The other end: public, third-party MCP servers that expose general biomedical knowledge — we do not own or run them, we just connect to them as a client, the same way we connect to <code class="docutils literal notranslate"><span class="pre">mofa_mcp_server.py</span></code>.</p>
+<p><a class="reference external" href="https://biomcp.org">BioMCP</a> is a real example: an open-source MCP server that fronts roughly 15 public biomedical data sources (PubMed, ClinicalTrials.gov, MyGene.info, MyChem.info, MyDisease.info, ClinVar, and others) behind a consistent set of tools — gene/drug/disease lookups, literature search, trial search, and more.</p>
+<p>Why this matters pedagogically: it is the same MCP client code, connecting to a completely different kind of server — one we did not write, running somewhere else, fronting public knowledge instead of our private model. The client only needs to speak MCP; it does not need to know who runs the server or what is behind it.</p>
+<section id="install-biomcp">
+<h3>Install BioMCP<a class="headerlink" href="#install-biomcp" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>biomcp-python
+<span class="c1"># or, for the newer single-binary CLI: uv tool install biomcp-cli</span>
+</pre></div>
+</div>
+</section>
+<section id="two-servers-one-agent">
+<h3>Two servers, one agent<a class="headerlink" href="#two-servers-one-agent" title="Link to this heading">#</a></h3>
+<p>We now give the agent <strong>two</strong> MCP servers at once: our private <code class="docutils literal notranslate"><span class="pre">mofa</span></code> server
+(local data) and the public <code class="docutils literal notranslate"><span class="pre">biomcp</span></code> server (general biomedical knowledge).
+<code class="docutils literal notranslate"><span class="pre">MultiServerMCPClient</span></code> supports this natively — just add a second entry.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_mcp_adapters.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiServerMCPClient</span>
+
+<span class="n">BIOMCP_BIN</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;biomcp&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;biomcp CLI not found on PATH — install it first: pip install biomcp-cli (or biomcp-python), then restart the kernel&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;biomcp binary:&quot;</span><span class="p">,</span> <span class="n">BIOMCP_BIN</span><span class="p">)</span>
+
+<span class="n">help_text</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;--help&quot;</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+<span class="n">biomcp_subcommand</span> <span class="o">=</span> <span class="s2">&quot;serve&quot;</span> <span class="k">if</span> <span class="s2">&quot;serve&quot;</span> <span class="ow">in</span> <span class="n">help_text</span> <span class="ow">and</span> <span class="s2">&quot;run&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">help_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Commands&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;run&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using subcommand:&quot;</span><span class="p">,</span> <span class="n">biomcp_subcommand</span><span class="p">)</span>
+
+<span class="n">multi_server_client</span> <span class="o">=</span> <span class="n">MultiServerMCPClient</span><span class="p">({</span>
+    <span class="s2">&quot;mofa&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">SERVER_PATH</span><span class="p">)],</span> <span class="s2">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;stdio&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;biomcp&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">biomcp_subcommand</span><span class="p">],</span> <span class="s2">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;stdio&quot;</span><span class="p">},</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="re-bind-and-re-define-the-agent-loop-over-the-combined-tool-set">
+<h3>Re-bind and re-define the agent loop over the combined tool set<a class="headerlink" href="#re-bind-and-re-define-the-agent-loop-over-the-combined-tool-set" title="Link to this heading">#</a></h3>
+<p>Nothing about <code class="docutils literal notranslate"><span class="pre">bind_tools</span></code> or <code class="docutils literal notranslate"><span class="pre">run_agent</span></code> changes conceptually — Claude just now has a larger, mixed set of tools to choose from, some fronting our own model, some fronting public biomedical databases.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_get_all_tools</span><span class="p">():</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">multi_server_client</span><span class="o">.</span><span class="n">get_tools</span><span class="p">()</span>
+
+<span class="n">all_tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_get_all_tools</span><span class="p">()</span>
+<span class="n">all_tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">all_tools</span><span class="p">}</span>
+
+<span class="n">mofa_tool_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tools_by_name</span><span class="p">)</span>          <span class="c1"># from Section 3 (mofa-only client)</span>
+<span class="n">biomcp_tool_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_tools_by_name</span><span class="p">)</span> <span class="o">-</span> <span class="n">mofa_tool_names</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tools total&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  from mofa   :&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">mofa_tool_names</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  from biomcp :&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">biomcp_tool_names</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">llm_with_all_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">all_tools</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_tools</span><span class="p">),</span> <span class="s2">&quot;tools (mofa + biomcp) to&quot;</span><span class="p">,</span> <span class="n">MODEL</span><span class="p">)</span>
+
+<span class="c1">#################################################</span>
+<span class="c1"># Write the system prompt for an agent with two tool families: MOFA tools and</span>
+<span class="c1"># BioMCP tools. Tell it when to use which, and how to handle the fact that MOFA&#39;s</span>
+<span class="c1"># Ensembl gene IDs carry a version suffix that BioMCP tools do not recognise.</span>
+<span class="n">SYSTEM_MULTI</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="c1">#### YOUR PROMPT HERE ####</span>
+<span class="p">)</span>
+<span class="c1">#################################################</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_agent_multi</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">SYSTEM_MULTI</span><span class="p">),</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">question</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
+        <span class="n">ai</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm_with_all_tools</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ai</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ai</span>
+        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">all_tools_by_name</span><span class="p">[</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="c1"># Spot-check what actually came back over the wire -- this is the</span>
+                <span class="c1"># evidence for the privacy claim in the closing markdown: only the</span>
+                <span class="c1"># arguments above went OUT to BioMCP; this is what came BACK.</span>
+                <span class="n">preview</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">preview</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">300</span><span class="p">:</span>
+                    <span class="n">preview</span> <span class="o">=</span> <span class="n">preview</span><span class="p">[:</span><span class="mi">300</span><span class="p">]</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;... [</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">preview</span><span class="p">)</span><span class="si">}</span><span class="s2"> chars total]&quot;</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;           &lt;- </span><span class="si">{</span><span class="n">preview</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
+                                        <span class="n">tool_call_id</span><span class="o">=</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent did not finish within </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> steps.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final_multi</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent_multi</span><span class="p">(</span>
+    <span class="s2">&quot;Factor2 is associated with breast cancer subtype. What biological processes &quot;</span>
+    <span class="s2">&quot;are enriched among its top 50 genes?&quot;</span><span class="p">,</span>
+    <span class="n">max_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">final_multi</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#################################################</span>
+<span class="c1"># Write a narrower, more directive question asking specifically for BioMCP&#39;s</span>
+<span class="c1"># gene-set enrichment on Factor2&#39;s top 5 genes, and nothing else.</span>
+<span class="n">final_multi</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent_multi</span><span class="p">(</span>
+    <span class="c1">#### YOUR PROMPT HERE ####,</span>
+    <span class="n">max_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">final_multi</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="c1">#################################################</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="possible-problems-to-discuss">
+<h3>Possible problems to discuss<a class="headerlink" href="#possible-problems-to-discuss" title="Link to this heading">#</a></h3>
+<p><strong>Is it safe to run the external server on our dataset?</strong></p>
+<ul class="simple">
+<li><p>The raw multi-omics data and the fitted MOFA model never go to BioMCP. They live only inside <code class="docutils literal notranslate"><span class="pre">mofa_mcp_server.py</span></code>’s process, loaded once from local cache. BioMCP has no access to that server or its data.</p></li>
+<li><p>What actually reaches BioMCP is whatever Claude puts into a tool call’s arguments — in the trace above, that is Ensembl gene IDs (<code class="docutils literal notranslate"><span class="pre">ENSG00000160180</span></code>) or gene symbols. BioMCP then relays those terms out to public APIs (PubMed, ClinicalTrials.gov, MyGene.info, g:Profiler, etc.), so those third-party services see the query terms too.</p></li>
+<li><p>Separately, and this is true regardless of BioMCP: the full conversation, including MOFA tool results, already goes to the model provider’s API as part of the agent loop. That is a standard consideration for any LLM tool-calling setup, not specific to adding BioMCP.</p></li>
+</ul>
+<p><strong>Why this is low-risk for this dataset specifically:</strong> TCGA breast-cancer data is a public, de-identified research cohort — gene names, factor loadings, and PAM50 subtype labels derived from it are not sensitive on their own. So in this notebook, the practical exposure is small.</p>
+<p>Two things worth knowing if you are adapting this to a less public dataset:</p>
+<ol class="arabic simple">
+<li><p><strong>The system prompt is a guideline, not a technical boundary.</strong> Nothing stops Claude from putting more context into a tool call than just a gene ID — it could phrase a query mentioning cohort size or subtype distribution if it thought that was helpful. The prompt discourages this but does not enforce it.</p></li>
+<li><p><strong>You can enforce it in code.</strong> If you want a hard guarantee, wrap the BioMCP tool calls with a validator that only allows arguments matching an expected pattern (bare Ensembl IDs, HGNC symbols, drug/disease names) and rejects anything else before it reaches <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code>.</p></li>
+</ol>
+<p>(Live demo tip: the printed tool results above are the evidence for this — you can point at exactly what went out and what came back, rather than asking the audience to take the claim on faith.)</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-3-agentic-llm-workflows/notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="part-1-tools.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="part-3-agent-skills.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Part 3 — Agent Skills: teaching an agent how, not just what</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-backend-bring-your-own-key">Model backend: bring your own key</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-mcp-here">Why MCP here?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-api-key">0. Environment &amp; API key</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mcp-server">1. The MCP server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#under-the-hood-talk-to-mcp-directly-no-adapter">2. Under the hood: talk to MCP directly (no adapter)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-adaptation-langchain-mcp-adapters">3. Framework adaptation: <code class="docutils literal notranslate"><span class="pre">langchain-mcp-adapters</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sanity-check-one-tool-no-llm">4. Sanity-check one tool (no LLM)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bind-the-mcp-tools-to-claude">5. Bind the MCP tools to Claude</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-agent-loop-async">6. Run the agent loop (async)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#same-answer-as-the-direct-tools-track">7. Same answer as the direct-tools track</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reflection">Reflection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bringing-in-an-external-mcp-server-biomcp">8. Bringing in an external MCP server: BioMCP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-biomcp">Install BioMCP</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-servers-one-agent">Two servers, one agent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#re-bind-and-re-define-the-agent-loop-over-the-combined-tool-set">Re-bind and re-define the agent loop over the combined tool set</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#possible-problems-to-discuss">Possible problems to discuss</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/session-3-agentic-llm-workflows/notebooks/part-2-MCPs.ipynb">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

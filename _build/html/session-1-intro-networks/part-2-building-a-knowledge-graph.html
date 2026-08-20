@@ -1,0 +1,1464 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Part 2 — Building a Knowledge Graph with NetworkX &#8212; ECCB 2026 T8</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-1-intro-networks/part-2-building-a-knowledge-graph';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Part 3 — Practical: Querying the Knowledge Graph" href="part-3-querying-the-knowledge-graph.html" />
+    <link rel="prev" title="Part 1 — What is a Network, and What is a Knowledge Graph?" href="part-1-networks-and-knowledge-graphs.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html">Part 1 — What is a Network, and What is a Knowledge Graph?</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 2 — Building a Knowledge Graph with NetworkX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-3-querying-the-knowledge-graph.html">Part 3 — Practical: Querying the Knowledge Graph</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="functions-definitions.html">Custom Function Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concept-glossary.html">Glossary</a></li>
+
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="intro.html" class="nav-link">Session 1</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 2 — Building a Knowledge Graph with NetworkX</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="part-2-building-a-knowledge-graph-with-networkx">
+<h1>Part 2 — Building a Knowledge Graph with NetworkX<a class="headerlink" href="#part-2-building-a-knowledge-graph-with-networkx" title="Link to this heading">#</a></h1>
+<p>In Part 1 we looked at the CSVs. Here we turn them into a graph, and then spend
+most of the notebook asking what <em>shape</em> that graph is — because the shape tells
+us a great deal about how the underlying data was assembled, and therefore what
+questions it can honestly answer.</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this notebook we will be able to:</p>
+<ul class="simple">
+<li><p>Build a typed, attributed graph from node and edge tables.</p></li>
+<li><p>Read a graph summary and know which numbers are meaningful.</p></li>
+<li><p>Interpret a degree distribution, and explain what a hub does and does not mean.</p></li>
+<li><p>Explain what an Open Targets association score is and how to threshold it.</p></li>
+<li><p>Visualise a graph coloured by node type.</p></li>
+<li><p>Recognise <strong>annotation sparsity</strong> — the absence of an edge that should exist.</p></li>
+</ul>
+</section>
+<section id="imports">
+<h2>1. Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ── Imports ──────────────────────────────────────────────────────────────────</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># ── Custom Imports ───────────────────────────────────────────────────────────</span>
+<span class="c1"># s1_helpers holds the plotting and graph utilities for this session. Most are</span>
+<span class="c1"># adapted from earlier co-expression network material, keeping the same names.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">s1_helpers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">h</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">9</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> 
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="c1"># ── Custom Imports ───────────────────────────────────────────────────────────</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="c1"># s1_helpers holds the plotting and graph utilities for this session. Most are</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="c1"># adapted from earlier co-expression network material, keeping the same names.</span>
+<span class="ne">----&gt; </span><span class="mi">9</span> <span class="kn">import</span><span class="w"> </span><span class="nn">s1_helpers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">h</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;s1_helpers&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="building-the-graph-explicitly">
+<h2>2. Building the graph, explicitly<a class="headerlink" href="#building-the-graph-explicitly" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">s1_helpers.load_kg()</span></code> does this in one line, but it is worth writing out once so
+that nothing is magic. A knowledge graph is <em>just</em> a loop over two tables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nodes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../data/session-1-data/kg_nodes.csv&quot;</span><span class="p">)</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../data/session-1-data/kg_edges.csv&quot;</span><span class="p">)</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+
+<span class="c1"># --- Nodes: the id becomes the key, everything else becomes an attribute ---</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">nodes</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>                                    <span class="c1"># gene / disease / icd10</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">else</span> <span class="n">row</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>  <span class="c1"># human-readable label</span>
+        <span class="n">extra</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">extra</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">extra</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> nodes added&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Edges: source, target, and whatever provenance the row carries ---</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">edges</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">attributes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">type</span><span class="p">}</span>
+
+    <span class="c1"># Only association edges have a score and an evidence count. We deliberately</span>
+    <span class="c1"># do NOT fill in a 0 for the others: &quot;no weight&quot; and &quot;weight of zero&quot; are</span>
+    <span class="c1"># different statements, and conflating them breaks every weight plot later.</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">weight</span><span class="p">):</span>
+        <span class="n">attributes</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">evidence</span><span class="p">):</span>
+        <span class="n">attributes</span><span class="p">[</span><span class="s2">&quot;evidence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">evidence</span><span class="p">)</span>
+
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">attributes</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> edges added&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1,768 edges added
+</pre></div>
+</div>
+</div>
+</div>
+<section id="undirected-with-the-direction-kept">
+<h3>Undirected, with the direction kept<a class="headerlink" href="#undirected-with-the-direction-kept" title="Link to this heading">#</a></h3>
+<p>We are building an <strong>undirected</strong> graph, because degree and components behave more
+intuitively that way. But <code class="docutils literal notranslate"><span class="pre">is_a</span></code> genuinely <em>is</em> directional, and an undirected graph
+does not remember which way round an edge was added.</p>
+<p>So the helper stamps the parent onto the edge explicitly. Without this, climbing the
+ontology in Part 3 would walk <em>downwards</em> on roughly half the edges, depending on
+NetworkX’s internal ordering — a bug that produces plausible-looking wrong answers
+rather than an error.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># From now on, use the helper - it does exactly the above, plus the parent stamp.</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">load_kg</span><span class="p">()</span>
+
+<span class="c1"># Proof that the direction survived into an undirected graph:</span>
+<span class="n">example</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;MONDO_0005494&quot;</span><span class="p">,</span> <span class="s2">&quot;MONDO_0006513&quot;</span><span class="p">)</span>   <span class="c1"># TNBC is_a ER-negative breast cancer</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">example</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  child : </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;MONDO_0005494&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  parent: </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">example</span><span class="p">][</span><span class="s1">&#39;parent&#39;</span><span class="p">]][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;type&#39;: &#39;is_a&#39;, &#39;parent&#39;: &#39;MONDO_0006513&#39;}
+
+  child : triple-negative breast carcinoma
+  parent: estrogen-receptor negative breast cancer
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="what-have-we-got">
+<h2>3. What have we got?<a class="headerlink" href="#what-have-we-got" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">print_graph_info</span></code> is the original summary function, extended to break the counts
+down by type — on a typed graph the totals alone hide most of what matters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span><span class="o">.</span><span class="n">print_graph_info</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of nodes: 881
+Number of edges: 1768
+Graph type: undirected
+
+Nodes by type:
+     760  gene
+      90  disease
+      31  icd10
+Edges by type:
+   1,656  associated_with
+      81  is_a
+      31  maps_to
+
+Self-loops: 0
+Graph density: 0.004561
+Connected components: 1
+Largest component: 881 nodes (100.0% of the graph)
+Average clustering coefficient: 0.0137
+</pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary><b>Reading these numbers</b> (click to expand)</summary>
+<ul class="simple">
+<li><p><strong>Density 0.0046</strong> — the graph is very sparse. Out of every 1,000 possible pairs
+of nodes, about 5 are connected. This is completely typical: real biological
+graphs are sparse, and dense ones are usually a sign that the threshold is too
+permissive.</p></li>
+<li><p><strong>1 connected component</strong> — everything is reachable from everything else. That is
+a property of how the graph was <em>built</em> (seeded from one disease and expanded),
+not a discovery about biology.</p></li>
+<li><p><strong>Average clustering 0.0137</strong> — near zero, and this is the interesting one. Clustering
+measures how often a node’s neighbours are themselves connected. Here they almost
+never are, because the graph is close to <strong>bipartite</strong>: genes connect to diseases,
+diseases connect to genes, but genes rarely connect to genes. Remember this number
+— it is why the projection in Part 3 is necessary.</p></li>
+</ul>
+</details></section>
+<section id="degree-who-is-connected-to-what">
+<h2>4. Degree: who is connected to what?<a class="headerlink" href="#degree-who-is-connected-to-what" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span><span class="o">.</span><span class="n">plot_degree_distribution</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">by_type</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8c1307cb913d62f15789b6f0e4cfca0cbfa427a4b231fdedf5322afcba1b0197.png" src="../_images/8c1307cb913d62f15789b6f0e4cfca0cbfa427a4b231fdedf5322afcba1b0197.png" />
+</div>
+</div>
+<p>That distribution is dominated by a spike of low-degree genes and a long right tail.
+Let us see what is actually in the tail.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span><span class="o">.</span><span class="n">get_highest_degree_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>name</th>
+      <th>type</th>
+      <th>degree</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>MONDO_0004989</td>
+      <td>breast carcinoma</td>
+      <td>disease</td>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>MONDO_0004988</td>
+      <td>breast adenocarcinoma</td>
+      <td>disease</td>
+      <td>41</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>MONDO_0006256</td>
+      <td>invasive breast carcinoma</td>
+      <td>disease</td>
+      <td>41</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>MONDO_0004953</td>
+      <td>invasive ductal breast carcinoma</td>
+      <td>disease</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>MONDO_0006116</td>
+      <td>breast carcinoma by gene expression profile</td>
+      <td>disease</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>MONDO_0007254</td>
+      <td>breast cancer</td>
+      <td>disease</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>MONDO_0005590</td>
+      <td>breast ductal adenocarcinoma</td>
+      <td>disease</td>
+      <td>35</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>MONDO_0005494</td>
+      <td>triple-negative breast carcinoma</td>
+      <td>disease</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>MONDO_0002486</td>
+      <td>lobular neoplasia</td>
+      <td>disease</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>MONDO_0005023</td>
+      <td>ductal breast carcinoma in situ</td>
+      <td>disease</td>
+      <td>33</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="the-hubs-are-all-diseases-and-that-is-a-construction-artefact">
+<h3>The hubs are all diseases — and that is a construction artefact<a class="headerlink" href="#the-hubs-are-all-diseases-and-that-is-a-construction-artefact" title="Link to this heading">#</a></h3>
+<p>This is the single most important habit to build today: <strong>when a graph tells us
+something, ask whether the data or the construction said it.</strong></p>
+<p>Here, the answer is construction. <code class="docutils literal notranslate"><span class="pre">build_kg_data.py</span></code> kept the top 30 genes <em>per
+disease</em>. So every disease has at most 30 gene edges plus its <code class="docutils literal notranslate"><span class="pre">is_a</span></code> edges, while a
+gene only gets an edge for each disease it happens to be top-30 in. Diseases were
+always going to be the hubs.</p>
+<p>Compare that to what a hub means in the inferred co-expression network we built in
+Part 1 §7, where a hub gene really is a gene that correlates with unusually many
+others. That is not free of artefacts either — its top hubs are <code class="docutils literal notranslate"><span class="pre">CD4</span></code>, <code class="docutils literal notranslate"><span class="pre">PTPN22</span></code>,
+<code class="docutils literal notranslate"><span class="pre">IL2RA</span></code> and <code class="docutils literal notranslate"><span class="pre">BTK</span></code>, immune genes that track how much immune infiltrate each tumour
+happens to contain. Both graphs have hubs; in each case the first question is what
+put them there.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Degree summarised by node type, which makes the asymmetry obvious.</span>
+<span class="n">degrees</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="s2">&quot;degree&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">}</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">()]</span>
+<span class="p">)</span>
+<span class="n">degrees</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)[</span><span class="s2">&quot;degree&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()[[</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;50%&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+      <th>mean</th>
+      <th>50%</th>
+      <th>max</th>
+    </tr>
+    <tr>
+      <th>type</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>disease</th>
+      <td>90.0</td>
+      <td>20.544444</td>
+      <td>30.0</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <th>gene</th>
+      <td>760.0</td>
+      <td>2.178947</td>
+      <td>1.0</td>
+      <td>27.0</td>
+    </tr>
+    <tr>
+      <th>icd10</th>
+      <td>31.0</td>
+      <td>1.000000</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>So: <strong><code class="docutils literal notranslate"><span class="pre">max</span></code> degree for a disease is capped near 30 + hierarchy edges by design</strong>,
+and genes sit at a median of 2. Neither number is telling us about biology.</p>
+<p>The genes with the highest degree, however, <em>are</em> interesting — they are the ones
+implicated across many different diseases.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get_highest_degree_nodes on a gene-only subgraph would return all zeros, because</span>
+<span class="c1"># genes never connect to genes. Degree has to be read off the full graph.</span>
+<span class="n">gene_degrees</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">[{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;degree&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">n</span><span class="p">)}</span>
+     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;gene&quot;</span><span class="p">)]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">gene_degrees</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;symbol  degree\n  TP53      27\n  ESR1      25\nPIK3CA      24\n BRCA2      19\n  CDH1      18\n BRCA1      17\n  PTEN      16\n ERBB2      16\n PALB2      13\n   ATM      13&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">TP53</span></code> and <code class="docutils literal notranslate"><span class="pre">PIK3CA</span></code> at the top are exactly what we would expect — the pan-cancer
+genes, implicated across almost everything. Their high degree is real signal about
+how broadly they have been studied.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ESR1</span></code> in second place is a different story. The estrogen receptor is not a
+pan-cancer gene at all; it is here because 63 of this graph’s 90 diseases are
+breast cancer subtypes, and <code class="docutils literal notranslate"><span class="pre">ESR1</span></code> is attached to most of them. Its degree is
+telling us about <strong>the shape of our disease set</strong>, not about biology.</p>
+<p>Two genes at the top of the same list, for two completely different reasons. That
+is the habit worth building: read a ranking, then ask what would have to be true
+for it to mean what it appears to mean.</p>
+</section>
+</section>
+<section id="edge-weights-what-is-an-association-score">
+<h2>5. Edge weights: what is an association score?<a class="headerlink" href="#edge-weights-what-is-an-association-score" title="Link to this heading">#</a></h2>
+<p>Open Targets computes an <strong>overall association score</strong> between 0 and 1 for each
+gene–disease pair. It is a weighted harmonic-sum aggregation across evidence types:
+genetic association, somatic mutation, known drugs, pathways, RNA expression,
+text mining, and animal models.</p>
+<p>Two things follow from that, and both matter:</p>
+<ol class="arabic simple">
+<li><p>It is <strong>not a probability</strong>. A score of 0.8 does not mean 80% likely to be causal.
+It means “a lot of evidence of several kinds points here”.</p></li>
+<li><p>It aggregates <strong>very different kinds of claim</strong>. A gene can score highly because
+it is genetically causal, <em>or</em> because a drug targeting it is used to treat the
+disease. Those are not the same relationship at all — we return to this in Part 3.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span><span class="o">.</span><span class="n">visualise_edge_weight_distribution</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/523b9fd246b933b18ca27dfaea58de6ac47364ddafdf874c699d5f1fd2824bfa.png" src="../_images/523b9fd246b933b18ca27dfaea58de6ac47364ddafdf874c699d5f1fd2824bfa.png" />
+</div>
+</div>
+<p>Note the title: 1,656 edges carry a weight, <strong>112 do not</strong>. The <code class="docutils literal notranslate"><span class="pre">is_a</span></code> and <code class="docutils literal notranslate"><span class="pre">maps_to</span></code>
+edges are structural — asserting “this is a subtype of that” is not something we
+attach a confidence score to in this dataset.</p>
+<p>That asymmetry is a trap when sparsifying, which is the next section.</p>
+</section>
+<section id="what-kind-of-evidence">
+<h2>6. What <em>kind</em> of evidence?<a class="headerlink" href="#what-kind-of-evidence" title="Link to this heading">#</a></h2>
+<p>The association score has a second problem, and it is worse than the first.</p>
+<p>It aggregates evidence types into one number, so a gene can score 0.98 because
+it is genetically causal, <strong>or</strong> because a drug hitting it treats the disease.
+Those are opposite kinds of claim and the overall score cannot tell them apart.</p>
+<p><code class="docutils literal notranslate"><span class="pre">kg_evidence.csv</span></code> keeps them apart. One row per (gene, disease, evidence type).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evidence</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">load_evidence</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">evidence</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> evidence rows for </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> edges</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">h</span><span class="o">.</span><span class="n">datatype_summary</span><span class="p">(</span><span class="n">evidence</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3,422 evidence rows for 1,768 edges
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>datatype</th>
+      <th>edges</th>
+      <th>mean_score</th>
+      <th>means</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>literature</td>
+      <td>1086</td>
+      <td>0.436</td>
+      <td>co-mentioned in publications (text mining)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>known_drug</td>
+      <td>653</td>
+      <td>0.731</td>
+      <td>a drug hitting this target is used for the dis...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>genetic_association</td>
+      <td>625</td>
+      <td>0.679</td>
+      <td>inherited variants linked to the disease (cause)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>somatic_mutation</td>
+      <td>569</td>
+      <td>0.528</td>
+      <td>mutations acquired in the tumour (cause)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>genetic_literature</td>
+      <td>164</td>
+      <td>0.620</td>
+      <td>genetic claims extracted from publications</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>rna_expression</td>
+      <td>140</td>
+      <td>0.074</td>
+      <td>the gene is differentially expressed in the di...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>animal_model</td>
+      <td>102</td>
+      <td>0.437</td>
+      <td>a model organism with this gene disrupted show...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>affected_pathway</td>
+      <td>83</td>
+      <td>0.673</td>
+      <td>the gene sits in a pathway implicated in the d...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Read the <code class="docutils literal notranslate"><span class="pre">means</span></code> column carefully. Only <code class="docutils literal notranslate"><span class="pre">genetic_association</span></code> and
+<code class="docutils literal notranslate"><span class="pre">somatic_mutation</span></code> assert that the gene has something to do with <em>causing</em> the
+disease. <code class="docutils literal notranslate"><span class="pre">known_drug</span></code> asserts the opposite direction of relevance — that the gene
+is a useful place to intervene. <code class="docutils literal notranslate"><span class="pre">literature</span></code> asserts only that a text-mining
+pipeline saw the two mentioned together.</p>
+<p>Here is the same edge, seen two ways:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">breast_cancer</span> <span class="o">=</span> <span class="s2">&quot;MONDO_0007254&quot;</span>
+<span class="n">symbols</span> <span class="o">=</span> <span class="p">{</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;gene&quot;</span><span class="p">)}</span>
+
+<span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;BRCA1&quot;</span><span class="p">,</span> <span class="s2">&quot;TUBB&quot;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- </span><span class="si">{</span><span class="n">symbol</span><span class="si">}</span><span class="s2"> -&gt; breast cancer, overall score &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">symbols</span><span class="p">[</span><span class="n">symbol</span><span class="p">],</span><span class="w"> </span><span class="n">breast_cancer</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">evidence_for_pair</span><span class="p">(</span><span class="n">evidence</span><span class="p">,</span> <span class="n">symbols</span><span class="p">[</span><span class="n">symbol</span><span class="p">],</span> <span class="n">breast_cancer</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span>
+          <span class="p">[[</span><span class="s2">&quot;datatype&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;means&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- BRCA1 -&gt; breast cancer, overall score 0.8355
+           datatype  weight                                            means
+         literature  0.9886       co-mentioned in publications (text mining)
+genetic_association  0.9754 inherited variants linked to the disease (cause)
+ genetic_literature  0.6083       genetic claims extracted from publications
+
+--- TUBB -&gt; breast cancer, overall score 0.6212
+  datatype  weight                                                          means
+known_drug  0.9869 a drug hitting this target is used for the disease (treatment)
+literature  0.6869                     co-mentioned in publications (text mining)
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> and <code class="docutils literal notranslate"><span class="pre">TUBB</span></code> have almost the same overall score. But <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> scores through
+<code class="docutils literal notranslate"><span class="pre">genetic_association</span></code> and has <strong>no drug evidence at all</strong>, while <code class="docutils literal notranslate"><span class="pre">TUBB</span></code> scores
+through <code class="docutils literal notranslate"><span class="pre">known_drug</span></code> and has <strong>no genetic evidence at all</strong>.</p>
+<p>One is a cause. The other is a treatment target. The overall score, which is what
+most people use, reports them identically. Hold onto that — it is the whole of
+Section B in Part 3.</p>
+</section>
+<section id="sparsification-turning-a-dial-and-watching-the-graph-change">
+<h2>7. Sparsification: turning a dial and watching the graph change<a class="headerlink" href="#sparsification-turning-a-dial-and-watching-the-graph-change" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SCORE_THRESHOLD</span></code> and “top N genes per disease” were choices made when the data was
+built. We can make them again here, on the edges we have.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;weight&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]:</span>
+    <span class="n">sparse</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">threshold_sparsification</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+    <span class="n">weighted</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">sparse</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;weight&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  score &gt;= </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">weighted</span><span class="si">:</span><span class="s2">&gt;5,</span><span class="si">}</span><span class="s2"> association edges kept &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">weighted</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  score &gt;= 0.0   1,656 association edges kept (100%)
+  score &gt;= 0.2   1,445 association edges kept (87%)
+  score &gt;= 0.4     913 association edges kept (55%)
+  score &gt;= 0.6     420 association edges kept (25%)
+  score &gt;= 0.8      16 association edges kept (1%)
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-trap">
+<h3>The trap<a class="headerlink" href="#the-trap" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">threshold_sparsification</span></code> keeps unweighted edges by default. Watch what happens
+if it does not — this is the original behaviour, where a missing weight was read as 0:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kept</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">threshold_sparsification</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">keep_unweighted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dropped</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">threshold_sparsification</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">keep_unweighted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">graph</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;keep_unweighted=True &quot;</span><span class="p">,</span> <span class="n">kept</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;keep_unweighted=False&quot;</span><span class="p">,</span> <span class="n">dropped</span><span class="p">)]:</span>
+    <span class="n">n_isa</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">edges_of_type</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="s2">&quot;is_a&quot;</span><span class="p">))</span>
+    <span class="n">n_map</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">edges_of_type</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="s2">&quot;maps_to&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">  is_a: </span><span class="si">{</span><span class="n">n_isa</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   maps_to: </span><span class="si">{</span><span class="n">n_map</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;components: </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">number_connected_components</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>keep_unweighted=True   is_a:  81   maps_to:  31   components: 327
+keep_unweighted=False  is_a:   0   maps_to:   0   components: 415
+</pre></div>
+</div>
+</div>
+</div>
+<p>Treating “no weight” as “weight 0” silently deletes <strong>the entire disease hierarchy
+and every ICD-10 link</strong>. The graph still loads, still draws, still has a sensible
+node count — and every ontology question we ask it afterwards returns nothing.</p>
+<p>This is the characteristic knowledge-graph bug: it does not crash, it just quietly
+becomes a different graph.</p>
+</section>
+</section>
+<section id="seeing-it">
+<h2>8. Seeing it<a class="headerlink" href="#seeing-it" title="Link to this heading">#</a></h2>
+<p>Layout algorithms on an 881-node graph produce a hairball. That is honest — it <em>is</em>
+a hairball — but colouring by type at least shows the structure.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span><span class="o">.</span><span class="n">visualise_graph</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Session 1 knowledge graph, coloured by node type&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ef6ed7c8fdfed5c8162c05f8dd7df23681ca8ae2672a3d57280c62b7e4683ab9.png" src="../_images/ef6ed7c8fdfed5c8162c05f8dd7df23681ca8ae2672a3d57280c62b7e4683ab9.png" />
+</div>
+</div>
+<p>The blue genes form a fringe around a core of orange diseases, with the green
+ICD-10 nodes hanging off the edge. That picture <em>is</em> the bipartite structure the
+near-zero clustering coefficient predicted.</p>
+<p>For a readable picture, take a subgraph. Here is the disease hierarchy on its own:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The is_a backbone: diseases and the subtype relationships between them.</span>
+<span class="n">hierarchy</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">hierarchy</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;disease&quot;</span><span class="p">))</span>
+<span class="n">hierarchy</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">edges_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;is_a&quot;</span><span class="p">))</span>
+<span class="n">hierarchy</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">clean_graph</span><span class="p">(</span><span class="n">hierarchy</span><span class="p">,</span> <span class="n">degree_threshold</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keep_largest_component</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">h</span><span class="o">.</span><span class="n">draw_network_with_node_attrs</span><span class="p">(</span>
+    <span class="n">hierarchy</span><span class="p">,</span>
+    <span class="n">color_attr</span><span class="o">=</span><span class="s2">&quot;type&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;The is_a hierarchy (</span><span class="si">{</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">}</span><span class="s2"> diseases)&quot;</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8b0b54dab3fbc364466831d02b30cfc2621e896ed4086f9b8624456ba2b8adc7.png" src="../_images/8b0b54dab3fbc364466831d02b30cfc2621e896ed4086f9b8624456ba2b8adc7.png" />
+</div>
+</div>
+</section>
+<section id="annotation-sparsity-the-edges-that-should-be-there-and-are-not">
+<h2>9. Annotation sparsity: the edges that should be there and are not<a class="headerlink" href="#annotation-sparsity-the-edges-that-should-be-there-and-are-not" title="Link to this heading">#</a></h2>
+<p>We finish with the most important idea in the notebook.</p>
+<p><code class="docutils literal notranslate"><span class="pre">build_kg_data.py</span></code> asked Open Targets for <strong>99</strong> diseases: breast cancer, its 74
+subtypes from the ontology, and 24 comparison diseases. The graph has <strong>90</strong>. Nine
+diseases vanished because they had <em>no gene associations at all</em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The five PAM50 molecular subtypes used in Session 2 are all diseases in this graph.</span>
+<span class="n">subtypes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;PAM50 label&quot;</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span>
+        <span class="s2">&quot;MONDO id&quot;</span><span class="p">:</span> <span class="n">mondo_id</span><span class="p">,</span>
+        <span class="s2">&quot;name in graph&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">mondo_id</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">mondo_id</span> <span class="ow">in</span> <span class="n">G</span> <span class="k">else</span> <span class="s2">&quot;ABSENT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;genes&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">mondo_id</span><span class="p">)),</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">mondo_id</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">PAM50_TO_MONDO</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">])</span>
+<span class="n">subtypes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PAM50 label</th>
+      <th>MONDO id</th>
+      <th>name in graph</th>
+      <th>genes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>LumA</td>
+      <td>MONDO_0021116</td>
+      <td>luminal A breast carcinoma</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>LumB</td>
+      <td>MONDO_0021115</td>
+      <td>luminal B breast carcinoma</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Basal</td>
+      <td>MONDO_0004984</td>
+      <td>basal-like breast carcinoma</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Her2</td>
+      <td>MONDO_0006244</td>
+      <td>HER2 positive breast carcinoma</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Normal</td>
+      <td>MONDO_0006324</td>
+      <td>normal breast-like subtype of breast carcinoma</td>
+      <td>19</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Basal-like breast carcinoma has zero genes.</strong></p>
+<p>Basal-like disease is one of the most intensively studied breast cancer subtypes.
+It obviously has genes. So what happened?</p>
+<p>Open Targets holds only <strong>16 direct associations</strong> for that exact ontology term, and
+the strongest scores <strong>0.009</strong> — below the 0.05 threshold used at build time. The
+evidence exists, but it was filed against a <em>neighbouring</em> term: <code class="docutils literal notranslate"><span class="pre">triple-negative</span> <span class="pre">breast</span> <span class="pre">carcinoma</span></code>, which is clinically near-synonymous and has 34 edges in our graph.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tnbc</span> <span class="o">=</span> <span class="s2">&quot;MONDO_0005494&quot;</span>   <span class="c1"># triple-negative breast carcinoma</span>
+<span class="n">basal</span> <span class="o">=</span> <span class="s2">&quot;MONDO_0004984&quot;</span>  <span class="c1"># basal-like breast carcinoma</span>
+
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">(</span><span class="n">tnbc</span><span class="p">,</span> <span class="n">basal</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">36s</span><span class="si">}</span><span class="s2"> degree=</span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">  &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;genes=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">))</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>triple-negative breast carcinoma     degree= 34  genes= 30
+basal-like breast carcinoma          degree=  2  genes=  0
+</pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary><b>Why this is the lesson, not a footnote</b> (click to expand)</summary>
+<p>Every knowledge graph we will ever use has this property. An edge is missing for
+one of three reasons and the graph does not tell us which:</p>
+<ol class="arabic simple">
+<li><p>The relationship does not exist. <em>(genuine negative)</em></p></li>
+<li><p>The relationship exists but nobody has studied it. <em>(annotation gap)</em></p></li>
+<li><p>The relationship exists, has been studied, and was recorded against a different
+but equivalent term. <em>(vocabulary mismatch — what happened here)</em></p></li>
+</ol>
+<p>Only the first is a finding. The other two are artefacts of curation, and they are
+much more common. This is precisely why the <code class="docutils literal notranslate"><span class="pre">is_a</span></code> hierarchy matters: it lets us
+recover from case 3 by asking about a parent term instead.</p>
+<p>That recovery is what Part 3 does.</p>
+</details></section>
+<section id="exercise">
+<h2>Exercise<a class="headerlink" href="#exercise" title="Link to this heading">#</a></h2>
+<p>Find the diseases in the graph with the fewest gene associations, and decide for
+each whether it is a genuine negative or an annotation gap.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: count the genes attached to each disease and sort ascending</span>
+<span class="c1">### YOUR CODE HERE ###</span>
+
+<span class="n">gene_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A knowledge graph is a loop over a node table and an edge table; nothing more.</p></li>
+<li><p>Undirected is easier to analyse, but genuinely directional edges (<code class="docutils literal notranslate"><span class="pre">is_a</span></code>) need
+their direction preserved as an attribute.</p></li>
+<li><p><strong>Hubs here are diseases, because of how the data was cut</strong> — always ask whether
+a graph property came from the data or from the construction.</p></li>
+<li><p>Association scores aggregate very different kinds of evidence into one number —
+<code class="docutils literal notranslate"><span class="pre">kg_evidence.csv</span></code> separates them, and the separation matters enormously.</p></li>
+<li><p>Thresholding a graph with mixed weighted and unweighted edges will silently
+delete the unweighted ones unless we are careful.</p></li>
+<li><p><strong>Annotation sparsity is the default state of biomedical knowledge graphs.</strong>
+A missing edge usually means nobody looked, or somebody used a different word.</p></li>
+</ul>
+<p><strong>Next:</strong> Part 3 puts this to work — starting from ICD-10 codes, recovering from
+the gaps, and finding which diseases share genes.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-1-intro-networks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="part-1-networks-and-knowledge-graphs.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Part 1 — What is a Network, and What is a Knowledge Graph?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="part-3-querying-the-knowledge-graph.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Part 3 — Practical: Querying the Knowledge Graph</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-the-graph-explicitly">2. Building the graph, explicitly</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#undirected-with-the-direction-kept">Undirected, with the direction kept</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-have-we-got">3. What have we got?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-who-is-connected-to-what">4. Degree: who is connected to what?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-hubs-are-all-diseases-and-that-is-a-construction-artefact">The hubs are all diseases — and that is a construction artefact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-weights-what-is-an-association-score">5. Edge weights: what is an association score?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-kind-of-evidence">6. What <em>kind</em> of evidence?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sparsification-turning-a-dial-and-watching-the-graph-change">7. Sparsification: turning a dial and watching the graph change</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-trap">The trap</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seeing-it">8. Seeing it</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#annotation-sparsity-the-edges-that-should-be-there-and-are-not">9. Annotation sparsity: the edges that should be there and are not</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/session-1-intro-networks/part-2-building-a-knowledge-graph.ipynb">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

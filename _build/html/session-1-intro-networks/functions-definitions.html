@@ -64,7 +64,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Glossary" href="concept-glossary.html" />
-    <link rel="prev" title="Session 1" href="intro.html" />
+    <link rel="prev" title="Part 3 — Practical: Querying the Knowledge Graph" href="part-3-querying-the-knowledge-graph.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -210,7 +210,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -343,7 +343,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../session-3-agentic-llm-workflows/intro.html">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -382,6 +382,13 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html">Part 1 — What is a Network, and What is a Knowledge Graph?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-2-building-a-knowledge-graph.html">Part 2 — Building a Knowledge Graph with NetworkX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-3-querying-the-knowledge-graph.html">Part 3 — Practical: Querying the Knowledge Graph</a></li>
+
+
+
+
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Custom Function Definitions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concept-glossary.html">Glossary</a></li>
 
@@ -447,6 +454,321 @@
                   
   <section id="module-s1_helpers">
 <span id="custom-function-definitions"></span><h1>Custom Function Definitions<a class="headerlink" href="#module-s1_helpers" title="Link to this heading">#</a></h1>
+<p>Session 1 helper functions.</p>
+<p>Most of these are adapted from an earlier gene co-expression network workshop,
+keeping the same names so they stay recognisable. The originals were written for
+co-expression networks - one node type, every edge carrying a
+correlation weight, always undirected. A curated knowledge graph breaks all
+three of those assumptions, so the ported versions here additionally handle:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>several node types (gene / disease / icd10) rather than just genes</p></li>
+<li><p>edges that carry no weight at all (<cite>is_a</cite>, <cite>maps_to</cite>)</p></li>
+<li><p>directed graphs, where connected components and clustering differ</p></li>
+</ul>
+</div></blockquote>
+<p>Deliberately lightweight: matplotlib, pandas, networkx, numpy and seaborn only
+(numpy arrives with pandas anyway). The original module pulled in torch, dgl and
+astropy at import time, which is a slow and fragile thing to ask of a workshop
+room.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.ancestors_of">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">ancestors_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#ancestors_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.ancestors_of" title="Link to this definition">#</a></dt>
+<dd><p>All ancestors reachable by following <cite>is_a</cite> edges upwards, nearest first.</p>
+<p>Breadth-first and alphabetically ordered within each level, so the result is
+identical on every machine and every run. That matters more than it sounds:
+a disease can have several parents, and iterating a set gives a different
+order in each Python process, so an un-sorted version prints a different
+answer every time the notebook is run.</p>
+<p>With <cite>with_depth</cite>, yields (ancestor, depth) where depth is the number of
+<cite>is_a</cite> hops from <cite>node</cite> - a real distance up the tree, not a position in a
+traversal.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.clean_graph">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">clean_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_largest_component</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#clean_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.clean_graph" title="Link to this definition">#</a></dt>
+<dd><p>Remove self-loops, isolates and low-degree nodes; optionally keep only the
+largest component. Directed graphs use weakly connected components.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.coexpression_network">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">coexpression_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correlations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#coexpression_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.coexpression_network" title="Link to this definition">#</a></dt>
+<dd><p>Build an inferred network: an edge wherever two genes correlate above <cite>threshold</cite>.</p>
+<p>Every node is a gene - one node type, unlike the knowledge graph - and every
+edge carries the correlation as its <cite>weight</cite>. Nodes are added for all genes,
+including ones that end up with no edges, because “which genes dropped out at
+this threshold?” is a question worth being able to ask.</p>
+<p><cite>absolute</cite> thresholds on <a href="#id1"><span class="problematic" id="id2">|r|</span></a>, so strong anti-correlation counts as a
+relationship. Pass <cite>correlations</cite> to reuse a matrix already computed - it is
+by far the expensive part, and the threshold sweep calls this repeatedly.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.coexpression_partners">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">coexpression_partners</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">correlations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#coexpression_partners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.coexpression_partners" title="Link to this definition">#</a></dt>
+<dd><p>The genes most strongly co-expressed with one gene, strongest <a href="#id3"><span class="problematic" id="id4">|r|</span></a> first.</p>
+<p>Pass the knowledge graph as <cite>G</cite> to get gene symbols alongside the Ensembl ids
+- the ranking is unreadable without them.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.coexpression_threshold_sweep">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">coexpression_threshold_sweep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correlations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#coexpression_threshold_sweep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.coexpression_threshold_sweep" title="Link to this definition">#</a></dt>
+<dd><p>Rebuild the network at several thresholds and report what survives each one.</p>
+<p>The point of the table is that there is no principled place to stop. Every row
+is a defensible network built from identical data, and the choice of row is
+the analyst’s, not the data’s.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.correlation_matrix">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">correlation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#correlation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.correlation_matrix" title="Link to this definition">#</a></dt>
+<dd><p>Gene x gene Pearson correlation, with the diagonal zeroed.</p>
+<p>The diagonal is every gene’s perfect correlation with itself. Left in, it
+dominates any “strongest partners” ranking, so it goes to zero here once
+rather than being special-cased at every call site.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.datatype_summary">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">datatype_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evidence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#datatype_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.datatype_summary" title="Link to this definition">#</a></dt>
+<dd><p>How much of each kind of evidence the graph rests on.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.diseases_for_genes">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">diseases_for_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#diseases_for_genes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.diseases_for_genes" title="Link to this definition">#</a></dt>
+<dd><p>Given a gene list, which diseases does it touch?</p>
+<p>This is the smallest useful knowledge-graph query: one hop out from a set
+of genes, counting where we land. It is the same shape as the queries an
+LLM agent will be asked to plan in Sessions 3 and 4.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.draw_network_with_node_attrs">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">draw_network_with_node_attrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Network</span> <span class="pre">Visualization'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_attr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_attr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(20,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spring'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tab20'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/s1_helpers.html#draw_network_with_node_attrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.draw_network_with_node_attrs" title="Link to this definition">#</a></dt>
+<dd><p>Draw a graph with nodes coloured and/or shaped by attribute.</p>
+<p>Adapted from the co-expression original with two fixes and one signature change:</p>
+<ul class="simple">
+<li><p>The original grouped nodes for drawing by shape, but built that grouping
+from <cite>shape_attr</cite>. Called with a <cite>color_attr</cite> and no <cite>shape_attr</cite> the
+grouping came out empty and <em>no nodes were drawn at all</em> - only edges.
+Colour-only calls now work.</p></li>
+<li><p>Attributes are read from the graph itself by default. The original
+required a separate <cite>node_attributes</cite> dict of the shape
+{attr_name: {node: value}}, which had to be kept in sync by hand. Pass
+one to override to colour by something not on the graph.</p></li>
+<li><p>An empty attribute no longer divides by zero when building the colormap.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.edges_of_type">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">edges_of_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#edges_of_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.edges_of_type" title="Link to this definition">#</a></dt>
+<dd><p>All edges of a given <cite>type</cite>, as (u, v) pairs.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.evidence_for_pair">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">evidence_for_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evidence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disease_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#evidence_for_pair"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.evidence_for_pair" title="Link to this definition">#</a></dt>
+<dd><p>Break a single gene-disease edge down into the evidence behind it.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.filter_by_datatype">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">filter_by_datatype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evidence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#filter_by_datatype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.filter_by_datatype" title="Link to this definition">#</a></dt>
+<dd><p>Keep only the <cite>associated_with</cite> edges supported by particular evidence types.</p>
+<p>Structural edges (<cite>is_a</cite>, <cite>maps_to</cite>) are always kept - they are not the sort
+of claim evidence types apply to, and dropping them would tear out the
+hierarchy exactly as an over-eager threshold does.</p>
+<p>Pass <cite>CAUSAL_DATATYPES</cite> to keep the edges that assert the gene has something
+to do with causing the disease, and watch how many disappear.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.gen_graph_legend">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">gen_graph_legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'type'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#gen_graph_legend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.gen_graph_legend" title="Link to this definition">#</a></dt>
+<dd><p>Legend patches for a graph coloured by <cite>attr</cite>.</p>
+<p>The original took a parallel series of colours and zipped it against
+the attribute values, which relied on the two being in the same order.
+This derives both from the graph, so they cannot disagree.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.gene_by_symbol">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">gene_by_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#gene_by_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.gene_by_symbol" title="Link to this definition">#</a></dt>
+<dd><p>Find a gene node’s Ensembl id from its symbol, e.g. “BRCA1” -&gt; ENSG00000012048.</p>
+<p>Participants think in symbols and the graph is keyed by Ensembl id, so this
+saves a manual lookup every time. Raises rather than returning None: a typo
+should stop the cell, not silently produce an empty result further down.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.genes_for_disease">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">genes_for_disease</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disease_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#genes_for_disease"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.genes_for_disease" title="Link to this definition">#</a></dt>
+<dd><p>The set of gene nodes linked to a disease by an <cite>associated_with</cite> edge.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.get_highest_degree_nodes">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">get_highest_degree_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#get_highest_degree_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.get_highest_degree_nodes" title="Link to this definition">#</a></dt>
+<dd><p>The <cite>top_n</cite> highest-degree nodes.</p>
+<p>Returns a DataFrame rather than the original’s list of tuples, so that the
+readable <cite>name</cite> sits next to the opaque id - <cite>ENSG00000012048</cite> means
+little, <cite>BRCA1</cite> means a lot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.icd10_for_disease">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">icd10_for_disease</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disease_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#icd10_for_disease"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.icd10_for_disease" title="Link to this definition">#</a></dt>
+<dd><p>Find an ICD-10 code for a disease, climbing the ontology if necessary.</p>
+<p>Returns a dict with the code, the node it was actually found on, and how
+many <cite>is_a</cite> steps that took. <cite>steps == 0</cite> means the disease carries the
+code itself; anything higher means we inherited it from an ancestor, which
+is a weaker claim and should be reported as such.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.load_evidence">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">load_evidence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('/work/gr-fe/bryan/ECCB_2026_T8_CODE/sessions/session-1-intro-networks/../../data_tmp/session-1-data')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#load_evidence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.load_evidence" title="Link to this definition">#</a></dt>
+<dd><p>The gene-disease edges split by kind of evidence.</p>
+<p>One row per (gene, disease, datatype). The <cite>weight</cite> column is the
+association score contributed by that evidence type alone, so the same
+gene-disease pair appears once per datatype supporting it.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.load_expression">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">load_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('/work/gr-fe/bryan/ECCB_2026_T8_CODE/sessions/session-1-intro-networks/../../data_tmp/session-1-data')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#load_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.load_expression" title="Link to this definition">#</a></dt>
+<dd><p>Load the committed expression matrix: patients (rows) x genes (columns).</p>
+<p>This is the TCGA-BRCA transcriptomics view used in Session 2, cut down to the
+genes that are also nodes in the knowledge graph (737 of 760) so that both
+networks describe the same genes. Values are log2-scale and already
+library-size normalised, so correlations can be taken directly.</p>
+<p>Generated by <cite>data-prep/build_coexpression_data.py</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.load_kg">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">load_kg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('/work/gr-fe/bryan/ECCB_2026_T8_CODE/sessions/session-1-intro-networks/../../data_tmp/session-1-data')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#load_kg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.load_kg" title="Link to this definition">#</a></dt>
+<dd><p>Build the Session 1 knowledge graph from the generated CSVs.</p>
+<p>Node attributes: <cite>type</cite>, <cite>name</cite>, <cite>extra</cite>.
+Edge attributes: <cite>type</cite>, and <cite>weight</cite> / <cite>evidence</cite> on <cite>associated_with</cite> only.</p>
+<p>The underlying edges are directional (gene -&gt; disease, disease -&gt; parent,
+disease -&gt; icd10). Undirected is the default because degree, hubs and
+connected components all behave more intuitively that way; pass
+<cite>directed=True</cite> when the direction is the point.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.load_omics">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">load_omics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('transcriptomics',)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/s1_helpers.html#load_omics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.load_omics" title="Link to this definition">#</a></dt>
+<dd><p>Load the Session 2 omics pickle, keeping only the layers asked for.</p>
+<p>The full file is ~900 MB, most of it the 200,000-probe methylation matrix,
+so the default keeps transcriptomics only. <cite>meta</cite> (the PAM50 subtype per
+patient) is always returned.</p>
+<p>Returns (dict_of_layers, meta_series).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.map_genes_to_kg">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">map_genes_to_kg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_ids</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#map_genes_to_kg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.map_genes_to_kg" title="Link to this definition">#</a></dt>
+<dd><p>Look a list of gene ids up in the knowledge graph.</p>
+<p>Accepts versioned or unversioned Ensembl ids. Returns one row per input id
+with whether it was found and, if so, its symbol and degree - so an omics
+gene list becomes an entry point into the graph.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.nodes_of_type">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">nodes_of_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#nodes_of_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.nodes_of_type" title="Link to this definition">#</a></dt>
+<dd><p>All node ids of a given <cite>type</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.plot_degree_distribution">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">plot_degree_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/s1_helpers.html#plot_degree_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.plot_degree_distribution" title="Link to this definition">#</a></dt>
+<dd><p>Degree distribution, optionally split by node type.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.print_graph_info">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">print_graph_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#print_graph_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.print_graph_info" title="Link to this definition">#</a></dt>
+<dd><p>Print basic information about a graph.</p>
+<p>Unlike the co-expression original this is safe on directed graphs, and it breaks
+the counts down by node and edge type - on a typed graph the totals alone
+hide most of what is interesting.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.remove_by_degree">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">remove_by_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_degree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#remove_by_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.remove_by_degree" title="Link to this definition">#</a></dt>
+<dd><p>Drop nodes whose degree is below <cite>min_degree</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.shared_gene_projection">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">shared_gene_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disease_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_shared</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#shared_gene_projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.shared_gene_projection" title="Link to this definition">#</a></dt>
+<dd><p>Project the bipartite gene-disease graph down onto diseases alone.</p>
+<p>Two diseases are joined if they share at least <cite>min_shared</cite> genes. The edge
+carries both the raw count (<cite>n_shared</cite>) and the Jaccard index (<cite>weight</cite>),
+because the two tell different stories: a well-studied disease shares many
+genes with everything simply by having many genes.</p>
+<p>This is the standard way to turn a two-mode network into a one-mode one,
+and it is where “which diseases resemble each other?” becomes a question
+about graph structure rather than about biology directly.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.shared_genes_between">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">shared_genes_between</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#shared_genes_between"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.shared_genes_between" title="Link to this definition">#</a></dt>
+<dd><p>Gene symbols shared by two diseases, for eyeballing a single pair.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.strip_ensembl_version">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">strip_ensembl_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#strip_ensembl_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.strip_ensembl_version" title="Link to this definition">#</a></dt>
+<dd><p>Turn versioned Ensembl ids into bare ones: ENSG00000012048.23 -&gt; ENSG00000012048.</p>
+<p>The TCGA matrices carry the version suffix; Open Targets does not. Joining
+the two without this step matches exactly nothing, silently.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.threshold_sparsification">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">threshold_sparsification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_unweighted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#threshold_sparsification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.threshold_sparsification" title="Link to this definition">#</a></dt>
+<dd><p>Drop edges whose weight is below <cite>threshold</cite>.</p>
+<p><cite>keep_unweighted</cite> is the knowledge-graph-specific part: <cite>is_a</cite> and
+<cite>maps_to</cite> edges carry no weight, and silently deleting them (which the
+co-expression version would, by treating a missing weight as 0) would tear the
+disease hierarchy out of the graph. Keep them by default.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.top_percentage_sparsification">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">top_percentage_sparsification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_percentage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_unweighted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#top_percentage_sparsification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.top_percentage_sparsification" title="Link to this definition">#</a></dt>
+<dd><p>Keep only the top <cite>top_percentage</cite> % of weighted edges.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.visualise_edge_weight_distribution">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">visualise_edge_weight_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/s1_helpers.html#visualise_edge_weight_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.visualise_edge_weight_distribution" title="Link to this definition">#</a></dt>
+<dd><p>Distribution of edge weights.</p>
+<p>Only edges that actually carry a weight are plotted; the original
+indexed <cite>G[u][v][‘weight’]</cite> directly and would raise a KeyError on the
+first <cite>is_a</cite> edge it met.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="s1_helpers.visualise_graph">
+<span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">visualise_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Knowledge</span> <span class="pre">Graph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'type'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/s1_helpers.html#visualise_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.visualise_graph" title="Link to this definition">#</a></dt>
+<dd><p>Quick look at a graph, nodes coloured by an attribute.</p>
+<p>The co-expression version drew every node the same blue, which is the right call
+for a co-expression network and the wrong one here - node type is the
+first thing we want to see.</p>
+</dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">
@@ -479,12 +801,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="intro.html"
+       href="part-3-querying-the-knowledge-graph.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Session 1</p>
+        <p class="prev-next-title">Part 3 — Practical: Querying the Knowledge Graph</p>
       </div>
     </a>
     <a class="right-next"
@@ -506,6 +828,49 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.ancestors_of"><code class="docutils literal notranslate"><span class="pre">ancestors_of()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.clean_graph"><code class="docutils literal notranslate"><span class="pre">clean_graph()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.coexpression_network"><code class="docutils literal notranslate"><span class="pre">coexpression_network()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.coexpression_partners"><code class="docutils literal notranslate"><span class="pre">coexpression_partners()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.coexpression_threshold_sweep"><code class="docutils literal notranslate"><span class="pre">coexpression_threshold_sweep()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.correlation_matrix"><code class="docutils literal notranslate"><span class="pre">correlation_matrix()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.datatype_summary"><code class="docutils literal notranslate"><span class="pre">datatype_summary()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.diseases_for_genes"><code class="docutils literal notranslate"><span class="pre">diseases_for_genes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.draw_network_with_node_attrs"><code class="docutils literal notranslate"><span class="pre">draw_network_with_node_attrs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.edges_of_type"><code class="docutils literal notranslate"><span class="pre">edges_of_type()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.evidence_for_pair"><code class="docutils literal notranslate"><span class="pre">evidence_for_pair()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.filter_by_datatype"><code class="docutils literal notranslate"><span class="pre">filter_by_datatype()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.gen_graph_legend"><code class="docutils literal notranslate"><span class="pre">gen_graph_legend()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.gene_by_symbol"><code class="docutils literal notranslate"><span class="pre">gene_by_symbol()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.genes_for_disease"><code class="docutils literal notranslate"><span class="pre">genes_for_disease()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.get_highest_degree_nodes"><code class="docutils literal notranslate"><span class="pre">get_highest_degree_nodes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.icd10_for_disease"><code class="docutils literal notranslate"><span class="pre">icd10_for_disease()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.load_evidence"><code class="docutils literal notranslate"><span class="pre">load_evidence()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.load_expression"><code class="docutils literal notranslate"><span class="pre">load_expression()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.load_kg"><code class="docutils literal notranslate"><span class="pre">load_kg()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.load_omics"><code class="docutils literal notranslate"><span class="pre">load_omics()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.map_genes_to_kg"><code class="docutils literal notranslate"><span class="pre">map_genes_to_kg()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.nodes_of_type"><code class="docutils literal notranslate"><span class="pre">nodes_of_type()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.plot_degree_distribution"><code class="docutils literal notranslate"><span class="pre">plot_degree_distribution()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.print_graph_info"><code class="docutils literal notranslate"><span class="pre">print_graph_info()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.remove_by_degree"><code class="docutils literal notranslate"><span class="pre">remove_by_degree()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.shared_gene_projection"><code class="docutils literal notranslate"><span class="pre">shared_gene_projection()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.shared_genes_between"><code class="docutils literal notranslate"><span class="pre">shared_genes_between()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.strip_ensembl_version"><code class="docutils literal notranslate"><span class="pre">strip_ensembl_version()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.threshold_sparsification"><code class="docutils literal notranslate"><span class="pre">threshold_sparsification()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.top_percentage_sparsification"><code class="docutils literal notranslate"><span class="pre">top_percentage_sparsification()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.visualise_edge_weight_distribution"><code class="docutils literal notranslate"><span class="pre">visualise_edge_weight_distribution()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s1_helpers.visualise_graph"><code class="docutils literal notranslate"><span class="pre">visualise_graph()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

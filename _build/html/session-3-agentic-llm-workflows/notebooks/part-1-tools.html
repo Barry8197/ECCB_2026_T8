@@ -1,0 +1,1025 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Part 1 — MOFA tools for an LLM agent (LangChain @tool) &#8212; ECCB 2026 T8</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'session-3-agentic-llm-workflows/notebooks/part-1-tools';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)" href="part-2-MCPs.html" />
+    <link rel="prev" title="Part 0 — Data exploration &amp; building omics.pkl" href="part-0-data-exploration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="ECCB'26 T8"/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt="ECCB'26 T8"/>
+  
+  
+    <p class="title logo__title">Multi-Omics 2 Discovery via LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="index.html" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_self" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Barry8197/ECCB2026_TEST" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+          
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../GettingStarted.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-1-intro-networks/intro.html">
+    Session 1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../session-2-multi-omics/intro.html">
+    Session 2
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../intro.html">
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="part-0-data-exploration.html">Part 0 — Data exploration &amp; building <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">@tool</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-2-MCPs.html">Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-3-agent-skills.html">Part 3 — Agent Skills: teaching an agent how, not just what</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../intro.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../intro.html" class="nav-link">Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="part-1-mofa-tools-for-an-llm-agent-langchain-tool">
+<h1>Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>)<a class="headerlink" href="#part-1-mofa-tools-for-an-llm-agent-langchain-tool" title="Link to this heading">#</a></h1>
+<p>In this notebook, we’re going to learn about how to make LLMs use <strong>tools.</strong>. Tools are simply <em>functions</em>, given to a LLM agent, which then decides which to call to answer a given task, instead of relying only on its internal knowledge.</p>
+<p>We’ll specifically be using as tools the functions defined in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>. These tools will help Claude answer questions about the multi-omics MOFA model we fitted in Part 0: A fitted MOFA model of TCGA breast-cancer subtypes, with 603 patients × 3 omics views (transcriptomics, proteomics, methylation), PAM50 subtype per patient.</p>
+<p>For Claude to know when to use each function, they all contain a short description (a docstring) of what it does, and Claude decides on its own which ones to use, and in what order.</p>
+<p><strong>Key design choice: the model is not fit by the agent.</strong>
+Within these functions, we have decided not to include the function to fit the MOFA model (<code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code>). The agent’s tools operate on the already
+fitted model. Fitting is expensive and non-interactive, so it is deliberately
+not exposed as a tool. Tools are the cheap, interpretable analysis steps.</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this notebook you should be able to:</p>
+<ul class="simple">
+<li><p>Explain what a tool is, and why handing Claude a function is not the same as trusting it with what is inside that function.</p></li>
+<li><p>Write a plain Python function that returns tool-friendly evidence, and wrap it as a tool Claude can call using LangChain’s <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code> decorator.</p></li>
+<li><p>Explain why an operation like <code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code> is deliberately kept out of an agent’s reach.</p></li>
+<li><p>Write a system prompt that gives Claude the grounding it needs to answer questions safely.</p></li>
+<li><p>Read an agent’s tool-call trace and judge whether it combined evidence from more than one tool correctly.</p></li>
+</ul>
+<section id="model-backend-bring-your-own-key">
+<h3>Model backend: bring-your-own-key<a class="headerlink" href="#model-backend-bring-your-own-key" title="Link to this heading">#</a></h3>
+<p>This notebook calls the real Anthropic API, through a library called LangChain that lets us hand Claude a list of Python functions it can call. Create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in the project root with <code class="docutils literal notranslate"><span class="pre">ANTHROPIC_API_KEY=sk-ant-...</span></code>; it is loaded into the environment below and never printed. Run this notebook with the <code class="docutils literal notranslate"><span class="pre">eccb</span></code> kernel.</p>
+<blockquote>
+<div><p>Only the cells in Section 6 (running the agent) spend API tokens. Everything above them is local computation on the already-fitted model.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="environment-api-key">
+<h2>0. Environment &amp; API key<a class="headerlink" href="#environment-api-key" title="Link to this heading">#</a></h2>
+<p>Load the key, and point the notebook at the project root so it can find <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39; ## YOUR CODE HERE ## &#39;&#39;&#39;</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">))</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY not found. Add it to a .env in the project root.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY loaded:&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-the-data-the-cached-mofa-model-one-time-setup">
+<h2>1. Load the data + the cached MOFA model (one-time setup)<a class="headerlink" href="#load-the-data-the-cached-mofa-model-one-time-setup" title="Link to this heading">#</a></h2>
+<p>This mirrors the pipeline in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>: load aligned omics, make the
+shared train/test split, then load the pre-fitted MOFA model from <code class="docutils literal notranslate"><span class="pre">.hdf5</span></code>
+(fit once via the project’s fit step, never re-fit here). The agent’s tools
+close over the objects built in this cell.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mofax</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mfx</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.mofa_tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RANDOM_STATE</span><span class="p">,</span> <span class="n">TEST_SIZE</span><span class="p">,</span> <span class="n">N_TOP_VARIABLE_HIGH_DIM_FEATURES</span><span class="p">,</span>
+    <span class="n">HIGH_DIMENSIONAL_VIEWS</span><span class="p">,</span> <span class="n">MAX_FACTORS</span><span class="p">,</span> <span class="n">MIN_TOTAL_R2</span><span class="p">,</span>
+    <span class="n">load_omics_data</span><span class="p">,</span> <span class="n">make_train_test_split</span><span class="p">,</span> <span class="n">select_active_factors</span><span class="p">,</span>
+    <span class="n">project_test_patients_to_mofa_factors</span><span class="p">,</span> <span class="n">eta_squared_by_factor</span><span class="p">,</span>
+    <span class="n">fit_factor_classifier</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>
+<span class="n">CACHE</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;outputs&quot;</span> <span class="o">/</span> <span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;trained_mofaplus_train_var</span><span class="si">{</span><span class="n">N_TOP_VARIABLE_HIGH_DIM_FEATURES</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;_max</span><span class="si">{</span><span class="n">MAX_FACTORS</span><span class="si">}</span><span class="s2">_ard_model.hdf5&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">CACHE</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Cached MOFA model not found: </span><span class="si">{</span><span class="n">CACHE</span><span class="si">}</span><span class="s2">. Run the one-time fit first.&quot;</span>
+
+<span class="n">X_omics</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;## YOUR CODE HERE ###&#39;&#39;&#39;</span> <span class="c1"># Upload the data using pre-existent function</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">test_ids</span> <span class="o">=</span> <span class="n">make_train_test_split</span><span class="p">(</span>
+    <span class="n">X_omics</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">TEST_SIZE</span><span class="p">,</span> <span class="n">RANDOM_STATE</span><span class="p">,</span> <span class="n">HIGH_DIMENSIONAL_VIEWS</span><span class="p">,</span>
+    <span class="n">N_TOP_VARIABLE_HIGH_DIM_FEATURES</span><span class="p">)</span>
+<span class="n">view_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">train_ids_str</span><span class="p">,</span> <span class="n">test_ids_str</span> <span class="o">=</span> <span class="n">train_ids</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">test_ids</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">mfx</span><span class="o">.</span><span class="n">mofa_model</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">CACHE</span><span class="p">))</span>                       <span class="c1"># LOAD, never fit</span>
+<span class="n">train_factors</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_factors</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">train_factors</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">train_factors</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">test_factors</span> <span class="o">=</span> <span class="n">project_test_patients_to_mofa_factors</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">train_factors</span><span class="p">,</span> <span class="n">view_names</span><span class="p">)</span>
+<span class="n">factors_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">train_factors</span><span class="p">,</span> <span class="n">test_factors</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">factors_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">factors_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">factors_df</span> <span class="o">=</span> <span class="n">factors_df</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+
+<span class="n">active_cols</span><span class="p">,</span> <span class="n">r2_summary</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39; ## YOUR CODE HERE ## Implement the appropiate including the model, MIN_TOTAL_R2 and MAX_FACTORS.&#39;&#39;&#39;</span>
+<span class="n">r2_all</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_r2</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Factor&quot;</span><span class="p">:</span> <span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span> <span class="s2">&quot;view&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;Group&quot;</span><span class="p">:</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;R2&quot;</span><span class="p">:</span> <span class="s2">&quot;r2&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded cached MOFA model | views=</span><span class="si">{</span><span class="n">view_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;train=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_ids</span><span class="p">)</span><span class="si">}</span><span class="s2">  test=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_ids</span><span class="p">)</span><span class="si">}</span><span class="s2">  active factors=</span><span class="si">{</span><span class="n">active_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-tool-functions-plain-python-on-the-cached-model">
+<h2>2. The tool functions (plain Python, on the cached model)<a class="headerlink" href="#the-tool-functions-plain-python-on-the-cached-model" title="Link to this heading">#</a></h2>
+<p>Each function returns a small JSON-serializable result, the kind of compact,
+grounded evidence an LLM can reason over. We demonstrate each directly here
+before handing them to the model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#################################################</span>
+<span class="c1"># Write a funciton &amp; its docstring that summarises </span>
+<span class="c1"># the patients information and features per omics view, plus the subtype class counts.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">data_summary</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    ## YOUR DOCSTRING HERE ## </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1">## YOUR CODE HERE ##</span>
+<span class="c1">#################################################</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">split_summary</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Train/test patient counts and the number of features kept per view after</span>
+<span class="sd">    variable-feature selection.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;n_train&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train_ids</span><span class="p">)),</span> <span class="s2">&quot;n_test&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_ids</span><span class="p">)),</span>
+            <span class="s2">&quot;features_per_view&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">view_names</span><span class="p">}}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">active_factors</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Which MOFA factors are &#39;active&#39; (total variance explained &gt;= threshold),</span>
+<span class="sd">    with each factor&#39;s total R2 summed across views.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;active_factors&quot;</span><span class="p">:</span> <span class="n">active_cols</span><span class="p">,</span>
+            <span class="s2">&quot;total_r2&quot;</span><span class="p">:</span> <span class="n">r2_summary</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">)[</span><span class="s2">&quot;total_r2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">factor_view_r2</span><span class="p">(</span><span class="n">factor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Variance explained (R2, %) by one factor in each omics view, and the view</span>
+<span class="sd">    that factor explains most.&quot;&quot;&quot;</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">r2_all</span><span class="p">[</span><span class="n">r2_all</span><span class="p">[</span><span class="s2">&quot;factor&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">factor</span><span class="p">][[</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="s2">&quot;r2&quot;</span><span class="p">]]</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">],</span> <span class="n">sub</span><span class="p">[</span><span class="s2">&quot;r2&quot;</span><span class="p">])}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;factor&quot;</span><span class="p">:</span> <span class="n">factor</span><span class="p">,</span> <span class="s2">&quot;r2_by_view&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
+            <span class="s2">&quot;top_view&quot;</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">)</span> <span class="k">if</span> <span class="n">d</span> <span class="k">else</span> <span class="kc">None</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">factor_subtype_association</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rank active factors by eta-squared: how much of each factor&#39;s variance is</span>
+<span class="sd">    explained by PAM50 subtype (training patients). Higher = more subtype-linked.&quot;&quot;&quot;</span>
+    <span class="n">assoc</span> <span class="o">=</span> <span class="n">eta_squared_by_factor</span><span class="p">(</span><span class="n">factors_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids_str</span><span class="p">,</span> <span class="n">active_cols</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">assoc</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">eta_squared</span><span class="o">=</span><span class="n">assoc</span><span class="p">[</span><span class="s2">&quot;eta_squared&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">top_features_for_factor</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="s2">&quot;transcriptomics&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Top positive- and negative-weighted features of `view` for `factor` — the</span>
+<span class="sd">    features that most strongly define that latent axis.&quot;&quot;&quot;</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_weights</span><span class="p">(</span><span class="n">views</span><span class="o">=</span><span class="n">view</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span> <span class="n">w</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="n">factor</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;factor&quot;</span><span class="p">:</span> <span class="n">factor</span><span class="p">,</span> <span class="s2">&quot;view&quot;</span><span class="p">:</span> <span class="n">view</span><span class="p">,</span>
+            <span class="s2">&quot;top_negative&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="s2">&quot;top_positive&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_subtype_from_factors</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fit logistic regression on MOFA factors (train) and evaluate on held-out</span>
+<span class="sd">    patients: accuracy / balanced-accuracy / macro-F1 and the most-confused pair.&quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">fit_factor_classifier</span><span class="p">(</span>
+        <span class="n">factors_df</span><span class="p">[</span><span class="n">active_cols</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_ids_str</span><span class="p">,</span> <span class="n">test_ids_str</span><span class="p">,</span> <span class="s2">&quot;MOFA factors + LR&quot;</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">pred</span><span class="p">))</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">),</span>
+                     <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pred&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">off</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span> <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">off</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">off</span><span class="o">.</span><span class="n">argmax</span><span class="p">(),</span> <span class="n">off</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;model&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;most_confused&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;true&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="s2">&quot;predicted&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">off</span><span class="o">.</span><span class="n">max</span><span class="p">())}}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">train_vs_test_subtype_association</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare factor&lt;-&gt;subtype eta-squared on TRAIN vs projected TEST patients —</span>
+<span class="sd">    does the factor space still separate subtypes out of sample?&quot;&quot;&quot;</span>
+    <span class="n">tr</span> <span class="o">=</span> <span class="n">eta_squared_by_factor</span><span class="p">(</span><span class="n">factors_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids_str</span><span class="p">,</span> <span class="n">active_cols</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">te</span> <span class="o">=</span> <span class="n">eta_squared_by_factor</span><span class="p">(</span><span class="n">factors_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids_str</span><span class="p">,</span> <span class="n">active_cols</span><span class="p">],</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">te</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;_train&quot;</span><span class="p">,</span> <span class="s2">&quot;_test&quot;</span><span class="p">))</span>
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;eta_squared_train&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;eta_squared_train&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;eta_squared_test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;eta_squared_test&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Quick direct demo — the evidence the agent will be working from:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;data_summary          :&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data_summary</span><span class="p">()[</span><span class="s2">&quot;subtype_counts&quot;</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;split_summary          :&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">split_summary</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;active_factors         :&quot;</span><span class="p">,</span> <span class="n">active_factors</span><span class="p">()[</span><span class="s2">&quot;active_factors&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;factor_view_r2(Factor1):&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">factor_view_r2</span><span class="p">(</span><span class="s2">&quot;Factor1&quot;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;subtype assoc (top 3)  :&quot;</span><span class="p">,</span> <span class="n">factor_subtype_association</span><span class="p">()[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;classify               :&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">classify_subtype_from_factors</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="wrap-the-functions-as-langchain-tools">
+<h2>3. Wrap the functions as LangChain tools<a class="headerlink" href="#wrap-the-functions-as-langchain-tools" title="Link to this heading">#</a></h2>
+<p>LangChain’s <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code> marker turns a plain Python function into something Claude can call directly. The docstring becomes the description the model reads to decide when a tool is useful — Claude never sees the function’s actual code, only its name, arguments, and docstring. Note we do not wrap
+<code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code>, <code class="docutils literal notranslate"><span class="pre">build_mofa_matrix_input</span></code>, or <code class="docutils literal notranslate"><span class="pre">evaluate_predictions</span></code>, the first is
+expensive setup, the other two are internal plumbing. Exposing them would only
+give the model ways to misfire.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">data_summary_tool</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return patients and features per omics view, plus PAM50 subtype class counts.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">data_summary</span><span class="p">()</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_summary_tool</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return train/test patient counts and features kept per view after selection.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">split_summary</span><span class="p">()</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">active_factors_tool</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return which MOFA factors are active and each factor&#39;s total R2 across views.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">active_factors</span><span class="p">()</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">factor_view_r2_tool</span><span class="p">(</span><span class="n">factor</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Variance explained (R2) by one factor (e.g. &#39;Factor1&#39;) in each omics view,</span>
+<span class="sd">    and which view it explains most.&quot;&quot;&quot;</span>
+
+    
+
+    <span class="c1">#################################################</span>
+    <span class="c1"># Complete the function using the existing functions to return the factor view r2.</span>
+    <span class="c1">## YOUR CODE HERE ##</span>
+    <span class="c1">#################################################</span>
+    
+    
+                
+    
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">factor_subtype_association_tool</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rank active factors by eta-squared association with PAM50 subtype (train).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">factor_subtype_association</span><span class="p">()</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">top_features_for_factor_tool</span><span class="p">(</span><span class="n">factor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;transcriptomics&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Top positive/negative weighted features of a view for a factor (its drivers).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">top_features_for_factor</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="n">view</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_subtype_from_factors_tool</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Predict subtype from MOFA factors; return held-out metrics + most-confused pair.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">classify_subtype_from_factors</span><span class="p">()</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">train_vs_test_subtype_association_tool</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare factor&lt;-&gt;subtype eta-squared on train vs projected test patients.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">train_vs_test_subtype_association</span><span class="p">()</span>
+
+<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_summary_tool</span><span class="p">,</span> <span class="n">split_summary_tool</span><span class="p">,</span> <span class="n">active_factors_tool</span><span class="p">,</span> <span class="n">factor_view_r2_tool</span><span class="p">,</span>
+         <span class="n">factor_subtype_association_tool</span><span class="p">,</span> <span class="n">top_features_for_factor_tool</span><span class="p">,</span>
+         <span class="n">classify_subtype_from_factors_tool</span><span class="p">,</span> <span class="n">train_vs_test_subtype_association_tool</span><span class="p">]</span>
+<span class="n">tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">}</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">tools_by_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="bind-the-tools-to-claude">
+<h2>4. Bind the tools to Claude<a class="headerlink" href="#bind-the-tools-to-claude" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">bind_tools</span></code> tells the model the tool schemas: what these tools are called, what arguments they take, and what their docstrings say. Claude decides at question time whether to use any of them. Creating the client and binding it to the tools does not call the API by itself; no tokens are spent until Claude actually answers a question in Section 6.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+
+<span class="n">MODEL</span> <span class="o">=</span> <span class="s2">&quot;claude-haiku-4-5&quot;</span>   <span class="c1"># swap for any current Claude model id</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">MODEL</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">llm_with_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">),</span> <span class="s2">&quot;tools to&quot;</span><span class="p">,</span> <span class="n">MODEL</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-agent-loop">
+<h2>5. The agent loop<a class="headerlink" href="#the-agent-loop" title="Link to this heading">#</a></h2>
+<p>A tool-calling agent is just a loop: send the conversation so far, run whatever tools the model asks for, add the results back into the conversation, and repeat until the model answers without requesting any more tools.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+
+<span class="c1">#################################################</span>
+<span class="c1"># Write the prompt to define the persona, the activity that the agent should perform. Additional clue: List the factors and the subtypes in the prompt.</span>
+<span class="n">SYSTEM</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">#################################################</span>
+<span class="s1">#               YOUR PROMPT HERE</span>
+<span class="s1">#################################################</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="c1">#################################################</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_agent</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">SYSTEM</span><span class="p">),</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">question</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
+        <span class="n">ai</span> <span class="o">=</span> <span class="n">llm_with_tools</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ai</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ai</span>
+        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">])</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
+                                        <span class="n">tool_call_id</span><span class="o">=</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent did not finish within </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> steps.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-the-agent-these-cells-spend-api-tokens">
+<h2>6. Run the agent (these cells spend API tokens)<a class="headerlink" href="#run-the-agent-these-cells-spend-api-tokens" title="Link to this heading">#</a></h2>
+<p>Each <code class="docutils literal notranslate"><span class="pre">run_agent(...)</span></code> call below issues real Anthropic API requests. They go from simple, single-tool questions to ones that need Claude to combine evidence from more than one tool. Run the ones you want.</p>
+<section id="simple-single-tool-questions">
+<h3>Simple, single-tool questions<a class="headerlink" href="#simple-single-tool-questions" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q1: data shape</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;How many patients and features are in each omics view, &quot;</span>
+                <span class="s2">&quot;and how many patients per PAM50 subtype?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q2: the split</span>
+<span class="c1">#################################################</span>
+<span class="c1"># Write the text to ask the agent to split the cohort between test and train. Additional clue: detail the information that you are asking for, eg. how many patients each?</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">#################################################</span>
+<span class="s1">               YOUR PROMPT HERE</span>
+<span class="s1">#################################################</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="c1">#################################################</span>
+<span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q3: active factors</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Which MOFA factors are active, and how much total variance &quot;</span>
+                <span class="s2">&quot;does each explain?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q4: factor vs view</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Which omics view does Factor1 explain the most?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="multi-step-reasoning">
+<h3>Multi-step reasoning<a class="headerlink" href="#multi-step-reasoning" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q5: FLAGSHIP = strongest subtype factor + its drivers</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Which MOFA factor is most associated with breast-cancer subtype, &quot;</span>
+                <span class="s2">&quot;and which transcriptomic features most strongly drive it?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q6: predict + failure mode</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Can we predict subtype from the MOFA factors alone? Report the &quot;</span>
+                <span class="s2">&quot;held-out performance and say which two subtypes are most confused.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q7: variance vs subtype separation (synthesises two tools)</span>
+<span class="c1">#################################################</span>
+<span class="c1"># Write the text to ask the agent to compare the R2 ranking with the subtype association ranking and explain </span>
+<span class="c1"># any mismatch, in order to understand the relationship between variance and subtype separation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">#################################################</span>
+<span class="s1">               YOUR CODE HERE</span>
+<span class="s1">#################################################</span>
+<span class="s1">                </span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="c1">#################################################</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q8: out-of-sample check</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Do the MOFA factors still separate subtypes on the held-out test &quot;</span>
+                <span class="s2">&quot;patients? Compare the train and test subtype associations.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="reflection">
+<h2>Reflection<a class="headerlink" href="#reflection" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Which tool calls did the model choose for each question, and in what order?</p></li>
+<li><p>For Q5/Q7, did it combine evidence from multiple tools, or stop early?</p></li>
+<li><p>What would be unsafe for the model to state without calling these tools?</p></li>
+<li><p>We intentionally did not expose <code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code>. What goes wrong if an agent can
+trigger an expensive, non-deterministic fit mid-conversation?</p></li>
+<li><p>The MCP track (<code class="docutils literal notranslate"><span class="pre">02_MCP_v1.ipynb</span></code>) and skills track (<code class="docutils literal notranslate"><span class="pre">03_agent_skills_v1.ipynb</span></code>)
+reuse this exact <code class="docutils literal notranslate"><span class="pre">mofa_tools.py</span></code> backend, compare how the tool layer is exposed.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./session-3-agentic-llm-workflows/notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="part-0-data-exploration.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Part 0 — Data exploration &amp; building <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="part-2-MCPs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-backend-bring-your-own-key">Model backend: bring-your-own-key</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-api-key">0. Environment &amp; API key</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-data-the-cached-mofa-model-one-time-setup">1. Load the data + the cached MOFA model (one-time setup)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tool-functions-plain-python-on-the-cached-model">2. The tool functions (plain Python, on the cached model)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-the-functions-as-langchain-tools">3. Wrap the functions as LangChain tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bind-the-tools-to-claude">4. Bind the tools to Claude</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-agent-loop">5. The agent loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-agent-these-cells-spend-api-tokens">6. Run the agent (these cells spend API tokens)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-single-tool-questions">Simple, single-tool questions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-step-reasoning">Multi-step reasoning</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reflection">Reflection</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/session-3-agentic-llm-workflows/notebooks/part-1-tools.ipynb">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

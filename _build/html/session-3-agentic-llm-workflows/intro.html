@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Session 3 &#8212; ECCB 2026 T8</title>
+    <title>Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs &#8212; ECCB 2026 T8</title>
   
   
   
@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Custom Function Definitions" href="functions-definitions.html" />
+    <link rel="next" title="Part 0 — Data exploration &amp; building omics.pkl" href="notebooks/part-0-data-exploration.html" />
     <link rel="prev" title="Glossary" href="../session-2-multi-omics/concept-glossary.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -210,7 +210,7 @@
 
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -343,7 +343,7 @@
 
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#">
-    Session 3
+    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
   </a>
 </li>
 
@@ -382,9 +382,10 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="functions-definitions.html">Custom Function Definitions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="concept-glossary.html">Glossary</a></li>
-
+<li class="toctree-l1"><a class="reference internal" href="notebooks/part-0-data-exploration.html">Part 0 — Data exploration &amp; building <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/part-1-tools.html">Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">@tool</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/part-2-MCPs.html">Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/part-3-agent-skills.html">Part 3 — Agent Skills: teaching an agent how, not just what</a></li>
 </ul>
 </div>
 </nav></div>
@@ -425,7 +426,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Session 3</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs</span></li>
   </ul>
 </nav>
 </div>
@@ -442,11 +443,52 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="session-3">
-<h1>Session 3<a class="headerlink" href="#session-3" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="session-3-building-agentic-llm-workflows-for-biomedical-knowledge-graphs">
+<h1>Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs<a class="headerlink" href="#session-3-building-agentic-llm-workflows-for-biomedical-knowledge-graphs" title="Link to this heading">#</a></h1>
+<p>Session 2 was about <em>how you build</em> a multi-omic profile. Session 3 is about <em>how you let something else use it</em>: an LLM agent — here, Claude, from Anthropic, reached through an API key — given tools so it can do more than it could using its knowledge alone.</p>
+<p>This session walks through three parts. Part 1 lets Claude call plain Python functions directly, as tools. Part 2 moves those same tools behind a server using the MCP protocol. Part 3 gives Claude general-purpose tools instead — running code, reading and writing files — guided by written instructions rather than a fixed list of functions.</p>
+<p>All three parts ask the model the same question, over the same tools — the same <code class="docutils literal notranslate"><span class="pre">mofa_tools.py</span></code> functions, operating on the one MOFA model fit once, back in Part 0. What changes between them is only the interface between the model and those tools — so you can see exactly what each layer (a typed tool, an MCP server, an agent skill) actually adds. The question every part answers is the same:</p>
+<blockquote>
+<div><p>Which MOFA factor is most associated with breast-cancer subtype, and what drives it?</p>
+</div></blockquote>
+<p>One design choice holds across all three parts: <strong>the model never gets raw omics data.</strong> Every function the agent can call — check <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code> yourself — takes small typed arguments, like a factor name or a threshold, never a DataFrame. The heavy, error-prone work (aligning three separately-exported omics files, fitting MOFA, computing variance explained) happens once, in Part 0, before any agent runs. The agent’s job is to reason over the results of that work, not to reproduce or verify it.</p>
+<section id="part-0-data-reconciliation">
+<h2>Part 0 — Data reconciliation<a class="headerlink" href="#part-0-data-reconciliation" title="Link to this heading">#</a></h2>
+<p>Three separately-exported omics files — transcriptomics, proteomics, methylation — cover different, only partially-overlapping sets of patients, in different orders. This notebook finds the patients present in all three, checks that they agree on each patient’s subtype, and merges them into one aligned <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code>. It matters specifically because of the rule above: an agent calling <code class="docutils literal notranslate"><span class="pre">load_omics_data</span></code> has no way to notice if that alignment does not hold, so someone has to guarantee it first.</p>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="building-agentic-llm-workflows-for-biomedical-knowledge-graphs">
-<h1>Building Agentic LLM Workflows for Biomedical Knowledge Graphs<a class="headerlink" href="#building-agentic-llm-workflows-for-biomedical-knowledge-graphs" title="Link to this heading">#</a></h1>
+<section id="part-1-tools">
+<h2>Part 1 — Tools<a class="headerlink" href="#part-1-tools" title="Link to this heading">#</a></h2>
+<p>The basic interface: plain Python functions, each with a short description of what it does, and Claude decides on its own which one to call, and in what order, to answer a question. We do that through a library called LangChain. This is the simplest way to give a model access to real evidence instead of asking it to guess, and it is enough to see the core mechanic every agent in this session shares: send a question, let Claude request tool calls, run them, feed the results back, repeat until it answers with no more calls.</p>
+<p><strong>Key takeaways</strong></p>
+<ul class="simple">
+<li><p>Handing Claude a function as a tool is not the same as trusting it with what is inside that function — the short description is the only thing Claude ever “reads” about how it works.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code> is deliberately never offered as a tool. Expensive, non-deterministic operations do not belong within an agent’s reach.</p></li>
+<li><p>Claude chooses which tools to call and in what order; nothing here hardcodes the reasoning path.</p></li>
+</ul>
+</section>
+<section id="part-2-the-model-context-protocol-mcp">
+<h2>Part 2 — The Model Context Protocol (MCP)<a class="headerlink" href="#part-2-the-model-context-protocol-mcp" title="Link to this heading">#</a></h2>
+<p>The tools from Part 1 only exist inside that one notebook — nobody else can use them without copying your code. MCP is a standard way to instead put tools behind a server: a small program that runs on its own, which any agent can connect to and call the same tools from, without needing your code at all.</p>
+<p>This matters for two reasons. First, you may not want your data or your tool logic sitting inside every notebook that touches it — a server lets you keep it in one controlled place instead. Second, and more useful day-to-day: other people have already built and published tools this way. If someone else’s server exposes tools over MCP, you can connect to it and use them immediately, without writing anything yourself.</p>
+<p>We first show that the results match Part 1 exactly — same tools, same cached model, just reached through a server instead of called directly — to prove MCP changes nothing about the tools themselves, only how they are reached. Then we connect to a second, public MCP server, BioMCP, run by someone else entirely, to show the real payoff: instant access to tools over public biomedical databases (PubMed, ClinicalTrials.gov, gene and drug lookups) that we never had to build.</p>
+<p><strong>Key takeaways</strong></p>
+<ul class="simple">
+<li><p>MCP does not change what a tool can do. It changes where it lives and who can reach it.</p></li>
+<li><p>That matters for two reasons: keeping data and logic in one controlled place, and reusing tools other people have already built and published.</p></li>
+<li><p>BioMCP makes the second reason concrete: connect to someone else’s server and gain tools instantly, the same way you connect to your own.</p></li>
+</ul>
+</section>
+<section id="part-3-agent-skills">
+<h2>Part 3 — Agent Skills<a class="headerlink" href="#part-3-agent-skills" title="Link to this heading">#</a></h2>
+<p>Parts 1 and 2 both hand Claude a fixed menu of functions to choose from — whether they live in your notebook or behind an MCP server, Claude can only ever do exactly what is on that menu. Part 3 removes the menu: instead, Claude gets general-purpose tools — run code, read a file, write a file — the same tools a person would have at a terminal. With those alone, Claude could in principle do almost anything, but it would not know your specifics: which model to load, what counts as good evidence, how you want the answer formatted.</p>
+<p>An <strong>Agent Skill</strong> is simply a markdown file of instructions, a <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code>, that Claude reads and follows for a task like this one, instead of you writing a separate function for every rule. Where Parts 1 and 2 defined <em>what Claude is allowed to do</em>, a skill teaches it <em>how to do this particular task well</em>.</p>
+<p><strong>Key takeaways</strong></p>
+<ul class="simple">
+<li><p>Tools and MCP both hand Claude a fixed list of things it can do. A skill instead hands it instructions for using tools it already has.</p></li>
+<li><p>The comparison worth running yourself: same task, same model, with and without the skill loaded. What Claude <em>can</em> do does not change; how well it does it does.</p></li>
+<li><p>“Load the cached model, never refit” is exactly the kind of knowledge that belongs in a skill, not a function signature — it is a rule about how to use a tool, not a new tool.</p></li>
+</ul>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -460,16 +502,16 @@
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "eccb"
         },
         kernelOptions: {
-            name: "python3",
+            name: "eccb",
             path: "./session-3-agentic-llm-workflows"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'eccb'</script>
 
                 </article>
               
@@ -490,11 +532,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="functions-definitions.html"
+       href="notebooks/part-0-data-exploration.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Custom Function Definitions</p>
+        <p class="prev-next-title">Part 0 — Data exploration &amp; building <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -516,10 +558,11 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Session 3</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#building-agentic-llm-workflows-for-biomedical-knowledge-graphs">Building Agentic LLM Workflows for Biomedical Knowledge Graphs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-data-reconciliation">Part 0 — Data reconciliation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-tools">Part 1 — Tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-the-model-context-protocol-mcp">Part 2 — The Model Context Protocol (MCP)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-agent-skills">Part 3 — Agent Skills</a></li>
 </ul>
-
   </nav></div>
 
   <div class="sidebar-secondary-item">

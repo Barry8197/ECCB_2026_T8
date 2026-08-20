@@ -72,4 +72,3 @@ sphinx:
   local_extensions:
     s1_helpers : "./session-1-intro-networks"
     s2_helpers : "./session-2-multi-omics"
-    s3_helpers : "./session-3-agentic-llm-workflows"
