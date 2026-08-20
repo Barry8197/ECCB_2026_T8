@@ -64,7 +64,7 @@ sphinx:
           attributes:
             target: _self
         - name: GitHub
-          url: https://github.com/Barry8197/ECCB2026_TEST
+          url: https://github.com/Barry8197/ECCB_2026_T8_CODE 
           icon: fa-brands fa-square-github
           type: fontawesome
     add_module_names: True
