@@ -116,6 +116,13 @@ We have developed a Jupyter Book containing all code and some extra materials to
     <p>I am a student in the Biomedical AI cohort at the University of Edinburgh. My research focus is developing network-based multimodal AI approaches to address heterogeneity in ovarian cancer.</p>
     <p>G.S.E.Agasi@sms.ed.ac.uk</p>
   </div>
+
+  <div style="flex: 1; min-width: 250px; text-align: center;">
+    <img src="profile_images/stefi.jpeg" alt="Profile Photo 3" style="width: 100px; height: 100px; border-radius: 50%;">
+    <h3>Stefi Tirkova</h3>
+    <p>I am a PhD student at the UKRI CDT in Biomedical AI at the University of Edinburgh. My research focuses on combining patient similarity networks with multi-omic data to better stratify patients with hypertension and understand the factors that contribute to resilience.</p>
+    <p>stefi.tirkova@ed.ac.uk</p>
+  </div>
   
 </div>
 
@@ -123,7 +130,7 @@ We have developed a Jupyter Book containing all code and some extra materials to
 
   <div style="flex: 1; min-width: 250px; text-align: center;">
     <img src="profile_images/chaimae_ElHoujjaji.jpg" alt="Profile Photo 1" style="width: 100px; height: 100px; border-radius: 50%;">
-    <h3>Sebestyén Kamp</h3>
+    <h3>Chaimae El Houjjaji</h3>
     <p>I am a PhD student at EPFL in Jacques Fellay’s lab in Lausanne. My research interests focus on translational discoveries using omics data, with a particular interest in multi-omics and AI. I have worked across oncology, immunology, and rare diseases.</p>
     <p>chaimae.elhoujjaji@epfl.ch</p>
   </div>
