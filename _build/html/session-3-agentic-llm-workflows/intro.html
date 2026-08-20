@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs &#8212; ECCB 2026 T8</title>
+    <title>Session 3 &#8212; ECCB 2026 T8</title>
   
   
   
@@ -210,7 +210,7 @@
 
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#">
-    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+    Session 3
   </a>
 </li>
 
@@ -343,7 +343,7 @@
 
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#">
-    Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs
+    Session 3
   </a>
 </li>
 
@@ -426,7 +426,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Session 3</span></li>
   </ul>
 </nav>
 </div>
@@ -443,8 +443,11 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="session-3-building-agentic-llm-workflows-for-biomedical-knowledge-graphs">
-<h1>Session 3: Building Agentic LLM Workflows for Biomedical Knowledge Graphs<a class="headerlink" href="#session-3-building-agentic-llm-workflows-for-biomedical-knowledge-graphs" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="session-3">
+<h1>Session 3<a class="headerlink" href="#session-3" title="Link to this heading">#</a></h1>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="building-agentic-llm-workflows-for-biomedical-knowledge-graphs">
+<h1>Building Agentic LLM Workflows for Biomedical Knowledge Graphs<a class="headerlink" href="#building-agentic-llm-workflows-for-biomedical-knowledge-graphs" title="Link to this heading">#</a></h1>
 <p>Session 2 was about <em>how you build</em> a multi-omic profile. Session 3 is about <em>how you let something else use it</em>: an LLM agent — here, Claude, from Anthropic, reached through an API key — given tools so it can do more than it could using its knowledge alone.</p>
 <p>This session walks through three parts. Part 1 lets Claude call plain Python functions directly, as tools. Part 2 moves those same tools behind a server using the MCP protocol. Part 3 gives Claude general-purpose tools instead — running code, reading and writing files — guided by written instructions rather than a fixed list of functions.</p>
 <p>All three parts ask the model the same question, over the same tools — the same <code class="docutils literal notranslate"><span class="pre">mofa_tools.py</span></code> functions, operating on the one MOFA model fit once, back in Part 0. What changes between them is only the interface between the model and those tools — so you can see exactly what each layer (a typed tool, an MCP server, an agent skill) actually adds. The question every part answers is the same:</p>
@@ -502,16 +505,16 @@
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb"
+            mode: "python"
         },
         kernelOptions: {
-            name: "eccb",
+            name: "python3",
             path: "./session-3-agentic-llm-workflows"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -558,11 +561,16 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Session 3</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#building-agentic-llm-workflows-for-biomedical-knowledge-graphs">Building Agentic LLM Workflows for Biomedical Knowledge Graphs</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-0-data-reconciliation">Part 0 — Data reconciliation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-tools">Part 1 — Tools</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-the-model-context-protocol-mcp">Part 2 — The Model Context Protocol (MCP)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-agent-skills">Part 3 — Agent Skills</a></li>
 </ul>
+</li>
+</ul>
+
   </nav></div>
 
   <div class="sidebar-secondary-item">
