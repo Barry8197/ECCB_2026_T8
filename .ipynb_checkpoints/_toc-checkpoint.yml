@@ -27,4 +27,5 @@ chapters:
   - file: session-3-agentic-llm-workflows/notebooks/part-1-tools
   - file: session-3-agentic-llm-workflows/notebooks/part-2-MCPs
   - file: session-3-agentic-llm-workflows/notebooks/part-3-agent-skills
+- file: session-4-kg-query-mini-challenge/MiniChallenge
 #- file: feedback_survey

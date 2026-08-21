@@ -149,4 +149,11 @@ We have developed a Jupyter Book containing all code and some extra materials to
     <p>simona.doneva@uzh.ch</p>
   </div>
 
+ <div style="flex: 1; min-width: 250px; text-align: center;">
+    <img src="profile_images/nuria.jpg" alt="Profile Photo 4" style="width: 100px; height: 100px; border-radius: 50%;">
+    <h3>Nuria Fabrega</h3>
+    <p> I am a PhD student in AI for Biomedical Innovation at the University of Edinburgh. My research focuses on using natural language processing (NLP) to structure experimental information and support data reuse and reproducibility.</p>
+    <p>N.Fabrega@sms.ed.ac.uk</p>
+  </div>
+
 </div>
