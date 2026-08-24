@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Part 2 — Correlation-Based / Factor-Based Multi-Omic Integration with MOFA" href="part-2-correlation-based-methods.html" />
+    <link rel="next" title="Part 2: Factor-Based Multi-Omic Integration with MOFA" href="part-2-correlation-based-methods.html" />
     <link rel="prev" title="Part 0 — Data Preparation" href="part-0-data-prep.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -398,7 +398,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="part-0-data-prep.html">Part 0 — Data Preparation</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 1 — Linear Methods for Multi-Omic Integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part-2-correlation-based-methods.html">Part 2 — Correlation-Based / Factor-Based Multi-Omic Integration with MOFA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-2-correlation-based-methods.html">Part 2: Factor-Based Multi-Omic Integration with MOFA</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-3-deep-learning-methods.html">Part 3 — Deep Learning Integration Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions-definitions.html">Custom Function Definitions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concept-glossary.html">Glossary</a></li>
@@ -609,7 +609,7 @@ Name: count, dtype: int64
 <p>Transcriptomics shows the clearest visible subtype structure: Basal (purple) forms a distinct cluster separated from the LumA/LumB/Normal samples. This suggests that transcriptomic variation contains strong subtype-related signal, which may translate into stronger performance for transcriptomics-based models, although this must be confirmed using supervised prediction.</p>
 <p>Proteomics shows weaker visible subtype structure in the first two principal components: samples from different subtypes largely overlap, with only a few outliers separated along PC1. This suggests that subtype-related variation is less dominant in the major variance directions, which may make classification more challenging, although predictive performance must be evaluated directly.</p>
 <p>Methylation shows weaker partial structure: some separation along PC1 is visible (Basal/Her2 trending right, LumA/LumB trending left), but subtype groups remain substantially overlapping compared with transcriptomics.</p>
-<p>Low variance explained everywhere (7–16% per PC) means these plots are only 2D projections of high-dimensional data. Fine cluster shapes should not be over-interpreted; only broad patterns, such as the stronger subtype separation in transcriptomics, could be considered meaningful.</p>
+<p>Low variance explained everywhere (7-16% per PC) means these plots are only 2D projections of high-dimensional data. Fine cluster shapes should not be over-interpreted; only broad patterns, such as the stronger subtype separation in transcriptomics, could be considered meaningful.</p>
 </details></section>
 <section id="model-helpers">
 <h2>4. Model helpers<a class="headerlink" href="#model-helpers" title="Link to this heading">#</a></h2>
@@ -645,7 +645,6 @@ Name: count, dtype: int64
 <section id="single-omic-benchmarks">
 <h2>5. Single-omic benchmarks<a class="headerlink" href="#single-omic-benchmarks" title="Link to this heading">#</a></h2>
 <p><strong>Why integrate in the first place?</strong></p>
-<p>Before integrating data types, measure how far each omic gets on its own..</p>
 <p>Before comparing integration strategies, we need a reason to integrate in the first place. Each omic layer below is trained as a standalone linear classifier, using the <em>same</em> train/test split, model, and metrics as every method that follows.</p>
 <p>The question isn’t “which single omic is best?”; it’s whether the omics agree with each other or not. If every omic already predicted the same subtype for every patient, integration would add complexity without adding information. If they disagree on a meaningful fraction of patients, that disagreement is exactly the signal integration is trying to recover.</p>
 <div class="cell docutils container">
@@ -656,16 +655,25 @@ Name: count, dtype: int64
 
 <span class="n">base_model</span> <span class="o">=</span> <span class="n">make_linear_classifier</span><span class="p">()</span>
 
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">model</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">proba</span> <span class="o">=</span> <span class="n">fit_predict</span><span class="p">(</span>
-        <span class="n">base_model</span><span class="p">,</span>
-        <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span>
-        <span class="n">y</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span>
-        <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span>
-    <span class="p">)</span>
-    <span class="n">single_omic_models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
-    <span class="n">single_omic_probabilities</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">proba</span>
-    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">pred</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;single omic: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+<span class="c1">############################################################</span>
+<span class="c1">### EXERCISE: Train a single-omic baseline for each omic ###</span>
+<span class="c1">############################################################</span>
+
+<span class="c1"># For each omic (name, X) in X_omics.items():</span>
+<span class="c1">#   1. Fit base_model on X.loc[train_ids] / y[train_ids] and predict on</span>
+<span class="c1">#      X.loc[test_ids], using fit_predict(base_model, X_train, y_train, X_test)</span>
+<span class="c1">#      -&gt; returns (model, pred, proba)</span>
+<span class="c1">#   2. Store the fitted model in single_omic_models[name]</span>
+<span class="c1">#   3. Store the predicted probabilities in single_omic_probabilities[name]</span>
+<span class="c1">#   4. Score pred with evaluate_predictions(y[test_ids], pred, f&quot;single omic: {name}&quot;)</span>
+<span class="c1">#      and append the result to `results`</span>
+
+<span class="c1"># ENTER YOUR CODE HERE</span>
+
+
+<span class="c1">############################################################</span>
+
+
 
 <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">results_df</span>
@@ -1498,22 +1506,33 @@ early integration: concatenation
 <p>Late integration trains one model per omic and averages the class probabilities. Each omic gets an equal vote by default.This sidesteps the dimensionality problem of early integration and keeps each omic’s model easy to inspect on its own, but it assumes equal weighting is the right call, an assumption we will stress-test later.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">late_integrated_probabilities</span><span class="p">(</span><span class="n">probability_tables</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Average same-index, same-column probability tables from omic-specific models.&quot;&quot;&quot;</span>
-    <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="ow">or</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">probability_tables</span><span class="p">}</span>
-    <span class="n">weight_total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">############################################################</span>
+<span class="c1">### EXERCISE: Late integration by prediction averaging #####</span>
+<span class="c1">############################################################</span>
+<span class="c1"># 1. Write the function late_integrated_probabilities(probability_tables, weights=None):</span>
+<span class="c1">#      Args:</span>
+<span class="c1">#        - probability_tables: dict[str, pd.DataFrame], mapping omic name -&gt;</span>
+<span class="c1">#          a (patients x classes) probability table, e.g. single_omic_probabilities</span>
+<span class="c1">#        - weights: optional dict[str, float] mapping omic name -&gt; weight.</span>
+<span class="c1">#          If None, default every omic to weight 1.0.</span>
+<span class="c1">#      Returns:</span>
+<span class="c1">#        - pd.DataFrame (patients x classes): the weighted average of the</span>
+<span class="c1">#          input probability tables, i.e. sum(table * weight) / sum(weights)</span>
+<span class="c1">#</span>
+<span class="c1">#      With a docstring that describes what it does.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Call it on single_omic_probabilities to get late_proba.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Convert late_proba to class predictions: late_proba.idxmax(axis=1),</span>
+<span class="c1">#    renamed &quot;prediction&quot; -&gt; late_pred.</span>
+<span class="c1">#</span>
+<span class="c1"># 4. Score late_pred with evaluate_predictions(y[test_ids], late_pred,</span>
+<span class="c1">#    &quot;late integration: equal weights&quot;) and append the result to `results`.</span>
 
-    <span class="n">averaged</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">proba</span> <span class="ow">in</span> <span class="n">probability_tables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">weighted_proba</span> <span class="o">=</span> <span class="n">proba</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-        <span class="n">averaged</span> <span class="o">=</span> <span class="n">weighted_proba</span> <span class="k">if</span> <span class="n">averaged</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">averaged</span> <span class="o">+</span> <span class="n">weighted_proba</span>
+<span class="c1"># ENTER YOUR CODE HERE</span>
 
-    <span class="k">return</span> <span class="n">averaged</span> <span class="o">/</span> <span class="n">weight_total</span>
+<span class="c1">############################################################</span>
 
-<span class="n">late_proba</span> <span class="o">=</span> <span class="n">late_integrated_probabilities</span><span class="p">(</span><span class="n">single_omic_probabilities</span><span class="p">)</span>
-<span class="n">late_pred</span> <span class="o">=</span> <span class="n">late_proba</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;prediction&quot;</span><span class="p">)</span>
-
-<span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">late_pred</span><span class="p">,</span> <span class="s2">&quot;late integration: equal weights&quot;</span><span class="p">))</span>
 <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">results_df</span>
 </pre></div>
@@ -2168,7 +2187,7 @@ early integration: concatenation
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Part 2 — Correlation-Based / Factor-Based Multi-Omic Integration with MOFA</p>
+        <p class="prev-next-title">Part 2: Factor-Based Multi-Omic Integration with MOFA</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
