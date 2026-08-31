@@ -437,7 +437,7 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="session-1-introduction-to-biological-networks-and-knowledge-graphs">
 <h1>Session 1: Introduction to Biological Networks and Knowledge Graphs<a class="headerlink" href="#session-1-introduction-to-biological-networks-and-knowledge-graphs" title="Link to this heading">#</a></h1>
-<p><strong>New here?</strong> <a class="reference internal" href="#session-story.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">session-story.md</span></code></span></a> is a one-page narrative of what
+<p><strong>New here?</strong> <a class="reference internal" href="session-story.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">session-story.md</span></code></span></a> is a one-page narrative of what
 this session does and what it finds — read that first, then the notebooks.</p>
 <section id="learning-goals">
 <h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Link to this heading">#</a></h2>
@@ -476,24 +476,24 @@ that matter most in practice</p></li>
 </tbody>
 </table>
 </div>
-<p>Participant (“fill in the blanks”) copies live in <code class="docutils literal notranslate"><span class="pre">participant/</span></code> and are generated
-from the solution notebooks — never edit them by hand:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>../../tools/make_participant_version.py<span class="w"> </span><span class="s2">&quot;part-*.ipynb&quot;</span>
-</pre></div>
-</div>
+<p>These are the <strong>participant</strong> notebooks: the interesting lines are replaced with
+<code class="docutils literal notranslate"><span class="pre">###</span> <span class="pre">YOUR</span> <span class="pre">CODE</span> <span class="pre">HERE</span> <span class="pre">###</span></code> for you to fill in. They are generated from the solution
+notebooks in the instructors’ repository — if something needs changing, it has to
+change there and be regenerated, so edits made here will be overwritten.</p>
 </section>
 <section id="layout">
 <h2>Layout<a class="headerlink" href="#layout" title="Link to this heading">#</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>session-story.md the one-page narrative of the session
-data/            generated data files (committed, small)
-data-prep/       developer scripts - build_kg_data.py,
-                 build_coexpression_data.py, make_images.py
-images/          diagrams used by the notebooks
-participant/     generated fill-in-the-blanks notebooks
-s1_helpers.py    graph utilities, mostly adapted from co-expression material
-concept-glossary.md
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>session-story.md    the one-page narrative of the session - start here
+part-*.ipynb        the three notebooks
+s1_helpers.py       graph utilities, mostly adapted from co-expression material
+concept-glossary.md every term used in the session, defined
+data-prep/          developer scripts (build_kg_data.py,
+                    build_coexpression_data.py, make_images.py) - not run by
+                    participants; they write to ../../data/session-1-data/
+images/             diagrams used by the notebooks
 </pre></div>
 </div>
+<p>The data itself lives at the repository root, in <code class="docutils literal notranslate"><span class="pre">data/session-1-data/</span></code>.</p>
 </section>
 <section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Link to this heading">#</a></h2>
@@ -507,17 +507,25 @@ each gene–disease edge by kind of evidence. Built from
 <p><strong>The expression matrix.</strong> <code class="docutils literal notranslate"><span class="pre">coexpr_expression.csv.gz</span></code> — 500 patients × 737 genes
 of TCGA-BRCA transcriptomics, subset to genes that are already graph nodes. Part 1
 §7 builds an inferred co-expression network from it, and Part 3 §D puts the two
-networks together. 1.1 MB, so it needs no external download.</p>
-<p>See <a class="reference internal" href="#data/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">data/README.md</span></code></span></a> for provenance and licences.</p>
+networks together.</p>
+<p>All five files live in <a class="reference internal" href="#../../data/session-1-data/"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/</span></code></span></a>
+and are committed to this repository — together they are 1.3 MB, so Session 1
+needs no separate download. See
+<a class="reference internal" href="#../../data/session-1-data/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/README.md</span></code></span></a>
+for provenance and licences.</p>
 <p>Genes are keyed by Ensembl gene ID, matching the TCGA-BRCA matrix used in
 Session 2, so the two join natively.</p>
 </section>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">pandas</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">networkx</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code> (see the
-repository <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>). Everything runs from the committed data except
-Section C of Part 3, which needs the full Session 2 omics pickle; it is optional
-and the notebook skips it cleanly if the file is absent.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pandas</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">networkx</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code> (see
+<code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> at the repository root).</p>
+<p>Everything runs from the committed data <strong>except Section C of Part 3</strong>, which
+needs the full ~900 MB Session 2 omics pickle. Most participants will not have
+it: the notebook catches the missing file, prints a skip message and carries on,
+and Section D — the closing section that puts the curated and inferred networks
+together — deliberately uses the committed 1.1 MB subset instead so that it runs
+for everyone.</p>
 </section>
 </section>
 

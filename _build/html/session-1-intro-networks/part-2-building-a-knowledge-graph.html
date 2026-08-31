@@ -500,20 +500,6 @@ questions it can honestly answer.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">9</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> 
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="c1"># ── Custom Imports ───────────────────────────────────────────────────────────</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="c1"># s1_helpers holds the plotting and graph utilities for this session. Most are</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="c1"># adapted from earlier co-expression network material, keeping the same names.</span>
-<span class="ne">----&gt; </span><span class="mi">9</span> <span class="kn">import</span><span class="w"> </span><span class="nn">s1_helpers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">h</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;s1_helpers&#39;
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="building-the-graph-explicitly">
@@ -522,8 +508,8 @@ questions it can honestly answer.</p>
 that nothing is magic. A knowledge graph is <em>just</em> a loop over two tables.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nodes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../data/session-1-data/kg_nodes.csv&quot;</span><span class="p">)</span>
-<span class="n">edges</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../data/session-1-data/kg_edges.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nodes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/data/session-1-data/kg_nodes.csv&quot;</span><span class="p">)</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/data/session-1-data/kg_edges.csv&quot;</span><span class="p">)</span>
 
 <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
 
@@ -561,11 +547,6 @@ that nothing is magic. A knowledge graph is <em>just</em> a loop over two tables
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1,768 edges added
-</pre></div>
-</div>
-</div>
 </div>
 <section id="undirected-with-the-direction-kept">
 <h3>Undirected, with the direction kept<a class="headerlink" href="#undirected-with-the-direction-kept" title="Link to this heading">#</a></h3>
@@ -589,14 +570,6 @@ rather than an error.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;type&#39;: &#39;is_a&#39;, &#39;parent&#39;: &#39;MONDO_0006513&#39;}
-
-  child : triple-negative breast carcinoma
-  parent: estrogen-receptor negative breast cancer
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 </section>
@@ -607,28 +580,6 @@ down by type — on a typed graph the totals alone hide most of what matters.</p
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span><span class="o">.</span><span class="n">print_graph_info</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of nodes: 881
-Number of edges: 1768
-Graph type: undirected
-
-Nodes by type:
-     760  gene
-      90  disease
-      31  icd10
-Edges by type:
-   1,656  associated_with
-      81  is_a
-      31  maps_to
-
-Self-loops: 0
-Graph density: 0.004561
-Connected components: 1
-Largest component: 881 nodes (100.0% of the graph)
-Average clustering coefficient: 0.0137
 </pre></div>
 </div>
 </div>
@@ -658,9 +609,6 @@ diseases connect to genes, but genes rarely connect to genes. Remember this numb
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/8c1307cb913d62f15789b6f0e4cfca0cbfa427a4b231fdedf5322afcba1b0197.png" src="../_images/8c1307cb913d62f15789b6f0e4cfca0cbfa427a4b231fdedf5322afcba1b0197.png" />
-</div>
 </div>
 <p>That distribution is dominated by a spike of low-degree genes and a long right tail.
 Let us see what is actually in the tail.</p>
@@ -670,105 +618,6 @@ Let us see what is actually in the tail.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>id</th>
-      <th>name</th>
-      <th>type</th>
-      <th>degree</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0004989</td>
-      <td>breast carcinoma</td>
-      <td>disease</td>
-      <td>45</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0004988</td>
-      <td>breast adenocarcinoma</td>
-      <td>disease</td>
-      <td>41</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0006256</td>
-      <td>invasive breast carcinoma</td>
-      <td>disease</td>
-      <td>41</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0004953</td>
-      <td>invasive ductal breast carcinoma</td>
-      <td>disease</td>
-      <td>38</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0006116</td>
-      <td>breast carcinoma by gene expression profile</td>
-      <td>disease</td>
-      <td>38</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0007254</td>
-      <td>breast cancer</td>
-      <td>disease</td>
-      <td>37</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>MONDO_0005590</td>
-      <td>breast ductal adenocarcinoma</td>
-      <td>disease</td>
-      <td>35</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0005494</td>
-      <td>triple-negative breast carcinoma</td>
-      <td>disease</td>
-      <td>34</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>MONDO_0002486</td>
-      <td>lobular neoplasia</td>
-      <td>disease</td>
-      <td>33</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0005023</td>
-      <td>ductal breast carcinoma in situ</td>
-      <td>disease</td>
-      <td>33</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <section id="the-hubs-are-all-diseases-and-that-is-a-construction-artefact">
 <h3>The hubs are all diseases — and that is a construction artefact<a class="headerlink" href="#the-hubs-are-all-diseases-and-that-is-a-construction-artefact" title="Link to this heading">#</a></h3>
@@ -794,63 +643,6 @@ put them there.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>count</th>
-      <th>mean</th>
-      <th>50%</th>
-      <th>max</th>
-    </tr>
-    <tr>
-      <th>type</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>disease</th>
-      <td>90.0</td>
-      <td>20.544444</td>
-      <td>30.0</td>
-      <td>45.0</td>
-    </tr>
-    <tr>
-      <th>gene</th>
-      <td>760.0</td>
-      <td>2.178947</td>
-      <td>1.0</td>
-      <td>27.0</td>
-    </tr>
-    <tr>
-      <th>icd10</th>
-      <td>31.0</td>
-      <td>1.000000</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <p>So: <strong><code class="docutils literal notranslate"><span class="pre">max</span></code> degree for a disease is capped near 30 + hierarchy edges by design</strong>,
 and genes sit at a median of 2. Neither number is telling us about biology.</p>
@@ -865,11 +657,6 @@ implicated across many different diseases.</p>
      <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;gene&quot;</span><span class="p">)]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">gene_degrees</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;symbol  degree\n  TP53      27\n  ESR1      25\nPIK3CA      24\n BRCA2      19\n  CDH1      18\n BRCA1      17\n  PTEN      16\n ERBB2      16\n PALB2      13\n   ATM      13&#39;
 </pre></div>
 </div>
 </div>
@@ -906,9 +693,6 @@ disease. Those are not the same relationship at all — we return to this in Par
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/523b9fd246b933b18ca27dfaea58de6ac47364ddafdf874c699d5f1fd2824bfa.png" src="../_images/523b9fd246b933b18ca27dfaea58de6ac47364ddafdf874c699d5f1fd2824bfa.png" />
-</div>
 </div>
 <p>Note the title: 1,656 edges carry a weight, <strong>112 do not</strong>. The <code class="docutils literal notranslate"><span class="pre">is_a</span></code> and <code class="docutils literal notranslate"><span class="pre">maps_to</span></code>
 edges are structural — asserting “this is a subtype of that” is not something we
@@ -930,94 +714,6 @@ Those are opposite kinds of claim and the overall score cannot tell them apart.<
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3,422 evidence rows for 1,768 edges
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>datatype</th>
-      <th>edges</th>
-      <th>mean_score</th>
-      <th>means</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>literature</td>
-      <td>1086</td>
-      <td>0.436</td>
-      <td>co-mentioned in publications (text mining)</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>known_drug</td>
-      <td>653</td>
-      <td>0.731</td>
-      <td>a drug hitting this target is used for the dis...</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>genetic_association</td>
-      <td>625</td>
-      <td>0.679</td>
-      <td>inherited variants linked to the disease (cause)</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>somatic_mutation</td>
-      <td>569</td>
-      <td>0.528</td>
-      <td>mutations acquired in the tumour (cause)</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>genetic_literature</td>
-      <td>164</td>
-      <td>0.620</td>
-      <td>genetic claims extracted from publications</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>rna_expression</td>
-      <td>140</td>
-      <td>0.074</td>
-      <td>the gene is differentially expressed in the di...</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>animal_model</td>
-      <td>102</td>
-      <td>0.437</td>
-      <td>a model organism with this gene disrupted show...</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>affected_pathway</td>
-      <td>83</td>
-      <td>0.673</td>
-      <td>the gene sits in a pathway implicated in the d...</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <p>Read the <code class="docutils literal notranslate"><span class="pre">means</span></code> column carefully. Only <code class="docutils literal notranslate"><span class="pre">genetic_association</span></code> and
 <code class="docutils literal notranslate"><span class="pre">somatic_mutation</span></code> assert that the gene has something to do with <em>causing</em> the
@@ -1036,20 +732,6 @@ pipeline saw the two mentioned together.</p>
     <span class="nb">print</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">evidence_for_pair</span><span class="p">(</span><span class="n">evidence</span><span class="p">,</span> <span class="n">symbols</span><span class="p">[</span><span class="n">symbol</span><span class="p">],</span> <span class="n">breast_cancer</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span>
           <span class="p">[[</span><span class="s2">&quot;datatype&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;means&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- BRCA1 -&gt; breast cancer, overall score 0.8355
-           datatype  weight                                            means
-         literature  0.9886       co-mentioned in publications (text mining)
-genetic_association  0.9754 inherited variants linked to the disease (cause)
- genetic_literature  0.6083       genetic claims extracted from publications
-
---- TUBB -&gt; breast cancer, overall score 0.6212
-  datatype  weight                                                          means
-known_drug  0.9869 a drug hitting this target is used for the disease (treatment)
-literature  0.6869                     co-mentioned in publications (text mining)
 </pre></div>
 </div>
 </div>
@@ -1077,15 +759,6 @@ built. We can make them again here, on the edges we have.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  score &gt;= 0.0   1,656 association edges kept (100%)
-  score &gt;= 0.2   1,445 association edges kept (87%)
-  score &gt;= 0.4     913 association edges kept (55%)
-  score &gt;= 0.6     420 association edges kept (25%)
-  score &gt;= 0.8      16 association edges kept (1%)
-</pre></div>
-</div>
-</div>
 </div>
 <section id="the-trap">
 <h3>The trap<a class="headerlink" href="#the-trap" title="Link to this heading">#</a></h3>
@@ -1101,12 +774,6 @@ if it does not — this is the original behaviour, where a missing weight was re
     <span class="n">n_map</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">edges_of_type</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="s2">&quot;maps_to&quot;</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">  is_a: </span><span class="si">{</span><span class="n">n_isa</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   maps_to: </span><span class="si">{</span><span class="n">n_map</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   &quot;</span>
           <span class="sa">f</span><span class="s2">&quot;components: </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">number_connected_components</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>keep_unweighted=True   is_a:  81   maps_to:  31   components: 327
-keep_unweighted=False  is_a:   0   maps_to:   0   components: 415
 </pre></div>
 </div>
 </div>
@@ -1127,9 +794,6 @@ a hairball — but colouring by type at least shows the structure.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span><span class="o">.</span><span class="n">visualise_graph</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Session 1 knowledge graph, coloured by node type&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/ef6ed7c8fdfed5c8162c05f8dd7df23681ca8ae2672a3d57280c62b7e4683ab9.png" src="../_images/ef6ed7c8fdfed5c8162c05f8dd7df23681ca8ae2672a3d57280c62b7e4683ab9.png" />
 </div>
 </div>
 <p>The blue genes form a fringe around a core of orange diseases, with the green
@@ -1153,9 +817,6 @@ near-zero clustering coefficient predicted.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/8b0b54dab3fbc364466831d02b30cfc2621e896ed4086f9b8624456ba2b8adc7.png" src="../_images/8b0b54dab3fbc364466831d02b30cfc2621e896ed4086f9b8624456ba2b8adc7.png" />
 </div>
 </div>
 </section>
@@ -1181,70 +842,6 @@ diseases vanished because they had <em>no gene associations at all</em>.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>PAM50 label</th>
-      <th>MONDO id</th>
-      <th>name in graph</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>LumA</td>
-      <td>MONDO_0021116</td>
-      <td>luminal A breast carcinoma</td>
-      <td>30</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>LumB</td>
-      <td>MONDO_0021115</td>
-      <td>luminal B breast carcinoma</td>
-      <td>30</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Basal</td>
-      <td>MONDO_0004984</td>
-      <td>basal-like breast carcinoma</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Her2</td>
-      <td>MONDO_0006244</td>
-      <td>HER2 positive breast carcinoma</td>
-      <td>30</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Normal</td>
-      <td>MONDO_0006324</td>
-      <td>normal breast-like subtype of breast carcinoma</td>
-      <td>19</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <p><strong>Basal-like breast carcinoma has zero genes.</strong></p>
 <p>Basal-like disease is one of the most intensively studied breast cancer subtypes.
@@ -1260,12 +857,6 @@ evidence exists, but it was filed against a <em>neighbouring</em> term: <code cl
 <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">(</span><span class="n">tnbc</span><span class="p">,</span> <span class="n">basal</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">36s</span><span class="si">}</span><span class="s2"> degree=</span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">  &quot;</span>
           <span class="sa">f</span><span class="s2">&quot;genes=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">))</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>triple-negative breast carcinoma     degree= 34  genes= 30
-basal-like breast carcinoma          degree=  2  genes=  0
 </pre></div>
 </div>
 </div>
@@ -1329,16 +920,16 @@ the gaps, and finding which diseases share genes.</p>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "eccb_2026"
         },
         kernelOptions: {
-            name: "python3",
+            name: "eccb_2026",
             path: "./session-1-intro-networks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'eccb_2026'</script>
 
                 </article>
               

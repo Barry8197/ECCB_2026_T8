@@ -504,28 +504,6 @@ from Part 1, which is where gene–disease <em>discovery</em> actually happens.<
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of nodes: 881
-Number of edges: 1768
-Graph type: undirected
-
-Nodes by type:
-     760  gene
-      90  disease
-      31  icd10
-Edges by type:
-   1,656  associated_with
-      81  is_a
-      31  maps_to
-
-Self-loops: 0
-Graph density: 0.004561
-Connected components: 1
-Largest component: 881 nodes (100.0% of the graph)
-Average clustering coefficient: 0.0137
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 </section>
@@ -550,7 +528,7 @@ a specific quadrant of it.</p>
 <p>The first fifteen of them:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">icd10_map</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../data/session-1-data/icd10_map.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">icd10_map</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/data/session-1-data/icd10_map.csv&quot;</span><span class="p">)</span>
 <span class="n">icd10_map</span><span class="p">[</span><span class="s2">&quot;disease name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">icd10_map</span><span class="p">[</span><span class="s2">&quot;mondo_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
     <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">G</span> <span class="k">else</span> <span class="s2">&quot;?&quot;</span>
 <span class="p">)</span>
@@ -558,140 +536,6 @@ a specific quadrant of it.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>mondo_id</th>
-      <th>disease name</th>
-      <th>icd10_code</th>
-      <th>icd10_label</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0004658</td>
-      <td>breast carcinoma in situ</td>
-      <td>ICD10CM:D05</td>
-      <td>Carcinoma in situ of breast</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0004975</td>
-      <td>Alzheimer disease</td>
-      <td>ICD10CM:G30</td>
-      <td>Alzheimer's disease</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0004975</td>
-      <td>Alzheimer disease</td>
-      <td>ICD10WHO:G30</td>
-      <td>Alzheimer disease</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0004979</td>
-      <td>asthma</td>
-      <td>ICD10CM:J45</td>
-      <td>Asthma</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0004979</td>
-      <td>asthma</td>
-      <td>ICD10WHO:J45</td>
-      <td>Asthma</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0005011</td>
-      <td>Crohn disease</td>
-      <td>ICD10CM:K50</td>
-      <td>Crohn's disease [regional enteritis]</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>MONDO_0005083</td>
-      <td>psoriasis</td>
-      <td>ICD10CM:L40</td>
-      <td>Psoriasis</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0005083</td>
-      <td>psoriasis</td>
-      <td>ICD10WHO:L40</td>
-      <td>Psoriasis</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>MONDO_0005090</td>
-      <td>schizophrenia</td>
-      <td>ICD10CM:F20</td>
-      <td>Schizophrenia</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0005090</td>
-      <td>schizophrenia</td>
-      <td>ICD10WHO:F20</td>
-      <td>Schizophrenia</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>MONDO_0005101</td>
-      <td>ulcerative colitis</td>
-      <td>ICD10CM:K51</td>
-      <td>Ulcerative colitis</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>MONDO_0005101</td>
-      <td>ulcerative colitis</td>
-      <td>ICD10WHO:K51</td>
-      <td>Ulcerative colitis</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>MONDO_0005147</td>
-      <td>type 1 diabetes mellitus</td>
-      <td>ICD10CM:E10</td>
-      <td>Type 1 diabetes mellitus</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>MONDO_0005147</td>
-      <td>type 1 diabetes mellitus</td>
-      <td>ICD10WHO:E10</td>
-      <td>Type 1 diabetes mellitus</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>MONDO_0005148</td>
-      <td>type 2 diabetes mellitus</td>
-      <td>ICD10CM:E11</td>
-      <td>Type 2 diabetes mellitus</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 </section>
 <section id="a2-exercise-how-good-is-the-coverage">
@@ -734,12 +578,6 @@ and notice that the gap is not spread evenly.</p>
     <span class="n">with_code</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">group</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">covered</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s2">18s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">with_code</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2"> have an ICD-10 code &quot;</span>
           <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">with_code</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>breast subtypes      3 of  63 have an ICD-10 code (5%)
-everything else     16 of  27 have an ICD-10 code (59%)
 </pre></div>
 </div>
 </div>
@@ -800,18 +638,6 @@ describe the disease at different resolutions.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>start: triple-negative breast carcinoma
-
-  1 hop(s) up: progesterone-receptor negative breast cancer
-  1 hop(s) up: Her2-receptor negative breast cancer
-  1 hop(s) up: estrogen-receptor negative breast cancer
-  2 hop(s) up: breast carcinoma by gene expression profile
-  3 hop(s) up: breast carcinoma
-  4 hop(s) up: breast cancer   &lt;-- [&#39;ICD10CM:C50&#39;]
-</pre></div>
-</div>
-</div>
 </div>
 <p>Notice that <strong>three</strong> diseases sit one hop up: estrogen-receptor negative,
 progesterone-receptor negative and Her2-receptor negative. That is not a quirk of
@@ -853,82 +679,6 @@ the information a molecular study cares about.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease</th>
-      <th>icd10</th>
-      <th>steps</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>30</th>
-      <td>gastric carcinoma</td>
-      <td></td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>38</th>
-      <td>coronary artery disorder</td>
-      <td></td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>lung adenocarcinoma</td>
-      <td></td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>48</th>
-      <td>melanoma</td>
-      <td></td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>52</th>
-      <td>pancreatic ductal adenocarcinoma</td>
-      <td></td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>57</th>
-      <td>colorectal cancer</td>
-      <td></td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>80</th>
-      <td>rheumatoid arthritis</td>
-      <td></td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>82</th>
-      <td>glioblastoma</td>
-      <td></td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <p>These eight are genuine dead ends, and for a <strong>different reason</strong> from the subtypes.</p>
 <p>Colorectal cancer, melanoma, glioblastoma, rheumatoid arthritis — every one of
@@ -1011,20 +761,6 @@ share a genetic basis”</em>.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- BRCA2 -&gt; breast cancer
-           datatype  weight
-         literature  0.9878
-genetic_association  0.9390
- genetic_literature  0.6083
-
---- TUBB -&gt; breast cancer
-  datatype  weight
-known_drug  0.9869
-literature  0.6869
-</pre></div>
-</div>
-</div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">BRCA2</span></code> has genetic evidence and <strong>no drug evidence</strong>. <code class="docutils literal notranslate"><span class="pre">TUBB</span></code> has drug evidence and
 <strong>no genetic evidence</strong>. They are cleanly separable — but only if we look at the
@@ -1087,34 +823,6 @@ autoimmunity or the clinic. It only sees which diseases share genes.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27 diseases, 69 shared-gene edges, 3 communities
-
-Community 1:
-    acute myeloid leukemia
-    colorectal cancer
-    gastric carcinoma
-    glioblastoma
-    lung adenocarcinoma
-    melanoma
-    ovarian cancer
-    pancreatic ductal adenocarcinoma
-    prostate cancer
-Community 2:
-    Crohn disease
-    coronary artery disorder
-    multiple sclerosis
-    psoriasis
-    rheumatoid arthritis
-    systemic lupus erythematosus
-    type 1 diabetes mellitus
-    ulcerative colitis
-Community 3:
-    chronic kidney disease
-    type 2 diabetes mellitus
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1138,9 +846,6 @@ Community 3:
 <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/47f8b540a88477e3f22ea0de2b40860d4916326672e28e38dcb61efe1c3de735.png" src="../_images/47f8b540a88477e3f22ea0de2b40860d4916326672e28e38dcb61efe1c3de735.png" />
 </div>
 </div>
 <details>
@@ -1207,11 +912,6 @@ because an empty join is not an error, it looks like a real biological result.</
 <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
     <span class="n">OMICS_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping Section C - </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Skipping Section C - No omics file at /home/bmai/Documents/eccb_omics/omics.pkl. This section is optional - the rest of the notebook runs without it.
 </pre></div>
 </div>
 </div>
@@ -1404,12 +1104,6 @@ what comes back by what the graph already says about it.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>breast cancer: 30 genes, 16 of them causal, 16 of those measured
-[&#39;ATM&#39;, &#39;BARD1&#39;, &#39;BRCA1&#39;, &#39;BRCA2&#39;, &#39;BRIP1&#39;, &#39;CCND1&#39;, &#39;CHEK2&#39;, &#39;EGFR&#39;, &#39;ESR1&#39;, &#39;FGFR2&#39;, &#39;NBN&#39;, &#39;PALB2&#39;, &#39;PIK3CA&#39;, &#39;PRIM1&#39;, &#39;TP53&#39;, &#39;VEGFA&#39;]
-</pre></div>
-</div>
-</div>
 </div>
 <section id="d1-do-the-causal-genes-corroborate-each-other">
 <h2>D1. Do the causal genes corroborate each other?<a class="headerlink" href="#d1-do-the-causal-genes-corroborate-each-other" title="Link to this heading">#</a></h2>
@@ -1432,73 +1126,6 @@ cancer should show some of it among themselves.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 of 120 causal gene pairs co-express at |r| &gt;= 0.5
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>gene_a</th>
-      <th>gene_b</th>
-      <th>r</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>93</th>
-      <td>BRIP1</td>
-      <td>BRCA2</td>
-      <td>0.659</td>
-    </tr>
-    <tr>
-      <th>92</th>
-      <td>BRIP1</td>
-      <td>BARD1</td>
-      <td>0.658</td>
-    </tr>
-    <tr>
-      <th>99</th>
-      <td>BARD1</td>
-      <td>BRCA2</td>
-      <td>0.600</td>
-    </tr>
-    <tr>
-      <th>98</th>
-      <td>BRIP1</td>
-      <td>PRIM1</td>
-      <td>0.581</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>ESR1</td>
-      <td>CCND1</td>
-      <td>0.571</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>BRCA1</td>
-      <td>PRIM1</td>
-      <td>0.569</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <p>Ten of 120 pairs — and look at which ten. <code class="docutils literal notranslate"><span class="pre">BRCA2</span></code>–<code class="docutils literal notranslate"><span class="pre">BRIP1</span></code>, <code class="docutils literal notranslate"><span class="pre">BARD1</span></code>–<code class="docutils literal notranslate"><span class="pre">BRIP1</span></code>,
 <code class="docutils literal notranslate"><span class="pre">BARD1</span></code>–<code class="docutils literal notranslate"><span class="pre">BRCA2</span></code>: the homologous-recombination repair complex, recovered from
@@ -1626,16 +1253,16 @@ is what those agents have to get right, and what we need to check them against.<
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "eccb_2026"
         },
         kernelOptions: {
-            name: "python3",
+            name: "eccb_2026",
             path: "./session-1-intro-networks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'eccb_2026'</script>
 
                 </article>
               

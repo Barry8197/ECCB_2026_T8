@@ -398,7 +398,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 0 — Data exploration &amp; building <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-1-tools.html">Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">@tool</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part-2-MCPs.html">Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-2-MCPs.html">Part 2 — MOFA tools over the Model Context Protocol (MCP)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-3-agent-skills.html">Part 3 — Agent Skills: teaching an agent how, not just what</a></li>
 </ul>
 </div>
@@ -503,12 +503,6 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DATA_DIR: /home/eidf128/eidf128/shared/export/nfabrega/git/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/data
-files: [&#39;methylation.pkl&#39;, &#39;omics.pkl&#39;, &#39;proteomics.pkl&#39;, &#39;transcriptomics.pkl&#39;]
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="what-s-inside-each-omics-file">
@@ -533,48 +527,6 @@ files: [&#39;methylation.pkl&#39;, &#39;omics.pkl&#39;, &#39;proteomics.pkl&#39;
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>n_patients</th>
-      <th>n_features</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>transcriptomics</th>
-      <td>1047</td>
-      <td>29995</td>
-    </tr>
-    <tr>
-      <th>proteomics</th>
-      <td>869</td>
-      <td>464</td>
-    </tr>
-    <tr>
-      <th>methylation</th>
-      <td>780</td>
-      <td>200000</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 </section>
 <section id="the-omics-files-are-not-aligned-reconstructing-the-shared-cohort">
@@ -592,18 +544,6 @@ files: [&#39;methylation.pkl&#39;, &#39;omics.pkl&#39;, &#39;proteomics.pkl&#39;
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;overlap - transcriptomics &amp; methylation:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;overlap - proteomics &amp; methylation     :&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;overlap - all three                    :&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span> <span class="o">&amp;</span> <span class="n">p</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>transcriptomics: 1047 patients
-proteomics     : 869 patients
-methylation    : 780 patients
-
-overlap - transcriptomics &amp; proteomics : 840
-overlap - transcriptomics &amp; methylation: 745
-overlap - proteomics &amp; methylation     : 631
-overlap - all three                    : 603
 </pre></div>
 </div>
 </div>
@@ -627,13 +567,6 @@ overlap - all three                    : 603
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;patients in all three omics layers : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">common</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;labels consistent across layers    : </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">consistent</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_wide</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;patients with a PAM50 label        : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">labeled</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>patients in all three omics layers : 603
-labels consistent across layers    : 603/603
-patients with a PAM50 label        : 603
 </pre></div>
 </div>
 </div>
@@ -661,14 +594,6 @@ patients with a PAM50 label        : 603
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>transcriptomics: (603, 29995)
-proteomics     : (603, 464)
-methylation    : (603, 200000)
-meta           : (603,)
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -678,11 +603,6 @@ meta           : (603,)
     <span class="k">assert</span> <span class="n">omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">ref_index</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;index mismatch in </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is entirely NaN&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All checks passed.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>All checks passed.
 </pre></div>
 </div>
 </div>
@@ -707,12 +627,6 @@ meta           : (603,)
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wrote: /home/eidf128/eidf128/shared/export/nfabrega/git/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/data/omics.pkl (1115.0 MB)
-load_omics_data OK: {&#39;transcriptomics&#39;: (603, 29995), &#39;proteomics&#39;: (603, 464), &#39;methylation&#39;: (603, 200000)} | y: (603,)
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="bridge-to-part-1">
@@ -730,16 +644,16 @@ load_omics_data OK: {&#39;transcriptomics&#39;: (603, 29995), &#39;proteomics&#3
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb"
+            mode: "python"
         },
         kernelOptions: {
-            name: "eccb",
+            name: "python3",
             path: "./session-3-agentic-llm-workflows/notebooks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               

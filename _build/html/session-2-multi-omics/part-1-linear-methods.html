@@ -512,7 +512,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelEncoder</span><span class="p">,</span> <span class="n">StandardScaler</span>
 
 <span class="c1"># ── Custom Imports ────────────────────────────────────────────────────────────</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_omics</span><span class="p">,</span> <span class="n">evaluate_predictions</span><span class="p">,</span> <span class="n">plot_confusion_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">s2_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_omics</span><span class="p">,</span> <span class="n">evaluate_predictions</span><span class="p">,</span> <span class="n">plot_confusion_matrix</span>
 
 <span class="c1"># ── Reproducibility ───────────────────────────────────────────────────────────</span>
 <span class="n">RANDOM_STATE</span> <span class="o">=</span> <span class="mi">42</span>
@@ -531,7 +531,7 @@
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../../data_tmp/TCGA-BRCA/&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data/&quot;</span><span class="p">)</span>
 
 <span class="n">X_omics</span> <span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_omics</span><span class="p">(</span><span class="n">DATA_DIR</span> <span class="p">,</span> <span class="n">omic_keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;transcriptomics&#39;</span> <span class="p">,</span> <span class="s1">&#39;proteomics&#39;</span><span class="p">,</span> <span class="s1">&#39;methylation&#39;</span><span class="p">])</span>
 
@@ -540,25 +540,6 @@
 
 <span class="n">train_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;train_ids&#39;</span><span class="p">]</span>
 <span class="n">test_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;test_ids&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Omic view dimensions:
-  transcriptomics:  500 patients ×  29995 features
-  proteomics     :  500 patients ×    464 features
-  methylation    :  500 patients × 200000 features
-
-Subtype counts:
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>paper_BRCA_Subtype_PAM50
-LumA      237
-LumB      100
-Basal      97
-Her2       41
-Normal     25
-Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
@@ -597,11 +578,6 @@ Name: count, dtype: int64
 <span class="n">plot_pca_by_omic</span><span class="p">(</span><span class="n">X_omics</span><span class="p">,</span> <span class="n">y_encoded</span><span class="p">,</span> <span class="n">class_names</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/a09133858b022dc5a9ea4c204fb895e9b5eea70b2f444db025fff32af1e1e616.png" src="../_images/a09133858b022dc5a9ea4c204fb895e9b5eea70b2f444db025fff32af1e1e616.png" />
-<img alt="../_images/a9bf498a13cf5b68f7f8e7e552c04f5785b8ecf5c82a37f75ac342a915af330c.png" src="../_images/a9bf498a13cf5b68f7f8e7e552c04f5785b8ecf5c82a37f75ac342a915af330c.png" />
-<img alt="../_images/069046d82a1f9ef748724071923c9c00fa00ff84722604ad6d8308dc8e8bd7bb.png" src="../_images/069046d82a1f9ef748724071923c9c00fa00ff84722604ad6d8308dc8e8bd7bb.png" />
 </div>
 </div>
 <details>
@@ -680,73 +656,6 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: transcriptomics
-────────────────────────────
-  Accuracy          : 0.824 
-  Balanced accuracy : 0.799
-</pre></div>
-</div>
-<img alt="../_images/2337cacb8bc225808974c0440638f10d158d30f05f5cc02a1a7e8049445f0070.png" src="../_images/2337cacb8bc225808974c0440638f10d158d30f05f5cc02a1a7e8049445f0070.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: proteomics
-───────────────────────
-  Accuracy          : 0.720 
-  Balanced accuracy : 0.643
-</pre></div>
-</div>
-<img alt="../_images/d27b24da484ddc3ca1e76a78b3a8f1daf607ad357e5a3e65c4e954f1c997c890.png" src="../_images/d27b24da484ddc3ca1e76a78b3a8f1daf607ad357e5a3e65c4e954f1c997c890.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: methylation
-────────────────────────
-  Accuracy          : 0.712 
-  Balanced accuracy : 0.688
-</pre></div>
-</div>
-<img alt="../_images/3fe21f183772da159d01b8345eba0aa77fdd3c9f22ec7e3ba199e46d189cab46.png" src="../_images/3fe21f183772da159d01b8345eba0aa77fdd3c9f22ec7e3ba199e46d189cab46.png" />
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>model</th>
-      <th>accuracy</th>
-      <th>balanced_accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>single omic: transcriptomics</td>
-      <td>0.824</td>
-      <td>0.798667</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>single omic: methylation</td>
-      <td>0.712</td>
-      <td>0.688333</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>single omic: proteomics</td>
-      <td>0.720</td>
-      <td>0.643333</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -781,157 +690,6 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test patients where every omic predicts the same subtype: 60.0%
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>n_patients</th>
-      <th>pct</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>all omics agree</th>
-      <td>75</td>
-      <td>60.0</td>
-    </tr>
-    <tr>
-      <th>omics disagree</th>
-      <td>50</td>
-      <td>40.0</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Of the disputed patients, 92% have at least one omic that got the true subtype right.
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>transcriptomics</th>
-      <th>proteomics</th>
-      <th>methylation</th>
-      <th>true_label</th>
-      <th>any_omic_correct</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>TCGA-E9-A5UO</th>
-      <td>LumA</td>
-      <td>LumB</td>
-      <td>LumA</td>
-      <td>LumB</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-D8-A1XY</th>
-      <td>LumB</td>
-      <td>LumA</td>
-      <td>LumB</td>
-      <td>LumA</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-D8-A27G</th>
-      <td>LumA</td>
-      <td>LumA</td>
-      <td>LumB</td>
-      <td>LumA</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-AR-A5QQ</th>
-      <td>Basal</td>
-      <td>Basal</td>
-      <td>Normal</td>
-      <td>Basal</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-BH-A1FN</th>
-      <td>Basal</td>
-      <td>Basal</td>
-      <td>LumB</td>
-      <td>LumB</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-E2-A108</th>
-      <td>Normal</td>
-      <td>LumA</td>
-      <td>LumA</td>
-      <td>Normal</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-AO-A0JC</th>
-      <td>LumB</td>
-      <td>LumA</td>
-      <td>LumA</td>
-      <td>LumA</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-AR-A0TX</th>
-      <td>Her2</td>
-      <td>LumA</td>
-      <td>Her2</td>
-      <td>Her2</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-BH-A0BJ</th>
-      <td>Normal</td>
-      <td>LumA</td>
-      <td>LumA</td>
-      <td>LumA</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>TCGA-AR-A24R</th>
-      <td>LumB</td>
-      <td>LumA</td>
-      <td>LumB</td>
-      <td>LumB</td>
-      <td>True</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -974,67 +732,6 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Early integration matrix: 500 patients x 230459 features
-
-early integration: concatenation
-────────────────────────────────
-  Accuracy          : 0.752 
-  Balanced accuracy : 0.702
-</pre></div>
-</div>
-<img alt="../_images/dde06a7be6f07bd4d0c59b32b970ed41b618c69b2a9a869da8964b563c05c311.png" src="../_images/dde06a7be6f07bd4d0c59b32b970ed41b618c69b2a9a869da8964b563c05c311.png" />
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>model</th>
-      <th>accuracy</th>
-      <th>balanced_accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>single omic: transcriptomics</td>
-      <td>0.824</td>
-      <td>0.798667</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>early integration: concatenation</td>
-      <td>0.752</td>
-      <td>0.702333</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>single omic: methylation</td>
-      <td>0.712</td>
-      <td>0.688333</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>single omic: proteomics</td>
-      <td>0.720</td>
-      <td>0.643333</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -1082,195 +779,6 @@ early integration: concatenation
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>omic</th>
-      <th>features_in_top_100</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>transcriptomics</td>
-      <td>56</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>proteomics</td>
-      <td>23</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>methylation</td>
-      <td>21</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>feature</th>
-      <th>abs_coefficient</th>
-      <th>omic</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>223955</th>
-      <td>methylation::cg26591149</td>
-      <td>0.003857</td>
-      <td>methylation</td>
-    </tr>
-    <tr>
-      <th>30088</th>
-      <td>proteomics::CDK1_pT14</td>
-      <td>0.003600</td>
-      <td>proteomics</td>
-    </tr>
-    <tr>
-      <th>30347</th>
-      <td>proteomics::PLK1</td>
-      <td>0.003514</td>
-      <td>proteomics</td>
-    </tr>
-    <tr>
-      <th>30119</th>
-      <td>proteomics::CYCLINB1</td>
-      <td>0.003480</td>
-      <td>proteomics</td>
-    </tr>
-    <tr>
-      <th>229474</th>
-      <td>methylation::cg24964883</td>
-      <td>0.003210</td>
-      <td>methylation</td>
-    </tr>
-    <tr>
-      <th>30136</th>
-      <td>proteomics::DNMT1</td>
-      <td>0.003144</td>
-      <td>proteomics</td>
-    </tr>
-    <tr>
-      <th>219956</th>
-      <td>methylation::cg16050326</td>
-      <td>0.003037</td>
-      <td>methylation</td>
-    </tr>
-    <tr>
-      <th>18078</th>
-      <td>transcriptomics::ENSG00000223392.1</td>
-      <td>0.002989</td>
-      <td>transcriptomics</td>
-    </tr>
-    <tr>
-      <th>179328</th>
-      <td>methylation::cg21250931</td>
-      <td>0.002979</td>
-      <td>methylation</td>
-    </tr>
-    <tr>
-      <th>30084</th>
-      <td>proteomics::cdc25C</td>
-      <td>0.002977</td>
-      <td>proteomics</td>
-    </tr>
-    <tr>
-      <th>30111</th>
-      <td>proteomics::Cox2</td>
-      <td>0.002966</td>
-      <td>proteomics</td>
-    </tr>
-    <tr>
-      <th>18200</th>
-      <td>transcriptomics::ENSG00000223949.8</td>
-      <td>0.002958</td>
-      <td>transcriptomics</td>
-    </tr>
-    <tr>
-      <th>30271</th>
-      <td>proteomics::MSH6</td>
-      <td>0.002941</td>
-      <td>proteomics</td>
-    </tr>
-    <tr>
-      <th>30038</th>
-      <td>proteomics::Aurora-A</td>
-      <td>0.002797</td>
-      <td>proteomics</td>
-    </tr>
-    <tr>
-      <th>29739</th>
-      <td>transcriptomics::ENSG00000287564.1</td>
-      <td>0.002743</td>
-      <td>transcriptomics</td>
-    </tr>
-    <tr>
-      <th>9904</th>
-      <td>transcriptomics::ENSG00000159495.8</td>
-      <td>0.002687</td>
-      <td>transcriptomics</td>
-    </tr>
-    <tr>
-      <th>209145</th>
-      <td>methylation::cg07980671</td>
-      <td>0.002674</td>
-      <td>methylation</td>
-    </tr>
-    <tr>
-      <th>5718</th>
-      <td>transcriptomics::ENSG00000127589.4</td>
-      <td>0.002652</td>
-      <td>transcriptomics</td>
-    </tr>
-    <tr>
-      <th>16308</th>
-      <td>transcriptomics::ENSG00000198914.5</td>
-      <td>0.002610</td>
-      <td>transcriptomics</td>
-    </tr>
-    <tr>
-      <th>13759</th>
-      <td>transcriptomics::ENSG00000179826.7</td>
-      <td>0.002590</td>
-      <td>transcriptomics</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><img alt="../_images/d5d0f8f479e5955d692373984ee70e07550d551f321b31276cfad53a03bf576f.png" src="../_images/d5d0f8f479e5955d692373984ee70e07550d551f321b31276cfad53a03bf576f.png" />
 </div>
 </div>
 <details>
@@ -1323,176 +831,6 @@ early integration: concatenation
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>feature_1</th>
-      <th>feature_2</th>
-      <th>omic_pair</th>
-      <th>abs_correlation</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>815</th>
-      <td>proteomics::CDK1_pT14</td>
-      <td>transcriptomics::ENSG00000138658.16</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.439948</td>
-    </tr>
-    <tr>
-      <th>855</th>
-      <td>proteomics::CYCLINB1</td>
-      <td>transcriptomics::ENSG00000138658.16</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.432839</td>
-    </tr>
-    <tr>
-      <th>835</th>
-      <td>proteomics::PLK1</td>
-      <td>transcriptomics::ENSG00000138658.16</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.420436</td>
-    </tr>
-    <tr>
-      <th>824</th>
-      <td>proteomics::PLK1</td>
-      <td>transcriptomics::ENSG00000127589.4</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.410333</td>
-    </tr>
-    <tr>
-      <th>1010</th>
-      <td>proteomics::ASNS</td>
-      <td>transcriptomics::ENSG00000225208.1</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.403460</td>
-    </tr>
-    <tr>
-      <th>844</th>
-      <td>proteomics::CYCLINB1</td>
-      <td>transcriptomics::ENSG00000127589.4</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.396262</td>
-    </tr>
-    <tr>
-      <th>1004</th>
-      <td>proteomics::ASNS</td>
-      <td>transcriptomics::ENSG00000127589.4</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.393260</td>
-    </tr>
-    <tr>
-      <th>1075</th>
-      <td>proteomics::TRIP13</td>
-      <td>transcriptomics::ENSG00000138658.16</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.392305</td>
-    </tr>
-    <tr>
-      <th>859</th>
-      <td>proteomics::CYCLINB1</td>
-      <td>transcriptomics::ENSG00000129484.14</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.389710</td>
-    </tr>
-    <tr>
-      <th>804</th>
-      <td>proteomics::CDK1_pT14</td>
-      <td>transcriptomics::ENSG00000127589.4</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.384738</td>
-    </tr>
-    <tr>
-      <th>839</th>
-      <td>proteomics::PLK1</td>
-      <td>transcriptomics::ENSG00000129484.14</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.381803</td>
-    </tr>
-    <tr>
-      <th>970</th>
-      <td>proteomics::CYCLINE1</td>
-      <td>transcriptomics::ENSG00000225208.1</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.375960</td>
-    </tr>
-    <tr>
-      <th>850</th>
-      <td>proteomics::CYCLINB1</td>
-      <td>transcriptomics::ENSG00000225208.1</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.364153</td>
-    </tr>
-    <tr>
-      <th>830</th>
-      <td>proteomics::PLK1</td>
-      <td>transcriptomics::ENSG00000225208.1</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.362718</td>
-    </tr>
-    <tr>
-      <th>819</th>
-      <td>proteomics::CDK1_pT14</td>
-      <td>transcriptomics::ENSG00000129484.14</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.352746</td>
-    </tr>
-    <tr>
-      <th>944</th>
-      <td>proteomics::Aurora-A</td>
-      <td>transcriptomics::ENSG00000127589.4</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.349084</td>
-    </tr>
-    <tr>
-      <th>895</th>
-      <td>proteomics::cdc25C</td>
-      <td>transcriptomics::ENSG00000138658.16</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.343621</td>
-    </tr>
-    <tr>
-      <th>924</th>
-      <td>proteomics::MSH6</td>
-      <td>transcriptomics::ENSG00000127589.4</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.340917</td>
-    </tr>
-    <tr>
-      <th>969</th>
-      <td>proteomics::CYCLINE1</td>
-      <td>transcriptomics::ENSG00000241359.1</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.339857</td>
-    </tr>
-    <tr>
-      <th>1090</th>
-      <td>proteomics::FOXM1</td>
-      <td>transcriptomics::ENSG00000225208.1</td>
-      <td>proteomics ↔ transcriptomics</td>
-      <td>0.339588</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><img alt="../_images/4386f3652926f3657504f7a8d01de773307af59ebb1b251908fd53f746d32608.png" src="../_images/4386f3652926f3657504f7a8d01de773307af59ebb1b251908fd53f746d32608.png" />
-</div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -1538,71 +876,6 @@ early integration: concatenation
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late integration: equal weights
-───────────────────────────────
-  Accuracy          : 0.832 
-  Balanced accuracy : 0.772
-</pre></div>
-</div>
-<img alt="../_images/7bbc1e435175d6e8b446184d1a4ae00ca82dc9e47902fc3cafeddee53976ad6c.png" src="../_images/7bbc1e435175d6e8b446184d1a4ae00ca82dc9e47902fc3cafeddee53976ad6c.png" />
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>model</th>
-      <th>accuracy</th>
-      <th>balanced_accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>single omic: transcriptomics</td>
-      <td>0.824</td>
-      <td>0.798667</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>late integration: equal weights</td>
-      <td>0.832</td>
-      <td>0.772000</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>early integration: concatenation</td>
-      <td>0.752</td>
-      <td>0.702333</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>single omic: methylation</td>
-      <td>0.712</td>
-      <td>0.688333</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>single omic: proteomics</td>
-      <td>0.720</td>
-      <td>0.643333</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <p>What is your interpretation of these results?</p>
 <details>
@@ -1657,87 +930,6 @@ early integration: concatenation
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
-────
-  Accuracy          : 0.832 
-  Balanced accuracy : 0.772
-</pre></div>
-</div>
-<img alt="../_images/7bbc1e435175d6e8b446184d1a4ae00ca82dc9e47902fc3cafeddee53976ad6c.png" src="../_images/7bbc1e435175d6e8b446184d1a4ae00ca82dc9e47902fc3cafeddee53976ad6c.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
-────
-  Accuracy          : 0.824 
-  Balanced accuracy : 0.764
-</pre></div>
-</div>
-<img alt="../_images/ff758c965bf591cdac8f1703e6d97ff780041f57c9137947be50a052c978024a.png" src="../_images/ff758c965bf591cdac8f1703e6d97ff780041f57c9137947be50a052c978024a.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
-────
-  Accuracy          : 0.832 
-  Balanced accuracy : 0.707
-</pre></div>
-</div>
-<img alt="../_images/65eed25d437ee589bd43d22295838c53a85700149846cd2bcc7582810c428497.png" src="../_images/65eed25d437ee589bd43d22295838c53a85700149846cd2bcc7582810c428497.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
-────
-  Accuracy          : 0.776 
-  Balanced accuracy : 0.729
-</pre></div>
-</div>
-<img alt="../_images/e3c55c6c53c5b2530e453a646052bf1c4f43ee8f023134175f84b803b15ceb43.png" src="../_images/e3c55c6c53c5b2530e453a646052bf1c4f43ee8f023134175f84b803b15ceb43.png" />
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>weighting</th>
-      <th>accuracy</th>
-      <th>balanced_accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>equal weights</td>
-      <td>0.832</td>
-      <td>0.772000</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>boost transcriptomics</td>
-      <td>0.824</td>
-      <td>0.764000</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>boost methylation</td>
-      <td>0.776</td>
-      <td>0.729000</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>boost proteomics</td>
-      <td>0.832</td>
-      <td>0.707333</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><img alt="../_images/5234fec91cc37cde215597f3c210f967037125d49f2dcd6d2df4842a5faa0434.png" src="../_images/5234fec91cc37cde215597f3c210f967037125d49f2dcd6d2df4842a5faa0434.png" />
-</div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -1791,77 +983,6 @@ early integration: concatenation
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late integration: stacking (meta-learner)
-─────────────────────────────────────────
-  Accuracy          : 0.808 
-  Balanced accuracy : 0.801
-</pre></div>
-</div>
-<img alt="../_images/1738393142a80d40218d89155e26730e71edd563fc0c20da8c8e2157713b6416.png" src="../_images/1738393142a80d40218d89155e26730e71edd563fc0c20da8c8e2157713b6416.png" />
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>model</th>
-      <th>accuracy</th>
-      <th>balanced_accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>5</th>
-      <td>late integration: stacking (meta-learner)</td>
-      <td>0.808</td>
-      <td>0.801333</td>
-    </tr>
-    <tr>
-      <th>0</th>
-      <td>single omic: transcriptomics</td>
-      <td>0.824</td>
-      <td>0.798667</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>late integration: equal weights</td>
-      <td>0.832</td>
-      <td>0.772000</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>early integration: concatenation</td>
-      <td>0.752</td>
-      <td>0.702333</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>single omic: methylation</td>
-      <td>0.712</td>
-      <td>0.688333</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>single omic: proteomics</td>
-      <td>0.720</td>
-      <td>0.643333</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1879,64 +1000,6 @@ early integration: concatenation
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>omic</th>
-      <th>methylation</th>
-      <th>proteomics</th>
-      <th>transcriptomics</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Basal</th>
-      <td>0.36</td>
-      <td>1.02</td>
-      <td>0.75</td>
-    </tr>
-    <tr>
-      <th>Her2</th>
-      <td>0.50</td>
-      <td>0.62</td>
-      <td>0.92</td>
-    </tr>
-    <tr>
-      <th>LumA</th>
-      <td>0.49</td>
-      <td>0.49</td>
-      <td>0.72</td>
-    </tr>
-    <tr>
-      <th>LumB</th>
-      <td>0.73</td>
-      <td>0.57</td>
-      <td>0.76</td>
-    </tr>
-    <tr>
-      <th>Normal</th>
-      <td>0.52</td>
-      <td>0.44</td>
-      <td>1.13</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -1961,71 +1024,6 @@ early integration: concatenation
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>model</th>
-      <th>accuracy</th>
-      <th>balanced_accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>5</th>
-      <td>late integration: stacking (meta-learner)</td>
-      <td>0.808</td>
-      <td>0.801333</td>
-    </tr>
-    <tr>
-      <th>0</th>
-      <td>single omic: transcriptomics</td>
-      <td>0.824</td>
-      <td>0.798667</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>late integration: equal weights</td>
-      <td>0.832</td>
-      <td>0.772000</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>early integration: concatenation</td>
-      <td>0.752</td>
-      <td>0.702333</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>single omic: methylation</td>
-      <td>0.712</td>
-      <td>0.688333</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>single omic: proteomics</td>
-      <td>0.720</td>
-      <td>0.643333</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><img alt="../_images/1d4f97d911145e93fdc5e3ef094f53af48097f02b1237485e15ba4f8eadbab3b.png" src="../_images/1d4f97d911145e93fdc5e3ef094f53af48097f02b1237485e15ba4f8eadbab3b.png" />
 </div>
 </div>
 <details>
@@ -2056,12 +1054,6 @@ early integration: concatenation
 <span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">best_pred</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model by balanced accuracy: late integration: stacking (meta-learner)
-</pre></div>
-</div>
-<img alt="../_images/1738393142a80d40218d89155e26730e71edd563fc0c20da8c8e2157713b6416.png" src="../_images/1738393142a80d40218d89155e26730e71edd563fc0c20da8c8e2157713b6416.png" />
 </div>
 </div>
 <details>
@@ -2153,16 +1145,16 @@ early integration: concatenation
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "eccb_2026"
         },
         kernelOptions: {
-            name: "python3",
+            name: "eccb_2026",
             path: "./session-2-multi-omics"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'eccb_2026'</script>
 
                 </article>
               

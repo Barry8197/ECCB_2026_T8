@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters) &#8212; ECCB 2026 T8</title>
+    <title>Part 2 — MOFA tools over the Model Context Protocol (MCP) &#8212; ECCB 2026 T8</title>
   
   
   
@@ -398,7 +398,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="part-0-data-exploration.html">Part 0 — Data exploration &amp; building <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-1-tools.html">Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">@tool</span></code>)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 2 — MOFA tools over the Model Context Protocol (MCP)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-3-agent-skills.html">Part 3 — Agent Skills: teaching an agent how, not just what</a></li>
 </ul>
 </div>
@@ -443,7 +443,7 @@
     
     <li class="breadcrumb-item"><a href="../intro.html" class="nav-link">Session 3</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 2 — MOFA tools over the Model Context Protocol (MCP)</span></li>
   </ul>
 </nav>
 </div>
@@ -460,51 +460,41 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="part-2-mofa-tools-over-mcp-fastmcp-langchain-mcp-adapters">
-<h1>Part 2 — MOFA tools over MCP (FastMCP + langchain-mcp-adapters)<a class="headerlink" href="#part-2-mofa-tools-over-mcp-fastmcp-langchain-mcp-adapters" title="Link to this heading">#</a></h1>
-<p>In this notebook, we learn about <strong>MCP (the Model Context Protocol)</strong>: a standard way to serve tools from a server so that any agent can call them without needing your code.</p>
-<p>In this notebook, we’ll cover two things:</p>
-<ol class="arabic simple">
-<li><p><strong>Calling LLM tools through the MCP</strong>: We’ll take the exact same tools from Part 1 and serve them through an MCP server (<code class="docutils literal notranslate"><span class="pre">server/mofa_mcp_server.py</span></code>). This shows the mechanics: how tools move from local to a shared server.</p></li>
-<li><p><strong>Bringing in an external MCP server — BioMCP</strong>: We’ll then connect to BioMCP, a community-built MCP server that queries over 40 biomedical data sources (PubMed, UniProt, ClinVar, and others) through a single interface, showing how MCPs eliminate the need to learn different APIs—one standard protocol connects you to many tools.</p></li>
-</ol>
+  <section class="tex2jax_ignore mathjax_ignore" id="part-2-mofa-tools-over-the-model-context-protocol-mcp">
+<h1>Part 2 — MOFA tools over the Model Context Protocol (MCP)<a class="headerlink" href="#part-2-mofa-tools-over-the-model-context-protocol-mcp" title="Link to this heading">#</a></h1>
+<p>In Part 1, the agent loop called the MOFA functions directly from Python. In this part, those same functions are provided by a separate program, an <strong>MCP server</strong>, and the agent accesses them by sending requests through it.</p>
+<p>We start with our own MCP server, built around the same MOFA functions, and check that it gives the same results as Part 1. We then connect the agent to an MCP server developed by someone else, so that it can use those additional tools alongside our own within the same conversation. Finally, we look at how an MCP server like ours is actually built.</p>
+<p>Throughout, the analysis itself stays fixed: the same MOFA functions, the same fitted model, and the same biological questions. What changes is only how the agent reaches the tools.</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this notebook you should be able to:</p>
 <ul class="simple">
-<li><p>Explain what MCP is, and why it changes where a tool lives and who can reach it, not what the tool can do.</p></li>
-<li><p>Serve the same tools from Part 1 through an MCP server, and confirm Claude gets the identical answer through it.</p></li>
-<li><p>Explain the two reasons MCP is worth the extra layer: keeping data and logic in one controlled place, and reusing tools other people have already built and published.</p></li>
-<li><p>Connect to a public MCP server (BioMCP) alongside your own, and write a system prompt that tells Claude when to use which.</p></li>
+<li><p>Explain what an MCP server is, and why moving a tool onto one changes where it runs and who can reach it, rather than what it does.</p></li>
+<li><p>Connect an agent to an MCP server and use its tools exactly as you used local tools in Part 1.</p></li>
+<li><p>Connect the same agent to a server written and run by someone else, and use both sets of tools in one conversation.</p></li>
+<li><p>Describe what information leaves your machine when an external server is involved.</p></li>
 </ul>
-<section id="model-backend-bring-your-own-key">
-<h3>Model backend: bring your own key<a class="headerlink" href="#model-backend-bring-your-own-key" title="Link to this heading">#</a></h3>
-<p>Reads <code class="docutils literal notranslate"><span class="pre">ANTHROPIC_API_KEY</span></code> from <code class="docutils literal notranslate"><span class="pre">.env</span></code>; run with the <code class="docutils literal notranslate"><span class="pre">eccb</span></code> kernel. Only the agent-run cells later in the notebook spend API tokens — everything above them is local: the server subprocess loads the cached model, no LLM involved.</p>
 </section>
-<section id="why-mcp-here">
-<h3>Why MCP here?<a class="headerlink" href="#why-mcp-here" title="Link to this heading">#</a></h3>
-<p>For this practical, the MCP server buys little over the plain functions in Part 1, and that is the point: the task is identical, so the only thing that changes is the interface. MCP starts to pay off when the tools front something you do not want inside every notebook process — here, that is a 1.1 GB <code class="docutils literal notranslate"><span class="pre">omics.pkl</span></code> and a fitted model. The server loads that once at startup and exposes only small, audited, read-only operations; many clients can reuse it without ever loading that data themselves.</p>
+<section id="what-is-mcp">
+<h2>What is MCP?<a class="headerlink" href="#what-is-mcp" title="Link to this heading">#</a></h2>
+<p>An <strong>MCP server</strong> is a program that makes a set of tools available to other programs. It runs on its own, holds whatever data those tools need, and waits for requests. An agent that wants to use one of those tools does not import any code: it connects to the server, asks what tools are available, and asks for one to be run.</p>
+<p>For that exchange to work, the agent and the server have to agree on how to ask those questions. The <strong>Model Context Protocol (MCP)</strong> is that agreement. It defines how a client asks a server what it offers, how it requests that a tool be run, and how results come back. Because the protocol is the same everywhere, any MCP-compatible agent can use any MCP server.</p>
+<p>You may ask: why add this extra layer at all? It is useful because it separates the tool provider from the application using the tools. The same set of tools can then be reused by different notebooks or agents without each one having to integrate the underlying code itself, and access to the data and functions can stay behind a single controlled interface. Just as importantly, the same standard lets your agent connect to tools built by other people without needing a new custom integration for each one.</p>
+<p>The server we use here is <code class="docutils literal notranslate"><span class="pre">server/mofa_mcp_server.py</span></code>. We wrote it for this practical: it holds the same eight analysis functions from Part 1, backed by the same cached MOFA model. This notebook is about using it. The last section shows how it was built.</p>
 </section>
-</section>
-<section id="environment-api-key">
-<h2>0. Environment &amp; API key<a class="headerlink" href="#environment-api-key" title="Link to this heading">#</a></h2>
-<p>Load the key, and point the notebook at the project root and the MCP server script.</p>
+<section id="setup">
+<h2>0. Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>Load the API key and locate the MCP server script.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># claude_notebooks/ sits one level deeper than notebooks/ (notebooks/claude_notebooks/),</span>
-<span class="c1"># so it needs to climb two levels instead of one to reach the project root.</span>
-<span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span><span class="p">:</span>
+
+<span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;complete_notebooks&quot;</span><span class="p">:</span>
+    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+<span class="k">elif</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span><span class="p">:</span>
     <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
@@ -513,493 +503,349 @@
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY not found. Add it to a .env in the project root.&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY loaded:&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">)))</span>
 
 <span class="n">SERVER_PATH</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;server&quot;</span> <span class="o">/</span> <span class="s2">&quot;mofa_mcp_server.py&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MCP server:&quot;</span><span class="p">,</span> <span class="n">SERVER_PATH</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">SERVER_PATH</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;MCP server not found at </span><span class="si">{</span><span class="n">SERVER_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;API key loaded:&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MCP server    :&quot;</span><span class="p">,</span> <span class="n">SERVER_PATH</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="the-mcp-server">
-<h2>1. The MCP server<a class="headerlink" href="#the-mcp-server" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">server/mofa_mcp_server.py</span></code> uses <strong>FastMCP</strong> (a Python library for building MCP servers with minimal boilerplate) to expose three MCP primitives, all backed by the cached MOFA model:</p>
-<ul class="simple">
-<li><p><strong>Tools</strong> (model-callable, read-only): <code class="docutils literal notranslate"><span class="pre">data_summary</span></code>, <code class="docutils literal notranslate"><span class="pre">split_summary</span></code>, <code class="docutils literal notranslate"><span class="pre">active_factors</span></code>, <code class="docutils literal notranslate"><span class="pre">factor_view_r2</span></code>, <code class="docutils literal notranslate"><span class="pre">factor_subtype_association</span></code>, <code class="docutils literal notranslate"><span class="pre">top_features_for_factor</span></code>, <code class="docutils literal notranslate"><span class="pre">classify_subtype_from_factors</span></code>, <code class="docutils literal notranslate"><span class="pre">train_vs_test_subtype_association</span></code></p></li>
-<li><p><strong>Resource</strong>: <code class="docutils literal notranslate"><span class="pre">mofa://summary</span></code> — a compact model/cohort summary to read into context</p></li>
-<li><p><strong>Prompt</strong>: <code class="docutils literal notranslate"><span class="pre">interpret_factor(factor)</span></code> — a reusable interpretation template</p></li>
-</ul>
-<p>The server loads the aligned omics and fitted model once at startup; <code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code> is not exposed here either, for the same reason as Part 1. The clients below launch it as a <code class="docutils literal notranslate"><span class="pre">stdio</span></code> subprocess — a subprocess your notebook talks to over its standard input/output, the same way you would pipe data between two command-line programs.</p>
+<section id="connecting-to-the-server">
+<h2>1. Connecting to the server<a class="headerlink" href="#connecting-to-the-server" title="Link to this heading">#</a></h2>
+<p>This section sets up the connection between the notebook and the MCP server, then rebuilds the same agent loop used in Part 1.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MultiServerMCPClient</span></code> is an MCP client: it launches the server, performs the exchange described above, and hands back the server’s tools in the form LangChain expects.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_mcp_adapters.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiServerMCPClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MultiServerMCPClient</span><span class="p">({</span>
+    <span class="s2">&quot;mofa&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">SERVER_PATH</span><span class="p">)],</span>
+        <span class="s2">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;stdio&quot;</span><span class="p">,</span>       <span class="c1"># the server runs as a subprocess of this notebook</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="c1"># Ask the server what it offers. Each tool arrives with its name, its arguments</span>
+<span class="c1"># and its description, the same three things Claude saw in Part 1.</span>
+<span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tools</span><span class="p">()</span>
+<span class="n">tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">}</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tools from the MOFA server:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Binding and the agent loop are unchanged from Part 1. The only difference is that the tools now live in another program, so calling one means sending a request and waiting for the reply — which is what <code class="docutils literal notranslate"><span class="pre">await</span></code> and <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code> mark on the tool call.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+
+<span class="n">MODEL</span> <span class="o">=</span> <span class="s2">&quot;claude-haiku-4-5&quot;</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">MODEL</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">llm_with_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
+
+<span class="c1"># Identical to the system prompt in Part 1.</span>
+<span class="n">SYSTEM</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You are a computational-biology assistant analysing a fitted MOFA model &quot;</span>
+          <span class="s2">&quot;of TCGA breast-cancer multi-omics data. Use the tools to gather evidence; &quot;</span>
+          <span class="s2">&quot;ground every quantitative claim in tool results and name which tool you used. &quot;</span>
+          <span class="s2">&quot;Factors are named &#39;Factor1&#39;..&#39;Factor10&#39;; subtypes are PAM50 (LumA, LumB, &quot;</span>
+          <span class="s2">&quot;Basal, Her2, Normal).&quot;</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_agent</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identical to Part 1&#39;s run_agent, except that it waits for the server to reply.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">SYSTEM</span><span class="p">),</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">question</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
+
+        <span class="c1"># Ask the model what to do next.</span>
+        <span class="n">model_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm_with_tools</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_response</span><span class="p">)</span>
+
+        <span class="c1"># If no tool was requested, the model has finished its answer. Return it.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_response</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">model_response</span>
+
+        <span class="c1"># Otherwise, run each requested tool</span>
+        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">model_response</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="c1"># ...except that the tool does not run here: the request goes to the </span>
+            <span class="c1"># server, which runs the function and sends the result back.</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">])</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
+                                        <span class="n">tool_call_id</span><span class="o">=</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent did not finish within </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> steps.&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">),</span> <span class="s2">&quot;MCP tools to&quot;</span><span class="p">,</span> <span class="n">MODEL</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div style="border-left:4px solid #028090; background:#f0f7f8; color:#16242f;
+            padding:0.75em 1em; margin:1em 0; border-radius:4px;">
+<details>
+<summary style="cursor:pointer; font-weight:bold;">Note — why does <code>run_agent()</code> need <code>async</code>, <code>await</code> and <code>ainvoke</code> now?</summary>
+<p style="margin-top:0.9em;">In Part 1, tools were called like any other Python function:</p>
+<pre style="background:#ffffff; padding:0.6em 0.8em; border-radius:3px; margin:0.6em 0;"><code>result = tools_by_name[call["name"]].invoke(call["args"])</code></pre>
+<p>In Part 2, the same line reads:</p>
+<pre style="background:#ffffff; padding:0.6em 0.8em; border-radius:3px; margin:0.6em 0;"><code>result = await tools_by_name[call["name"]].ainvoke(call["args"])</code></pre>
+<p>This is because the agent is no longer calling a function in this notebook. An MCP tool may be running in another program, so the notebook sends it a request and waits for the result to come back.</p>
+<p>Python has a way of handling that kind of waiting without stopping everything else: <em>asynchronous</em> programming (<code>async</code>). An asynchronous function can pause while it waits for a result and let Python get on with other work in the meantime — useful whenever a program is talking to several things at once.</p>
+<p>That is what the two new keywords are. The <code>a</code> in <code>ainvoke</code> means asynchronous: it starts the operation rather than completing it. <code>await</code> then means, roughly, <em>pause here until the result is ready, then continue</em>.</p>
+<p>Python only allows <code>await</code> inside an asynchronous function, so <code>run_agent()</code> has to change too — from <code>def run_agent(...)</code> to <code>async def run_agent(...)</code>.</p>
+<p style="margin-bottom:0;">We gain nothing from this here: the notebook asks one question at a time and has no other work to get on with while it waits. The library that connects us to MCP servers is simply written this way, because it is built for programs handling several servers and many requests at once.</p>
+</details>
+</div></section>
+<section id="the-same-questions-answered-through-the-server">
+<h2>2. The same questions, answered through the server<a class="headerlink" href="#the-same-questions-answered-through-the-server" title="Link to this heading">#</a></h2>
+<p>Below are two of the questions from Part 1: the first one, which needs a single tool, and the flagship question, which needs several. The tool names in the trace and the answers themselves should match what you saw in Part 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q1 from Part 1: one tool</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;How many patients and features are in each omics view, and how many patients per PAM50 subtype?&quot;</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q5 from Part 1, the flagship: several tools, the second chosen after seeing the first result</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;Which MOFA factor is most associated with breast-cancer subtype, and which transcriptomic features most strongly drive it?&quot;</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Same tools, same order, same answer. The functions ran in another process, and neither Claude nor the agent loop had to be told anything about that.</p>
+<p>Now write your own question. Anything the eight tools can answer between them — a good one needs more than a single tool, so that you can watch Claude decide what to ask for next.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#################################################</span>
+<span class="c1"># Write a question that needs more than one tool. </span>
+<span class="c1"># Additional clue: look at Part 1 notebook for ideas</span>
+<span class="c1">#</span>
+<span class="c1">### YOUR CODE HERE ###</span>
+<span class="c1">#</span>
+<span class="c1">#################################################</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
-<section id="under-the-hood-talk-to-mcp-directly-no-adapter">
-<h2>2. Under the hood: talk to MCP directly (no adapter)<a class="headerlink" href="#under-the-hood-talk-to-mcp-directly-no-adapter" title="Link to this heading">#</a></h2>
-<p>Before bringing in the LangChain adapter, we connect with MCP’s own client library directly, to see what MCP actually is underneath the convenience wrapper: open a <code class="docutils literal notranslate"><span class="pre">ClientSession</span></code> over <code class="docutils literal notranslate"><span class="pre">stdio</span></code>, ask the server what it offers (<em>handshake</em>), then call one tool over the wire. No LLM involved, this costs nothing to run.</p>
+<section id="connecting-to-somebody-else-s-server">
+<h2>3. Connecting to somebody else’s server<a class="headerlink" href="#connecting-to-somebody-else-s-server" title="Link to this heading">#</a></h2>
+<p>Everything so far used a server we wrote, fronting our own model. The more useful case is a server somebody else runs, exposing data we do not have.</p>
+<p><a class="reference external" href="https://biomcp.org">BioMCP</a> is one: an open-source MCP server covering around fifteen public biomedical sources — PubMed, ClinicalTrials.gov, ClinVar, MyGene.info and others — behind one set of tools. Because it speaks the same protocol, connecting to it takes the same few lines as connecting to our own server, and the agent can use both at once.</p>
+<p>It is already installed in this environment. Elsewhere, you would install it with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>biomcp-python
+</pre></div>
+</div>
+<p>The next cell finds the BioMCP command and adds it as a second entry alongside our own server.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span>
+
+<span class="n">BIOMCP_BIN</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;biomcp&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;biomcp not found on PATH -- pip install biomcp-python, then restart the kernel&quot;</span>
+
+<span class="c1"># The CLI has used both `serve` and `run` across versions; pick whichever this one has.</span>
+<span class="n">help_text</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;--help&quot;</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+<span class="n">subcommand</span> <span class="o">=</span> <span class="s2">&quot;run&quot;</span> <span class="k">if</span> <span class="s2">&quot; run &quot;</span> <span class="ow">in</span> <span class="n">help_text</span> <span class="k">else</span> <span class="s2">&quot;serve&quot;</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MultiServerMCPClient</span><span class="p">({</span>
+    <span class="s2">&quot;mofa&quot;</span><span class="p">:</span>   <span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">SERVER_PATH</span><span class="p">)],</span> <span class="s2">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;stdio&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;biomcp&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">BIOMCP_BIN</span><span class="p">,</span>     <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">subcommand</span><span class="p">],</span>       <span class="s2">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;stdio&quot;</span><span class="p">},</span>
+<span class="p">})</span>
+
+<span class="n">mofa_tool_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tools_by_name</span><span class="p">)</span>
+<span class="n">all_tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tools</span><span class="p">()</span>
+<span class="n">all_tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">all_tools</span><span class="p">}</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tools in total&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  ours   :&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">mofa_tool_names</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  theirs :&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_tools_by_name</span><span class="p">)</span> <span class="o">-</span> <span class="n">mofa_tool_names</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>With two sets of tools available, the system prompt has to say which is for what. It also has to mention one practical detail: our MOFA tools return Ensembl IDs with a version suffix, and BioMCP does not recognise those.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">llm_with_all_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">all_tools</span><span class="p">)</span>
+
+<span class="n">SYSTEM_MULTI</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;You are a computational-biology assistant. You have two kinds of tools: &quot;</span>
+    <span class="s2">&quot;(1) MOFA tools analysing a fitted multi-omics model of TCGA breast-cancer &quot;</span>
+    <span class="s2">&quot;data (factors &#39;Factor1&#39;..&#39;Factor10&#39;, PAM50 subtypes), and (2) BioMCP tools &quot;</span>
+    <span class="s2">&quot;for general biomedical knowledge (genes, drugs, diseases, literature). &quot;</span>
+    <span class="s2">&quot;Use MOFA tools for questions about our fitted model/factors/patients; use &quot;</span>
+    <span class="s2">&quot;BioMCP tools for general biomedical facts about specific genes, drugs, or &quot;</span>
+    <span class="s2">&quot;diseases. Ground every claim in tool output and name which tool you used. &quot;</span>
+    <span class="s2">&quot;NOTE: MOFA tools return Ensembl gene IDs with a version suffix (e.g. &quot;</span>
+    <span class="s2">&quot;&#39;ENSG00000160180.15&#39;). BioMCP tools do not recognise the version suffix -- &quot;</span>
+    <span class="s2">&quot;strip it (to &#39;ENSG00000160180&#39;) before passing an ID to any BioMCP tool. &quot;</span>
+    <span class="s2">&quot;Resolve one gene at a time rather than issuing many lookups in parallel. &quot;</span>
+    <span class="s2">&quot;If a question asks for something no available tool result actually supports, &quot;</span>
+    <span class="s2">&quot;say so explicitly rather than inferring an answer from general biomedical knowledge.&quot;</span>
+<span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_agent_multi</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Same loop as before, over the combined tool set.&quot;&quot;&quot;</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">SYSTEM_MULTI</span><span class="p">),</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">question</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
+
+        <span class="n">model_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm_with_all_tools</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_response</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_response</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">model_response</span>
+
+        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">model_response</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">all_tools_by_name</span><span class="p">[</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="c1"># Worth watching: the arguments above are what leaves your machine.</span>
+                <span class="n">preview</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;           &lt;- </span><span class="si">{</span><span class="n">preview</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                      <span class="o">+</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;... [</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">preview</span><span class="p">)</span><span class="si">}</span><span class="s2"> chars]&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">preview</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
+                                        <span class="n">tool_call_id</span><span class="o">=</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent did not finish within </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> steps.&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_tools</span><span class="p">),</span> <span class="s2">&quot;tools to&quot;</span><span class="p">,</span> <span class="n">MODEL</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The question below cannot be answered by either server alone. Finding the genes that drive a factor needs our model; saying what those genes do needs the literature.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;Factor2 is associated with breast cancer subtype. What biological processes &quot;</span> \
+        <span class="s2">&quot;are enriched among its top 50 genes?&quot;</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent_multi</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Watch the trace: it starts in our tools, then crosses into theirs, using the gene IDs the first set returned.</p>
+<p>Now write your own. Something that starts in the MOFA model and ends in the public data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#################################################</span>
+<span class="c1"># Write a question that has to use both sets of tools. </span>
+<span class="c1"># Additional clue: get a gene or a set of genes out of the MOFA model first, then ask something </span>
+<span class="c1"># about them that only public data can answer -- clinical trials, variants, or published literature.</span>
+<span class="c1">#</span>
+<span class="c1">### YOUR CODE HERE ###</span>
+<span class="c1">#</span>
+<span class="c1">#################################################</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="what-this-bought-us">
+<h2>4. What this bought us<a class="headerlink" href="#what-this-bought-us" title="Link to this heading">#</a></h2>
+<p>The first half of the notebook changed nothing about what the agent could do. That was the point: the same tools, reached differently, gave the same answers. What changed is that the tools and the data behind them now live in one place, loaded once, and any number of clients can use them without a copy of the code or the omics tables.</p>
+<p>The second half is where we see the usefulness of MCPs. Connecting to BioMCP took the same handful of lines as connecting to our own server, and the agent gained tools over fifteen public databases that we did not write and do not maintain.</p>
+<p><strong>What leaves your machine.</strong> The omics tables and the fitted model stay inside the MOFA server’s process; BioMCP never sees them. What reaches BioMCP is whatever Claude puts in a tool call’s arguments — in the traces above, gene identifiers — which BioMCP then passes on to the public APIs behind it. Separately, and true of Part 1 as well, the whole conversation goes to Anthropic as part of the agent loop.</p>
+<p>For this dataset that is low-stakes: TCGA is public and de-identified. On data that is not, note that the system prompt is a guideline and not a boundary — <strong>nothing prevents Claude from putting more context into a tool call than you intended</strong>. If you need a guarantee, validate the arguments in code before they reach the server.</p>
+</section>
+<section id="reflection">
+<h2>Reflection<a class="headerlink" href="#reflection" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Compare the traces in Section 2 with the ones from Part 1. Did Claude call the same tools, in the same order?</p></li>
+<li><p>The agent loop never mentions MCP. Why did it not need changing when the tools moved onto a server?</p></li>
+<li><p>When you asked a question needing both servers, how did Claude get from a MOFA result to a BioMCP query?</p></li>
+<li><p>Our server exposes only read-only tools. What would you want to change if one of them wrote to a file?</p></li>
+</ul>
+</section>
+<section id="how-the-server-works">
+<h2>5. How the server works<a class="headerlink" href="#how-the-server-works" title="Link to this heading">#</a></h2>
+<p><em>For the interested reader. Nothing here is needed to run anything above.</em></p>
+<section id="building-the-server">
+<h3>Building the server<a class="headerlink" href="#building-the-server" title="Link to this heading">#</a></h3>
+<p>MCP has official software development kits in several languages. Ours is written with the Python one, using its high-level interface, <strong>FastMCP</strong>, which turns ordinary functions into MCP tools. The whole idea fits in a few lines:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server.fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastMCP</span>
+
+<span class="n">mcp</span> <span class="o">=</span> <span class="n">FastMCP</span><span class="p">(</span><span class="s2">&quot;my-server&quot;</span><span class="p">)</span>
+
+<span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add two numbers.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">mcp</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That is all MCP asks of you. Everything else in <code class="docutils literal notranslate"><span class="pre">server/mofa_mcp_server.py</span></code> is the MOFA analysis from Part 1, unchanged.</p>
+<p>The decorator is what does the work. <code class="docutils literal notranslate"><span class="pre">&#64;mcp.tool()</span></code> takes the function’s name, its type-hinted arguments, and its docstring, and makes those three things visible to any client that connects. They are the same three things Claude saw in Part 1, and the same job LangChain’s <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code> did there — one layer further out. As in Part 1, the docstring is the interface: it is what the model reads when deciding whether the tool is worth calling, and the body is what it never sees.</p>
+<p>Everything above the decorators in our file — loading the omics tables, the train/test split, opening the fitted model, projecting the test patients — runs once, when the server starts. That is what makes the reuse described earlier practical: one copy of the data, loaded once, shared by every client that connects, rather than a copy loaded inside every notebook.</p>
+<p>Two other decorators publish things a plain function list cannot. <code class="docutils literal notranslate"><span class="pre">&#64;mcp.resource(&quot;mofa://summary&quot;)</span></code> publishes data addressed by a URI — here a compact description of the fitted model — which the application reads into context rather than the model choosing to call. <code class="docutils literal notranslate"><span class="pre">&#64;mcp.prompt()</span></code> publishes a reusable template that the user picks; ours is <code class="docutils literal notranslate"><span class="pre">interpret_factor(factor)</span></code>, four lines that ask for a full interpretation of one factor in a fixed form. A prompt supplies instructions rather than capability, which is an idea Part 3 takes much further.</p>
+<p>Each tool also carries <code class="docutils literal notranslate"><span class="pre">ToolAnnotations(readOnlyHint=True,</span> <span class="pre">...)</span></code>, saying it only reads and never changes anything. A client can use that to run a tool without pausing to ask a human first — worth having precisely because the caller here is a model rather than a fixed script.</p>
+<p>Finally, <code class="docutils literal notranslate"><span class="pre">mcp.run()</span></code> at the bottom is what lets <code class="docutils literal notranslate"><span class="pre">MultiServerMCPClient</span></code> start the server with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">server/mofa_mcp_server.py</span></code>. Run that command yourself in a terminal and it will sit there apparently doing nothing, waiting for input — which is what a server of this kind looks like when nothing is talking to it.</p>
+</section>
+<section id="the-exchange-underneath">
+<h3>The exchange underneath<a class="headerlink" href="#the-exchange-underneath" title="Link to this heading">#</a></h3>
+<p>Now that you have seen how a server publishes things, here is what the client and the server actually say to each other.</p>
+<p>Below we connect with MCP’s own client library instead of the adapter. The pattern is always the same: open a session, <code class="docutils literal notranslate"><span class="pre">initialize</span></code> it — the server replies with what it can do — and then ask for things. No model is involved, so this costs nothing to run.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="n">StdioServerParameters</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mcp.client.stdio</span><span class="w"> </span><span class="kn">import</span> <span class="n">stdio_client</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="n">server_params</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">SERVER_PATH</span><span class="p">)])</span>
 
 <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
         <span class="n">init</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to: </span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">serverInfo</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">caps</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">capabilities</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Server advertises:&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;tools&quot;</span> <span class="k">if</span> <span class="n">caps</span><span class="o">.</span><span class="n">tools</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span> <span class="k">if</span> <span class="n">caps</span><span class="o">.</span><span class="n">resources</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;prompts&quot;</span> <span class="k">if</span> <span class="n">caps</span><span class="o">.</span><span class="n">prompts</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;connected to:&quot;</span><span class="p">,</span> <span class="n">init</span><span class="o">.</span><span class="n">serverInfo</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> TOOLS (the model may choose to call these)&quot;</span><span class="p">)</span>
+        <span class="c1"># TOOLS -- the model may choose to call these</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
             <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">inputSchema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">{}))</span>
-            <span class="n">ro</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">annotations</span><span class="p">,</span> <span class="s2">&quot;readOnlyHint&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)   readOnlyHint=</span><span class="si">{</span><span class="n">ro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  tool      </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> RESOURCES (data to read into context) &quot;</span><span class="p">)</span>
+        <span class="c1"># RESOURCES -- data to read into context, not called by the model</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_resources</span><span class="p">())</span><span class="o">.</span><span class="n">resources</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">uri</span><span class="si">}</span><span class="s2">  (</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-        <span class="n">summary</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">read_resource</span><span class="p">(</span><span class="s2">&quot;mofa://summary&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  read mofa://summary -&gt;&quot;</span><span class="p">,</span> <span class="n">summary</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  resource  </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">uri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> PROMPTS (server-provided templates) &quot;</span><span class="p">)</span>
+        <span class="c1"># PROMPTS -- reusable templates a user can pick</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_prompts</span><span class="p">())</span><span class="o">.</span><span class="n">prompts</span><span class="p">:</span>
             <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">arguments</span> <span class="ow">or</span> <span class="p">[]))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  prompt    </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> tools/call factor_subtype_association&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">mofa://summary -&gt;&quot;</span><span class="p">)</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">read_resource</span><span class="p">(</span><span class="s2">&quot;mofa://summary&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">summary</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">calling factor_subtype_association -&gt;&quot;</span><span class="p">)</span>
         <span class="n">called</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">&quot;factor_subtype_association&quot;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">,</span> <span class="n">called</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">120</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">called</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">150</span><span class="p">],</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>The block above never imported LangChain — that was MCP directly.</p>
-<p>MCP messages travel as <strong>JSON-RPC</strong> (a simple request/response message format) over a transport — here that is <code class="docutils literal notranslate"><span class="pre">stdio</span></code>, though it could be HTTP instead. On that wire, MCP defines a fixed set of methods: <code class="docutils literal notranslate"><span class="pre">initialize</span></code>, <code class="docutils literal notranslate"><span class="pre">tools/list</span></code>, <code class="docutils literal notranslate"><span class="pre">tools/call</span></code>, <code class="docutils literal notranslate"><span class="pre">resources/list</span></code>, <code class="docutils literal notranslate"><span class="pre">resources/read</span></code>, <code class="docutils literal notranslate"><span class="pre">prompts/list</span></code>, <code class="docutils literal notranslate"><span class="pre">prompts/get</span></code>.</p>
-<p>Tools are only one of several things a server can offer:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Primitive</p></th>
-<th class="head"><p>Driven by</p></th>
-<th class="head"><p>What it is</p></th>
-<th class="head"><p>In our server</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><strong>Tools</strong></p></td>
-<td><p>the model</p></td>
-<td><p>functions the model may choose to call</p></td>
-<td><p>the 8 analysis functions</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Resources</strong></p></td>
-<td><p>the app/user</p></td>
-<td><p>data to read into context</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mofa://summary</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Prompts</strong></p></td>
-<td><p>the user</p></td>
-<td><p>reusable, parameterized templates</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">interpret_factor</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Sampling</strong></p></td>
-<td><p>the server</p></td>
-<td><p>server asks the client’s LLM to generate</p></td>
-<td><p>(not used)</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Elicitation</strong></p></td>
-<td><p>the server</p></td>
-<td><p>server asks the human mid-call</p></td>
-<td><p>(not used)</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Roots</strong></p></td>
-<td><p>the client</p></td>
-<td><p>filesystem/scope boundaries</p></td>
-<td><p>(not used)</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Each tool also carried <code class="docutils literal notranslate"><span class="pre">readOnlyHint=True</span></code> — metadata a client could use to auto-run a tool instead of pausing for human approval, which matters specifically because the caller here is a model, not a fixed script. A generic remote-procedure-call setup has no equivalent notion.</p>
-<p>One more useful pattern before we bring in the adapter: wrap a single call in a small reusable function, the way <code class="docutils literal notranslate"><span class="pre">MCPTool</span></code> will do more fully further down.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_resource</span><span class="p">(</span><span class="n">uri</span><span class="p">):</span>
-    <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
-        <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-            <span class="k">return</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">read_resource</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
-
-<span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;mofa://summary&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="framework-adaptation-langchain-mcp-adapters">
-<h2>3. Framework adaptation: <code class="docutils literal notranslate"><span class="pre">langchain-mcp-adapters</span></code><a class="headerlink" href="#framework-adaptation-langchain-mcp-adapters" title="Link to this heading">#</a></h2>
-<p>We call <code class="docutils literal notranslate"><span class="pre">get_tools()</span></code>, so only the <em>tools</em> primitive flows into the agent. The same client also exposes <code class="docutils literal notranslate"><span class="pre">get_resources()</span></code> and <code class="docutils literal notranslate"><span class="pre">get_prompt()</span></code>. Nothing about MCP is thrown away here — the adapter <strong>is</strong> itself an MCP client, speaking the identical wire protocol shown above; <code class="docutils literal notranslate"><span class="pre">get_tools()</span></code> just converts the one primitive a tool-calling loop actually needs.</p>
-</section>
-<section id="sanity-check-one-tool-no-llm">
-<h2>4. Sanity-check one tool (no LLM)<a class="headerlink" href="#sanity-check-one-tool-no-llm" title="Link to this heading">#</a></h2>
-<p>Call a tool straight through the adapter’s building blocks so the structured evidence is visible before involving the model at all.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">parse_mcp</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;MCP tools return text content blocks; json.loads each back to a dict/list.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">block</span>
-            <span class="n">parsed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">text</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_unwrap</span><span class="p">(</span><span class="n">parsed</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">out</span>
-    <span class="n">parsed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">result</span>
-    <span class="k">return</span> <span class="n">_unwrap</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_unwrap</span><span class="p">(</span><span class="n">parsed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Undo the {&quot;result&quot;: [...]} auto-wrapping MCP applies to non-object tool outputs.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">list</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">parsed</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MCPTool</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
-            <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-                <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
-                <span class="n">parsed</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">]</span>
-                <span class="c1"># if the tool returns a single object rather than a list of records,</span>
-                <span class="c1"># collapse back down to that one object instead of a 1-item list</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">return</span> <span class="n">parsed</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tools_by_name</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;factor_subtype_association&quot;</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">(</span><span class="s2">&quot;factor_subtype_association&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;classify_subtype_from_factors&quot;</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">(</span><span class="s2">&quot;classify_subtype_from_factors&quot;</span><span class="p">),</span>
-<span class="p">}</span>
-
-<span class="n">assoc</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="s2">&quot;factor_subtype_association&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">({})</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;factor_subtype_association (top 3):&quot;</span><span class="p">,</span> <span class="n">assoc</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
-
-<span class="bp">cls</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="s2">&quot;classify_subtype_from_factors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">({})</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;classify_subtype_from_factors    :&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="bind-the-mcp-tools-to-claude">
-<h2>5. Bind the MCP tools to Claude<a class="headerlink" href="#bind-the-mcp-tools-to-claude" title="Link to this heading">#</a></h2>
-<p>Identical to Part 1: <code class="docutils literal notranslate"><span class="pre">bind_tools</span></code> does not care where the tools came from. Binding does not call the API.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructuredTool</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_list_mcp_tools</span><span class="p">():</span>
-    <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
-        <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-            <span class="k">return</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span><span class="o">.</span><span class="n">tools</span>
-
-<span class="n">mcp_tool_specs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_list_mcp_tools</span><span class="p">()</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_make_langchain_tool</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">mcp_tool</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="n">mcp_tool</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">StructuredTool</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
-        <span class="n">coroutine</span><span class="o">=</span><span class="n">_run</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="n">args_schema</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># LangChain will infer a permissive schema; fine for demo use</span>
-    <span class="p">)</span>
-
-<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">_make_langchain_tool</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">MCPTool</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">mcp_tool_specs</span>
-<span class="p">]</span>
-<span class="n">tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MODEL</span> <span class="o">=</span> <span class="s2">&quot;claude-haiku-4-5&quot;</span>
-<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">MODEL</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">llm_with_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">),</span> <span class="s2">&quot;MCP tools to&quot;</span><span class="p">,</span> <span class="n">MODEL</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-the-agent-loop-async">
-<h2>6. Run the agent loop (async)<a class="headerlink" href="#run-the-agent-loop-async" title="Link to this heading">#</a></h2>
-<p>Same loop as Part 1, but <code class="docutils literal notranslate"><span class="pre">await</span></code>-ing the model and the tools, since MCP tools are asynchronous here.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
-
-<span class="n">SYSTEM</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You are a computational-biology assistant analysing a fitted MOFA model of &quot;</span>
-          <span class="s2">&quot;TCGA breast-cancer multi-omics data. Use the tools to gather evidence; ground &quot;</span>
-          <span class="s2">&quot;every quantitative claim in tool results and name which tool you used. Factors &quot;</span>
-          <span class="s2">&quot;are &#39;Factor1&#39;..&#39;Factor10&#39;; subtypes are PAM50 (LumA, LumB, Basal, Her2, Normal).&quot;</span><span class="p">)</span>
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_agent</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
-    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">SYSTEM</span><span class="p">),</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">question</span><span class="p">)]</span>
-    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
-        <span class="n">ai</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm_with_tools</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ai</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ai</span>
-        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">])</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
-                                        <span class="n">tool_call_id</span><span class="o">=</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
-    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent did not finish within </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> steps.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>The tool wrapping above is deliberately loose — <code class="docutils literal notranslate"><span class="pre">args_schema=None</span></code> means LangChain has to guess how to validate Claude’s arguments. The version below fixes that by converting each tool’s real MCP schema into a proper Pydantic model, so a bad argument gets caught before it ever reaches the server.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_json_schema_to_pydantic</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Turn an MCP tool&#39;s JSON schema into a Pydantic model LangChain can use.&quot;&quot;&quot;</span>
-    <span class="n">props</span> <span class="o">=</span> <span class="n">input_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">{})</span>
-    <span class="n">required</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">input_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="p">[]))</span>
-    <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;integer&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;boolean&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">}</span>
-
-    <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">prop_name</span><span class="p">,</span> <span class="n">prop_spec</span> <span class="ow">in</span> <span class="n">props</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prop_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span> <span class="n">Any</span><span class="p">)</span>
-        <span class="n">default</span> <span class="o">=</span> <span class="o">...</span> <span class="k">if</span> <span class="n">prop_name</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">else</span> <span class="n">prop_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">fields</span><span class="p">[</span><span class="n">prop_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">py_type</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">create_model</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_Args&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_make_langchain_tool</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">mcp_tool</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">):</span>
-    <span class="n">ArgsModel</span> <span class="o">=</span> <span class="n">_json_schema_to_pydantic</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">inputSchema</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="n">mcp_tool</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">StructuredTool</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
-        <span class="n">coroutine</span><span class="o">=</span><span class="n">_run</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="n">args_schema</span><span class="o">=</span><span class="n">ArgsModel</span><span class="p">,</span>
-    <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">_make_langchain_tool</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">MCPTool</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">))</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">mcp_tool_specs</span><span class="p">]</span>
-<span class="n">tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">}</span>
-<span class="n">llm_with_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent</span><span class="p">(</span>
-    <span class="s2">&quot;Which MOFA factor is most associated with breast-cancer subtype, and which &quot;</span>
-    <span class="s2">&quot;transcriptomic features most strongly drive it?&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">final</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="same-answer-as-the-direct-tools-track">
-<h2>7. Same answer as the direct-tools track<a class="headerlink" href="#same-answer-as-the-direct-tools-track" title="Link to this heading">#</a></h2>
-<p>The flagship answer should match Part 1 — same backend and cached model, different transport. Compare the factor Claude picked against the direct evidence:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Direct evidence (top subtype-associated factors):&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">assoc</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;factor&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: eta_squared = </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;eta_squared&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="reflection">
-<h2>Reflection<a class="headerlink" href="#reflection" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Primitives: name the three this server exposes. Which adapter calls load the resource and the prompt instead of the tools? (<code class="docutils literal notranslate"><span class="pre">get_resources()</span></code>, <code class="docutils literal notranslate"><span class="pre">get_prompt()</span></code>)</p></li>
-<li><p>Did the adapter throw MCP away? No — it is an MCP client speaking the Section 2 protocol. What actually differs between Sections 2 and 5? (convenience and object model, not capability.)</p></li>
-<li><p>Layering: MCP rode on <code class="docutils literal notranslate"><span class="pre">stdio</span></code> + JSON-RPC. What changes if the transport is HTTP? (the primitives do not.)</p></li>
-<li><p>Annotations: every tool was <code class="docutils literal notranslate"><span class="pre">readOnlyHint=True</span></code>. How would a client use that? What changes for a tool that <em>writes</em>?</p></li>
-<li><p>Same answer: it matched Part 1. So what did MCP buy here, and when does it pay off? (big/private data behind an audited server, reuse across clients.)</p></li>
-</ul>
-</section>
-<section id="bringing-in-an-external-mcp-server-biomcp">
-<h2>8. Bringing in an external MCP server: BioMCP<a class="headerlink" href="#bringing-in-an-external-mcp-server-biomcp" title="Link to this heading">#</a></h2>
-<p>So far our only MCP server has been our own: a private, local server fronting our own fitted model and data. That is one end of the spectrum. The other end: public, third-party MCP servers that expose general biomedical knowledge — we do not own or run them, we just connect to them as a client, the same way we connect to <code class="docutils literal notranslate"><span class="pre">mofa_mcp_server.py</span></code>.</p>
-<p><a class="reference external" href="https://biomcp.org">BioMCP</a> is a real example: an open-source MCP server that fronts roughly 15 public biomedical data sources (PubMed, ClinicalTrials.gov, MyGene.info, MyChem.info, MyDisease.info, ClinVar, and others) behind a consistent set of tools — gene/drug/disease lookups, literature search, trial search, and more.</p>
-<p>Why this matters pedagogically: it is the same MCP client code, connecting to a completely different kind of server — one we did not write, running somewhere else, fronting public knowledge instead of our private model. The client only needs to speak MCP; it does not need to know who runs the server or what is behind it.</p>
-<section id="install-biomcp">
-<h3>Install BioMCP<a class="headerlink" href="#install-biomcp" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>biomcp-python
-<span class="c1"># or, for the newer single-binary CLI: uv tool install biomcp-cli</span>
-</pre></div>
-</div>
-</section>
-<section id="two-servers-one-agent">
-<h3>Two servers, one agent<a class="headerlink" href="#two-servers-one-agent" title="Link to this heading">#</a></h3>
-<p>We now give the agent <strong>two</strong> MCP servers at once: our private <code class="docutils literal notranslate"><span class="pre">mofa</span></code> server
-(local data) and the public <code class="docutils literal notranslate"><span class="pre">biomcp</span></code> server (general biomedical knowledge).
-<code class="docutils literal notranslate"><span class="pre">MultiServerMCPClient</span></code> supports this natively — just add a second entry.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_mcp_adapters.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiServerMCPClient</span>
-
-<span class="n">BIOMCP_BIN</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;biomcp&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;biomcp CLI not found on PATH — install it first: pip install biomcp-cli (or biomcp-python), then restart the kernel&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;biomcp binary:&quot;</span><span class="p">,</span> <span class="n">BIOMCP_BIN</span><span class="p">)</span>
-
-<span class="n">help_text</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;--help&quot;</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
-<span class="n">biomcp_subcommand</span> <span class="o">=</span> <span class="s2">&quot;serve&quot;</span> <span class="k">if</span> <span class="s2">&quot;serve&quot;</span> <span class="ow">in</span> <span class="n">help_text</span> <span class="ow">and</span> <span class="s2">&quot;run&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">help_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Commands&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;run&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using subcommand:&quot;</span><span class="p">,</span> <span class="n">biomcp_subcommand</span><span class="p">)</span>
-
-<span class="n">multi_server_client</span> <span class="o">=</span> <span class="n">MultiServerMCPClient</span><span class="p">({</span>
-    <span class="s2">&quot;mofa&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">SERVER_PATH</span><span class="p">)],</span> <span class="s2">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;stdio&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;biomcp&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">biomcp_subcommand</span><span class="p">],</span> <span class="s2">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;stdio&quot;</span><span class="p">},</span>
-<span class="p">})</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="re-bind-and-re-define-the-agent-loop-over-the-combined-tool-set">
-<h3>Re-bind and re-define the agent loop over the combined tool set<a class="headerlink" href="#re-bind-and-re-define-the-agent-loop-over-the-combined-tool-set" title="Link to this heading">#</a></h3>
-<p>Nothing about <code class="docutils literal notranslate"><span class="pre">bind_tools</span></code> or <code class="docutils literal notranslate"><span class="pre">run_agent</span></code> changes conceptually — Claude just now has a larger, mixed set of tools to choose from, some fronting our own model, some fronting public biomedical databases.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_get_all_tools</span><span class="p">():</span>
-    <span class="k">return</span> <span class="k">await</span> <span class="n">multi_server_client</span><span class="o">.</span><span class="n">get_tools</span><span class="p">()</span>
-
-<span class="n">all_tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_get_all_tools</span><span class="p">()</span>
-<span class="n">all_tools_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">all_tools</span><span class="p">}</span>
-
-<span class="n">mofa_tool_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tools_by_name</span><span class="p">)</span>          <span class="c1"># from Section 3 (mofa-only client)</span>
-<span class="n">biomcp_tool_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_tools_by_name</span><span class="p">)</span> <span class="o">-</span> <span class="n">mofa_tool_names</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tools total&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  from mofa   :&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">mofa_tool_names</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  from biomcp :&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">biomcp_tool_names</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">llm_with_all_tools</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">all_tools</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_tools</span><span class="p">),</span> <span class="s2">&quot;tools (mofa + biomcp) to&quot;</span><span class="p">,</span> <span class="n">MODEL</span><span class="p">)</span>
-
-<span class="c1">#################################################</span>
-<span class="c1"># Write the system prompt for an agent with two tool families: MOFA tools and</span>
-<span class="c1"># BioMCP tools. Tell it when to use which, and how to handle the fact that MOFA&#39;s</span>
-<span class="c1"># Ensembl gene IDs carry a version suffix that BioMCP tools do not recognise.</span>
-<span class="n">SYSTEM_MULTI</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="c1">#### YOUR PROMPT HERE ####</span>
-<span class="p">)</span>
-<span class="c1">#################################################</span>
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_agent_multi</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
-    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">SYSTEM_MULTI</span><span class="p">),</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">question</span><span class="p">)]</span>
-    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
-        <span class="n">ai</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm_with_all_tools</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ai</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ai</span>
-        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">all_tools_by_name</span><span class="p">[</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="c1"># Spot-check what actually came back over the wire -- this is the</span>
-                <span class="c1"># evidence for the privacy claim in the closing markdown: only the</span>
-                <span class="c1"># arguments above went OUT to BioMCP; this is what came BACK.</span>
-                <span class="n">preview</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">preview</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">300</span><span class="p">:</span>
-                    <span class="n">preview</span> <span class="o">=</span> <span class="n">preview</span><span class="p">[:</span><span class="mi">300</span><span class="p">]</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;... [</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">preview</span><span class="p">)</span><span class="si">}</span><span class="s2"> chars total]&quot;</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;           &lt;- </span><span class="si">{</span><span class="n">preview</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
-                                        <span class="n">tool_call_id</span><span class="o">=</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
-    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent did not finish within </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> steps.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final_multi</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent_multi</span><span class="p">(</span>
-    <span class="s2">&quot;Factor2 is associated with breast cancer subtype. What biological processes &quot;</span>
-    <span class="s2">&quot;are enriched among its top 50 genes?&quot;</span><span class="p">,</span>
-    <span class="n">max_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">final_multi</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#################################################</span>
-<span class="c1"># Write a narrower, more directive question asking specifically for BioMCP&#39;s</span>
-<span class="c1"># gene-set enrichment on Factor2&#39;s top 5 genes, and nothing else.</span>
-<span class="n">final_multi</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent_multi</span><span class="p">(</span>
-    <span class="c1">#### YOUR PROMPT HERE ####,</span>
-    <span class="n">max_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">final_multi</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-<span class="c1">#################################################</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="possible-problems-to-discuss">
-<h3>Possible problems to discuss<a class="headerlink" href="#possible-problems-to-discuss" title="Link to this heading">#</a></h3>
-<p><strong>Is it safe to run the external server on our dataset?</strong></p>
-<ul class="simple">
-<li><p>The raw multi-omics data and the fitted MOFA model never go to BioMCP. They live only inside <code class="docutils literal notranslate"><span class="pre">mofa_mcp_server.py</span></code>’s process, loaded once from local cache. BioMCP has no access to that server or its data.</p></li>
-<li><p>What actually reaches BioMCP is whatever Claude puts into a tool call’s arguments — in the trace above, that is Ensembl gene IDs (<code class="docutils literal notranslate"><span class="pre">ENSG00000160180</span></code>) or gene symbols. BioMCP then relays those terms out to public APIs (PubMed, ClinicalTrials.gov, MyGene.info, g:Profiler, etc.), so those third-party services see the query terms too.</p></li>
-<li><p>Separately, and this is true regardless of BioMCP: the full conversation, including MOFA tool results, already goes to the model provider’s API as part of the agent loop. That is a standard consideration for any LLM tool-calling setup, not specific to adding BioMCP.</p></li>
-</ul>
-<p><strong>Why this is low-risk for this dataset specifically:</strong> TCGA breast-cancer data is a public, de-identified research cohort — gene names, factor loadings, and PAM50 subtype labels derived from it are not sensitive on their own. So in this notebook, the practical exposure is small.</p>
-<p>Two things worth knowing if you are adapting this to a less public dataset:</p>
-<ol class="arabic simple">
-<li><p><strong>The system prompt is a guideline, not a technical boundary.</strong> Nothing stops Claude from putting more context into a tool call than just a gene ID — it could phrase a query mentioning cohort size or subtype distribution if it thought that was helpful. The prompt discourages this but does not enforce it.</p></li>
-<li><p><strong>You can enforce it in code.</strong> If you want a hard guarantee, wrap the BioMCP tool calls with a validator that only allows arguments matching an expected pattern (bare Ensembl IDs, HGNC symbols, drug/disease names) and rejects anything else before it reaches <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code>.</p></li>
-</ol>
-<p>(Live demo tip: the printed tool results above are the evidence for this — you can point at exactly what went out and what came back, rather than asking the audience to take the claim on faith.)</p>
+<p>Two things that makes visible.</p>
+<p><strong>A server offers more than tools.</strong> <em>Tools</em> are chosen by the model. <em>Resources</em> are data the application reads into context, like <code class="docutils literal notranslate"><span class="pre">mofa://summary</span></code>. <em>Prompts</em> are templates the user picks, like <code class="docutils literal notranslate"><span class="pre">interpret_factor</span></code>. In Section 1 we called <code class="docutils literal notranslate"><span class="pre">get_tools()</span></code>, which pulled in only the first of the three, because that is what a tool-calling loop needs; <code class="docutils literal notranslate"><span class="pre">get_resources()</span></code> and <code class="docutils literal notranslate"><span class="pre">get_prompt()</span></code> fetch the others.</p>
+<p><strong>The messages are ordinary.</strong> They travel as JSON-RPC — a plain request/response format — over a transport. Ours is <code class="docutils literal notranslate"><span class="pre">stdio</span></code>: the server runs as a subprocess and the two talk through its standard input and output, the same way you would pipe one command-line program into another. Over a network it would be HTTP instead, and nothing above would change.</p>
 </section>
 </section>
 </section>
@@ -1069,25 +915,17 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-backend-bring-your-own-key">Model backend: bring your own key</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-mcp-here">Why MCP here?</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-api-key">0. Environment &amp; API key</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mcp-server">1. The MCP server</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#under-the-hood-talk-to-mcp-directly-no-adapter">2. Under the hood: talk to MCP directly (no adapter)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-adaptation-langchain-mcp-adapters">3. Framework adaptation: <code class="docutils literal notranslate"><span class="pre">langchain-mcp-adapters</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sanity-check-one-tool-no-llm">4. Sanity-check one tool (no LLM)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bind-the-mcp-tools-to-claude">5. Bind the MCP tools to Claude</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-agent-loop-async">6. Run the agent loop (async)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#same-answer-as-the-direct-tools-track">7. Same answer as the direct-tools track</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-mcp">What is MCP?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">0. Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connecting-to-the-server">1. Connecting to the server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-same-questions-answered-through-the-server">2. The same questions, answered through the server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connecting-to-somebody-else-s-server">3. Connecting to somebody else’s server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-bought-us">4. What this bought us</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reflection">Reflection</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bringing-in-an-external-mcp-server-biomcp">8. Bringing in an external MCP server: BioMCP</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-biomcp">Install BioMCP</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-servers-one-agent">Two servers, one agent</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#re-bind-and-re-define-the-agent-loop-over-the-combined-tool-set">Re-bind and re-define the agent loop over the combined tool set</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#possible-problems-to-discuss">Possible problems to discuss</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-the-server-works">5. How the server works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-the-server">Building the server</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-exchange-underneath">The exchange underneath</a></li>
 </ul>
 </li>
 </ul>
