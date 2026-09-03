@@ -461,8 +461,8 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="part-1-mofa-tools-for-an-llm-agent-langchain-tool">
 <h1>Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>)<a class="headerlink" href="#part-1-mofa-tools-for-an-llm-agent-langchain-tool" title="Link to this heading">#</a></h1>
-<p>In this notebook, we’re going to learn about how to make LLMs use <strong>tools.</strong>. Tools are simply <em>functions</em>, given to a LLM agent, which then decides which to call to answer a given task, instead of relying only on its internal knowledge.</p>
-<p>We’ll specifically be using as tools the functions defined in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>. These tools will help Claude answer questions about the multi-omics MOFA model we fitted in Part 0: A fitted MOFA model of TCGA breast-cancer subtypes, with 603 patients × 3 omics views (transcriptomics, proteomics, methylation), PAM50 subtype per patient.</p>
+<p>In this notebook, we’re going to learn about how to make LLMs use <strong>tools</strong>. Tools are simply <em>functions</em>, given to a LLM agent, which then decides which to call to answer a given task, instead of relying only on its internal knowledge.</p>
+<p>We’ll specifically be using as tools the functions defined in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>. These tools will help Claude answer questions about the multi-omics MOFA model we fitted: A fitted MOFA model of TCGA breast-cancer subtypes, with 500 patients × 3 omics views (transcriptomics, proteomics, methylation), PAM50 subtype per patient.</p>
 <p>For Claude to know when to use each function, they all contain a short description (a docstring) of what it does, and Claude decides on its own which ones to use, and in what order.</p>
 <p><strong>Key design choice: the model is not fit by the agent.</strong>
 Within these functions, we have decided not to include the function to fit the MOFA model (<code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code>). The agent’s tools operate on the already
@@ -474,17 +474,9 @@ not exposed as a tool. Tools are the cheap, interpretable analysis steps.</p>
 <ul class="simple">
 <li><p>Explain what a tool is, and why handing Claude a function is not the same as trusting it with what is inside that function.</p></li>
 <li><p>Write a plain Python function that returns tool-friendly evidence, and wrap it as a tool Claude can call using LangChain’s <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code> decorator.</p></li>
-<li><p>Explain why an operation like <code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code> is deliberately kept out of an agent’s reach.</p></li>
 <li><p>Write a system prompt that gives Claude the grounding it needs to answer questions safely.</p></li>
 <li><p>Read an agent’s tool-call trace and judge whether it combined evidence from more than one tool correctly.</p></li>
 </ul>
-<section id="model-backend-bring-your-own-key">
-<h3>Model backend: bring-your-own-key<a class="headerlink" href="#model-backend-bring-your-own-key" title="Link to this heading">#</a></h3>
-<p>This notebook calls the real Anthropic API, through a library called LangChain that lets us hand Claude a list of Python functions it can call. Create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in the project root with <code class="docutils literal notranslate"><span class="pre">ANTHROPIC_API_KEY=sk-ant-...</span></code>; it is loaded into the environment below and never printed. Run this notebook with the <code class="docutils literal notranslate"><span class="pre">eccb</span></code> kernel.</p>
-<blockquote>
-<div><p>Only the cells in Section 6 (running the agent) spend API tokens. Everything above them is local computation on the already-fitted model.</p>
-</div></blockquote>
-</section>
 </section>
 <section id="environment-api-key">
 <h2>0. Environment &amp; API key<a class="headerlink" href="#environment-api-key" title="Link to this heading">#</a></h2>
@@ -496,9 +488,14 @@ not exposed as a tool. Tools are the cheap, interpretable analysis steps.</p>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
 
-<span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39; ## YOUR CODE HERE ## &#39;&#39;&#39;</span>
+<span class="n">SESSION_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">SESSION_DIR</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Session directory not found: </span><span class="si">{</span><span class="n">SESSION_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">DOTENV_PATH</span> <span class="o">=</span> <span class="s2">&quot;/.env&quot;</span>
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="n">SESSION_DIR</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>  <span class="c1"># shared mount on workshop servers</span>
+
+<span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">SESSION_DIR</span>            <span class="c1"># anchors imports (src/...) and paths below</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">))</span>
-<span class="n">load_dotenv</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">DOTENV_PATH</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY not found. Add it to a .env in the project root.&quot;</span><span class="p">)</span>
@@ -528,16 +525,16 @@ close over the objects built in this cell.</p>
     <span class="n">fit_factor_classifier</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>
 <span class="n">CACHE</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;outputs&quot;</span> <span class="o">/</span> <span class="p">(</span>
     <span class="sa">f</span><span class="s2">&quot;trained_mofaplus_train_var</span><span class="si">{</span><span class="n">N_TOP_VARIABLE_HIGH_DIM_FEATURES</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="sa">f</span><span class="s2">&quot;_max</span><span class="si">{</span><span class="n">MAX_FACTORS</span><span class="si">}</span><span class="s2">_ard_model.hdf5&quot;</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">CACHE</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Cached MOFA model not found: </span><span class="si">{</span><span class="n">CACHE</span><span class="si">}</span><span class="s2">. Run the one-time fit first.&quot;</span>
 
-<span class="n">X_omics</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;## YOUR CODE HERE ###&#39;&#39;&#39;</span> <span class="c1"># Upload the data using pre-existent function</span>
+<span class="n">X_omics</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_omics_data</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">)</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">test_ids</span> <span class="o">=</span> <span class="n">make_train_test_split</span><span class="p">(</span>
     <span class="n">X_omics</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">TEST_SIZE</span><span class="p">,</span> <span class="n">RANDOM_STATE</span><span class="p">,</span> <span class="n">HIGH_DIMENSIONAL_VIEWS</span><span class="p">,</span>
     <span class="n">N_TOP_VARIABLE_HIGH_DIM_FEATURES</span><span class="p">)</span>
+
 <span class="n">view_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <span class="n">train_ids_str</span><span class="p">,</span> <span class="n">test_ids_str</span> <span class="o">=</span> <span class="n">train_ids</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">test_ids</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
@@ -576,7 +573,6 @@ before handing them to the model.</p>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1">## YOUR CODE HERE ##</span>
 <span class="c1">#################################################</span>
-
 
 <span class="k">def</span><span class="w"> </span><span class="nf">split_summary</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Train/test patient counts and the number of features kept per view after</span>
@@ -683,16 +679,10 @@ give the model ways to misfire.</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">factor_view_r2_tool</span><span class="p">(</span><span class="n">factor</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Variance explained (R2) by one factor (e.g. &#39;Factor1&#39;) in each omics view,</span>
 <span class="sd">    and which view it explains most.&quot;&quot;&quot;</span>
-
-    
-
     <span class="c1">#################################################</span>
     <span class="c1"># Complete the function using the existing functions to return the factor view r2.</span>
     <span class="c1">## YOUR CODE HERE ##</span>
     <span class="c1">#################################################</span>
-    
-    
-                
     
 <span class="nd">@tool</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">factor_subtype_association_tool</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
@@ -748,25 +738,32 @@ give the model ways to misfire.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
 
 <span class="c1">#################################################</span>
-<span class="c1"># Write the prompt to define the persona, the activity that the agent should perform. Additional clue: List the factors and the subtypes in the prompt.</span>
-<span class="n">SYSTEM</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">#################################################</span>
+<span class="c1"># Write the prompt to define the persona, the activity that the agent should perform. </span>
+<span class="c1"># Additional clue: List the factors and the subtypes in the prompt.</span>
+<span class="n">SYSTEM</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;`</span>
 <span class="s1">#               YOUR PROMPT HERE</span>
-<span class="s1">#################################################</span>
 <span class="s1">&#39;&#39;&#39;</span>
 <span class="c1">#################################################</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">run_agent</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
     <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">SYSTEM</span><span class="p">),</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">question</span><span class="p">)]</span>
     <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
-        <span class="n">ai</span> <span class="o">=</span> <span class="n">llm_with_tools</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ai</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ai</span>
-        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">ai</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+
+        <span class="c1"># Ask the model what to do next</span>
+        <span class="n">model_response</span> <span class="o">=</span> <span class="n">llm_with_tools</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_response</span><span class="p">)</span>
+
+        <span class="c1"># If no tool was requested, this is the final answer</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_response</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">model_response</span>
+        
+        <span class="c1"># Otherwise, run each requested tool</span>
+        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">model_response</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">call</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">tools_by_name</span><span class="p">[</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">])</span>
+
+            <span class="c1"># Add the tool result to the conversation</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
                                         <span class="n">tool_call_id</span><span class="o">=</span><span class="n">call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent did not finish within </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> steps.&quot;</span><span class="p">)</span>
@@ -795,9 +792,7 @@ give the model ways to misfire.</p>
 <span class="c1">#################################################</span>
 <span class="c1"># Write the text to ask the agent to split the cohort between test and train. Additional clue: detail the information that you are asking for, eg. how many patients each?</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">#################################################</span>
-<span class="s1">               YOUR PROMPT HERE</span>
-<span class="s1">#################################################</span>
+<span class="s1">#               YOUR PROMPT HERE</span>
 <span class="s1">&#39;&#39;&#39;</span>
 <span class="c1">#################################################</span>
 <span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
@@ -849,12 +844,9 @@ give the model ways to misfire.</p>
 <span class="c1">#################################################</span>
 <span class="c1"># Write the text to ask the agent to compare the R2 ranking with the subtype association ranking and explain </span>
 <span class="c1"># any mismatch, in order to understand the relationship between variance and subtype separation</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">#################################################</span>
-<span class="s1">               YOUR CODE HERE</span>
-<span class="s1">#################################################</span>
-<span class="s1">                </span>
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Is the factor that explains the most variance also the one that &quot;</span>
+                <span class="s2">&quot;best separates subtypes? Compare the R2 ranking with the subtype &quot;</span>
+                <span class="s2">&quot;association ranking and explain any mismatch.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 <span class="c1">#################################################</span>
 </pre></div>
 </div>
@@ -950,10 +942,7 @@ reuse this exact <code class="docutils literal notranslate"><span class="pre">mo
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-backend-bring-your-own-key">Model backend: bring-your-own-key</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-api-key">0. Environment &amp; API key</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-data-the-cached-mofa-model-one-time-setup">1. Load the data + the cached MOFA model (one-time setup)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tool-functions-plain-python-on-the-cached-model">2. The tool functions (plain Python, on the cached model)</a></li>

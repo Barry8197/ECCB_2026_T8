@@ -491,14 +491,14 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
 
-<span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;complete_notebooks&quot;</span><span class="p">:</span>
-    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
-<span class="k">elif</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span><span class="p">:</span>
-    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="n">SESSION_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">SESSION_DIR</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Session directory not found: </span><span class="si">{</span><span class="n">SESSION_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">DOTENV_PATH</span> <span class="o">=</span> <span class="s2">&quot;/.env&quot;</span>
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="n">SESSION_DIR</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>  <span class="c1"># shared mount on workshop servers</span>
+
+<span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">SESSION_DIR</span>            <span class="c1"># anchors imports (src/...) and paths below</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">))</span>
-<span class="n">load_dotenv</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">DOTENV_PATH</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY not found. Add it to a .env in the project root.&quot;</span><span class="p">)</span>
@@ -657,12 +657,13 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span>
 
-<span class="n">BIOMCP_BIN</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;biomcp&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;biomcp not found on PATH -- pip install biomcp-python, then restart the kernel&quot;</span>
+<span class="c1"># biomcp is installed in the same env as this kernel, but the kernel&#39;s PATH may</span>
+<span class="c1"># not include that env&#39;s bin/ (e.g. Jupyter server running from another env),</span>
+<span class="c1"># so fall back to the directory of the kernel&#39;s own interpreter.</span>
+<span class="n">BIOMCP_BIN</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;biomcp&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;biomcp&quot;</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">BIOMCP_BIN</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="s2">&quot;biomcp not found -- pip install biomcp-python into this kernel&#39;s env&quot;</span>
 
-<span class="c1"># The CLI has used both `serve` and `run` across versions; pick whichever this one has.</span>
-<span class="n">help_text</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">BIOMCP_BIN</span><span class="p">,</span> <span class="s2">&quot;--help&quot;</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
-<span class="n">subcommand</span> <span class="o">=</span> <span class="s2">&quot;run&quot;</span> <span class="k">if</span> <span class="s2">&quot; run &quot;</span> <span class="ow">in</span> <span class="n">help_text</span> <span class="k">else</span> <span class="s2">&quot;serve&quot;</span>
+<span class="n">subcommand</span> <span class="o">=</span> <span class="s2">&quot;run&quot;</span>  <span class="c1"># stdio-transport server on current biomcp versions</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">MultiServerMCPClient</span><span class="p">({</span>
     <span class="s2">&quot;mofa&quot;</span><span class="p">:</span>   <span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">SERVER_PATH</span><span class="p">)],</span> <span class="s2">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;stdio&quot;</span><span class="p">},</span>
@@ -734,8 +735,8 @@
 <p>The question below cannot be answered by either server alone. Finding the genes that drive a factor needs our model; saying what those genes do needs the literature.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;Factor2 is associated with breast cancer subtype. What biological processes &quot;</span> \
-        <span class="s2">&quot;are enriched among its top 50 genes?&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;What is the top negative-weight transcriptomic driver of Factor2? &quot;</span> \
+        <span class="s2">&quot;Search the literature for what is known about its role in breast cancer.&quot;</span>
 <span class="n">answer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_agent_multi</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 </pre></div>
@@ -858,16 +859,16 @@
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "eccb_t8"
         },
         kernelOptions: {
-            name: "python3",
+            name: "eccb_t8",
             path: "./session-3-agentic-llm-workflows/notebooks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'eccb_t8'</script>
 
                 </article>
               

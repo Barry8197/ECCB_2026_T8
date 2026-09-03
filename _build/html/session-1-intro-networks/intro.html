@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Part 1 — What is a Network, and What is a Knowledge Graph?" href="part-1-networks-and-knowledge-graphs.html" />
+    <link rel="next" title="Part 1 — Networks and Knowledge Graphs: Key Concepts" href="part-1-networks-and-knowledge-graphs.html" />
     <link rel="prev" title="Getting Started" href="../GettingStarted.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -396,7 +396,7 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html">Part 1 — What is a Network, and What is a Knowledge Graph?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html">Part 1 — Networks and Knowledge Graphs: Key Concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-2-building-a-knowledge-graph.html">Part 2 — Building a Knowledge Graph with NetworkX</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-3-querying-the-knowledge-graph.html">Part 3 — Practical: Querying the Knowledge Graph</a></li>
 
@@ -492,19 +492,19 @@ by eye. Everything here scales to graphs of millions of nodes without changing.<
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/kg_nodes.csv</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/data/session-1-data/kg_nodes.csv</span></code></p></td>
 <td><p>Node table — <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span></code> (gene / disease / icd10), <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">extra</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/kg_edges.csv</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/data/session-1-data/kg_edges.csv</span></code></p></td>
 <td><p>Edge table — <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">target</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">weight</span></code>, <code class="docutils literal notranslate"><span class="pre">evidence</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/kg_evidence.csv</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/data/session-1-data/kg_evidence.csv</span></code></p></td>
 <td><p>The same gene–disease edges split by <em>kind</em> of evidence</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/icd10_map.csv</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/data/session-1-data/icd10_map.csv</span></code></p></td>
 <td><p>MONDO disease id → ICD-10 code and label</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/coexpr_expression.csv.gz</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/data/session-1-data/coexpr_expression.csv.gz</span></code></p></td>
 <td><p>500 patients × 737 genes of TCGA-BRCA expression</p></td>
 </tr>
 </tbody>
@@ -514,19 +514,13 @@ by eye. Everything here scales to graphs of millions of nodes without changing.<
 <a class="reference external" href="https://mondo.monarchinitiative.org/">MONDO Disease Ontology</a> (CC BY 4.0) by
 <code class="docutils literal notranslate"><span class="pre">data-prep/build_kg_data.py</span></code>. That script downloads ~1.1 GB and cuts it down to a
 breast-cancer-focused subset small enough to read by eye: <strong>881 nodes</strong> (760 genes,
-90 diseases, 31 ICD-10 codes) and <strong>1,768 edges</strong>; we do not need to run it.</p>
-<p>Around breast cancer and its subtypes we add <strong>24 comparison diseases</strong> — other
-cancers, autoimmune and inflammatory conditions, neurological and cardiometabolic
-disease — so that “which diseases resemble each other?” has a real answer rather
-than one big breast-cancer blob.</p>
-<p>Genes are keyed by <strong>Ensembl gene ID</strong>, the same identifier space as the TCGA-BRCA
-transcriptomics matrix in Session 2, so the two datasets join natively. The
-expression file is that matrix, cut down to the genes that are already nodes in
-the graph — which is what lets us build an inferred <em>and</em> a curated network over
-exactly the same genes.</p>
+90 diseases, 31 ICD-10 codes) and <strong>1,768 edges</strong>. We have already downloaded and processed this data and it is available in the file locations indicated in the table above.</p>
+<p>We want to assess the breast cancer disease environment by placing it in the context of <strong>24 reference diseases</strong> - including other cancers, autoimmune and inflammatory conditions, neurological, and cardiometabolic disease - we want to look at the relationships between those disease.</p>
+<p>Genes are identified by <strong>Ensembl gene ID</strong> accessions, the same identifier space as the TCGA-BRCA transcriptomics matrix in Session 2, so the two datasets are compatible. The
+expression file contains a matrix of expression values filtered to the genes in our graph. This allows us to build a computed <em>and</em> a curated network over exactly the same genes.</p>
 </section>
-<section id="part-1-what-is-a-network-and-what-is-a-knowledge-graph">
-<h3>Part 1 — What is a Network, and What is a Knowledge Graph?<a class="headerlink" href="#part-1-what-is-a-network-and-what-is-a-knowledge-graph" title="Link to this heading">#</a></h3>
+<section id="part-1-networks-and-knowledge-graphs-key-concepts">
+<h3>Part 1 — Networks and Knowledge Graphs: Key Concepts<a class="headerlink" href="#part-1-networks-and-knowledge-graphs-key-concepts" title="Link to this heading">#</a></h3>
 <section id="graphs">
 <h4>1.1 Graphs<a class="headerlink" href="#graphs" title="Link to this heading">#</a></h4>
 <p>A graph is a set of <strong>nodes</strong> and a set of <strong>edges</strong> between them. Degree, paths and
@@ -535,18 +529,13 @@ using a diagram and a four-node toy example, and shows the one operation that ma
 graphs worth the trouble: composing edges into a path produces an answer nobody
 stored.</p>
 </section>
-<section id="inferred-versus-curated">
-<h4>1.2 Inferred versus curated<a class="headerlink" href="#inferred-versus-curated" title="Link to this heading">#</a></h4>
-<p>Two networks can look identical and mean opposite things.</p>
-<p>An <strong>inferred</strong> network computes its edges from measurements. Correlate every gene
-against every other gene, keep what clears a threshold. The edges are a statistical
-claim about <em>our data</em>, and the network can contain relationships nobody has
-described before.</p>
-<p>A <strong>curated knowledge graph</strong> reads its edges out of a database of recorded facts.
-It can only contain what somebody already knew.</p>
-<p>The failure modes are opposite, and neither is fixable by better code. In an
-inferred network a spurious edge is usually a confounder. In a knowledge graph a
-<em>missing</em> edge usually means nobody has looked yet.</p>
+<section id="correlation-versus-curation">
+<h4>1.2 Correlation versus Curation<a class="headerlink" href="#correlation-versus-curation" title="Link to this heading">#</a></h4>
+<p>Two networks can look very similar, but encode fundamentally different information.</p>
+<p>Our gene expression network is a <strong>computed</strong> network its edges are calculated from numerical data according to our experimental design; in this case we calculate the correlation amongst genes pairwise and then retain only those relations that pass a threshold value that we set. The edges are a statistical outcome from <em>our data</em> as a result of <em>our method</em>. It is entirely data driven and may reveal relationships that are novel.</p>
+<p>A <strong>curated knowledge graph</strong> reads its edges out of a database of asserted facts (often with qualifying or quantifying features). It is prior knowledge, not a discovery set on its own.</p>
+<p>Both types of network can fail to accurately capture the properties we may be interested, but the reason for that failure is fundamentally different; neither is fixable by better code. In a computed network a <strong>spurious</strong> edge is noise generated by the algorithmic process used to generate it and decisions made in the experimental design. In a knowledge graph a
+<strong>missing</strong> edge means no-one has recorded that association yet, either because there is no evidence that it should exist or because it hasn’t been formally encoded in a knowledge source. A <strong>spurious</strong> edge would arise from an incorrect assertion in a knowledge source - so provenance and evidence associated with these data is crucial to assess when building such graphs.</p>
 </section>
 <section id="what-makes-it-a-knowledge-graph">
 <h4>1.3 What makes it a knowledge graph<a class="headerlink" href="#what-makes-it-a-knowledge-graph" title="Link to this heading">#</a></h4>
@@ -559,20 +548,11 @@ splitting every gene–disease edge by the <em>kind</em> of evidence behind it. 
 <section id="building-one-of-each">
 <h4>1.4 Building one of each<a class="headerlink" href="#building-one-of-each" title="Link to this heading">#</a></h4>
 <p>We then build both networks over the same 737 genes and compare them.</p>
-<p><strong>The same gene looks completely different in the two networks.</strong> <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code>
-co-expresses with the proliferation programme — tubulin-adjacent mitotic genes
-that have nothing to do with it — plus <code class="docutils literal notranslate"><span class="pre">PALB2</span></code> and <code class="docutils literal notranslate"><span class="pre">FANCD2</span></code>, which are genuine
-repair partners the knowledge graph has no way to record. Meanwhile the curated
-graph gives its hereditary breast–ovarian diseases. <code class="docutils literal notranslate"><span class="pre">TP53</span></code> is starker still: a
-27-disease hub in the curated graph, and essentially invisible to co-expression
-(strongest |r| = 0.18), because it is regulated by protein stability rather than
-transcription. Neither absence means <em>unimportant</em>; they mean different things,
-and knowing which is the skill.</p>
-<p><strong>And the inferred network has a knob the curated one does not.</strong> Sweeping the
-correlation threshold from 0.3 to 0.8 takes the same data from 39,593 edges to
-200. Nothing in the data says where to stop. The knowledge graph has exactly
-1,768 edges whatever we think — which removes that problem and introduces the
-opposite one: we cannot loosen the criteria to see more.</p>
+<p><strong>The same gene can occupy a completely different environment in the two networks.</strong> <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code>
+co-expresses with the proliferation programme — tubulin-adjacent mitotic genes invovled in cell division and <code class="docutils literal notranslate"><span class="pre">PALB2</span></code> and <code class="docutils literal notranslate"><span class="pre">FANCD2</span></code>, which are genuine repair partners. The knowledge graph may capture the former, but is unlikely to capture the latter. Meanwhile the curated
+graph contains well-known associations and relations between genes, diseases, and ICD codes for hereditary breast–ovarian diseases; many of these are long established and present in a whole host of databases, ontologies, and other sources. <code class="docutils literal notranslate"><span class="pre">TP53</span></code> is at the centre of a 27-disease hub in the curated graph, but is essentially invisible in the co-expression network
+(strongest |r| = 0.18), because its role is primarily effected through modulation of protein stability rather than differential transcriptional regulation.</p>
+<p><strong>The computed network has a flexibility in construction that the curated one does not.</strong> Sweeping across the correlation threshold from 0.3 to 0.8 allows us to modify the way that the same data is represented from a graph of 39,593 edges to one of 200. Nothing in the data implicitly says which (if any) is correct. The knowledge graph has exactly 1,768 edges defined simply from what we include and the sources we choose; we can of course vary that, but it is a fundamentally different consideration.</p>
 </section>
 </section>
 <section id="part-2-building-a-knowledge-graph-with-networkx">
@@ -672,7 +652,7 @@ and carry no curated breast-cancer edge at all. <code class="docutils literal no
 <code class="docutils literal notranslate"><span class="pre">BUB1B</span></code>, <code class="docutils literal notranslate"><span class="pre">HMMR</span></code>, <code class="docutils literal notranslate"><span class="pre">KNL1</span></code> and <code class="docutils literal notranslate"><span class="pre">RRM2</span></code>, which are proliferation artefacts. No column
 in the table separates them; that judgement needs biology.</p>
 <p>None of the gaps or mismatches along the way are bugs. They are what working with
-real biomedical knowledge is like, and recognising them is the skill.</p>
+real biomedical knowledge is like, and recognising them and what they might mean is the skill.</p>
 </section>
 </section>
 <section id="where-this-leads">
@@ -732,7 +712,7 @@ them against.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Part 1 — What is a Network, and What is a Knowledge Graph?</p>
+        <p class="prev-next-title">Part 1 — Networks and Knowledge Graphs: Key Concepts</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -756,9 +736,9 @@ them against.</p>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-biological-networks-and-knowledge-graphs">Introduction to Biological Networks and Knowledge Graphs</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general">General</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-what-is-a-network-and-what-is-a-knowledge-graph">Part 1 — What is a Network, and What is a Knowledge Graph?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-networks-and-knowledge-graphs-key-concepts">Part 1 — Networks and Knowledge Graphs: Key Concepts</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#graphs">1.1 Graphs</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#inferred-versus-curated">1.2 Inferred versus curated</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#correlation-versus-curation">1.2 Correlation versus Curation</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-it-a-knowledge-graph">1.3 What makes it a knowledge graph</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#building-one-of-each">1.4 Building one of each</a></li>
 </ul>

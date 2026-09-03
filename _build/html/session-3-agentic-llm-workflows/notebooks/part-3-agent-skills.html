@@ -461,71 +461,72 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="part-3-agent-skills-teaching-an-agent-how-not-just-what">
 <h1>Part 3 — Agent Skills: teaching an agent how, not just what<a class="headerlink" href="#part-3-agent-skills-teaching-an-agent-how-not-just-what" title="Link to this heading">#</a></h1>
-<p>Task: Run the full BRCA subtype-prediction pipeline on the
-fitted MOFA model and give a one-paragraph interpretation, then generate the
-diagnostic plots and say which one best supports the claim that MOFA captures
-subtype biology.</p>
-<p>Same <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code> backend as Part 1 and Part 2, but here a coding agent
-(Pi) reaches it by running Python through its own <code class="docutils literal notranslate"><span class="pre">bash</span></code> tool, guided by a skill.</p>
+<p>In Parts 1 and 2, we gave Claude a fixed set of MOFA-specific tools. Claude could decide which of those tools to use, but it could only do the things we had explicitly made available.</p>
+<p>In this part, we change that setup. Instead of giving the agent one specialised tool for each operation, we use a <strong>coding agent</strong> with a few general-purpose capabilities: it can read files, write files, and run commands. With those alone, it can inspect the repository, find <code class="docutils literal notranslate"><span class="pre">mofa_tools.py</span></code>, and run the analysis itself.</p>
+<p>That gives the agent much more freedom. But it also creates a new problem: <strong>how does it know how we want this particular analysis to be carried out?</strong></p>
+<p>That is where <strong>Agent Skills</strong> come in. A skill gives the agent reusable instructions for a particular kind of task: it can define things such as which resouces to use and where to find them, which steps to follow, or how should be the format of the final result.</p>
+<p>In this notebook, we will give the coding agent the same MOFA analysis task twice: once with a MOFA-specific skill, and once without it. The agent has the same general capabilities in both cases. What changes is the guidance available to it.</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this notebook you should be able to:</p>
 <ul class="simple">
-<li><p>Explain the shift from a fixed list of tools (Parts 1-2) to a coding agent with general-purpose tools (<code class="docutils literal notranslate"><span class="pre">bash</span></code>, file read/write).</p></li>
-<li><p>Explain what an Agent Skill is, and what problem it solves that tools and MCP do not.</p></li>
-<li><p>Run the same task through Pi with and without a skill loaded, and identify which differences are new capability versus behaviour.</p></li>
-<li><p>Explain why “load the cached model, never refit” belongs in a skill rather than a tool signature.</p></li>
+<li><p>Explain the difference between giving an agent a fixed set of specialised tools and giving it general-purpose coding capabilities.</p></li>
+<li><p>Explain what an <strong>Agent Skill</strong> is and why it can be useful when an agent has many possible ways to approach a task.</p></li>
+<li><p>Compare the same task with and without a skill, and identify what the skill changes.</p></li>
+<li><p>Recognise the difference between <strong>capability</strong> — what the agent is able to do — and <strong>procedural guidance</strong> — how we want it to do it.</p></li>
 </ul>
 </section>
-<section id="from-tool-calling-to-coding-agents-why-the-paradigm-shifted">
-<h2>0. From tool-calling to coding agents, why the paradigm shifted<a class="headerlink" href="#from-tool-calling-to-coding-agents-why-the-paradigm-shifted" title="Link to this heading">#</a></h2>
-<p>Where we’ve been. In nb01 we handed the model a fixed list of typed
-functions (<code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>); in nb02 we served the same functions over MCP. Both share a
-mental model: a brain wired to a hand-curated set of tools.</p>
-<p><strong>The shift.</strong> Modern agent design moved toward giving the model a few
-general tools: read a file, write a file, run a shell command, inside a
-real repository/filesystem. Once an agent can run <code class="docutils literal notranslate"><span class="pre">bash</span></code> and edit files, it
-can install a package, run a script, inspect data, call a CLI, with no
-pre-built tool for each. The interface becomes the filesystem + shell. This
-is the coding-agent paradigm: Claude Code, Codex, Cursor, OpenHands, Pi.</p>
-<p>Why now? Models got good enough at long-horizon reasoning and code; a few
-primitives (<code class="docutils literal notranslate"><span class="pre">bash</span></code> + file I/O) generalize better than 50 brittle bespoke tools;
-and the repo becomes shared, persistent memory across steps.</p>
+<section id="from-specialised-tools-to-a-coding-agent">
+<h2>0. From specialised tools to a coding agent<a class="headerlink" href="#from-specialised-tools-to-a-coding-agent" title="Link to this heading">#</a></h2>
+<p>In Parts 1 and 2, we carefully chose the functions Claude was allowed to call. For example, if we wanted Claude to inspect factor weights, we exposed a function specifically for that purpose.</p>
+<p>A coding agent works differently. Instead of receiving a list of task-specific functions, it receives a small set of much more general tools. For example, it may be able to:</p>
+<ul class="simple">
+<li><p>read a file,</p></li>
+<li><p>write or edit a file,</p></li>
+<li><p>run a command in the terminal</p></li>
+</ul>
+<p>If the agent can read the repository, and run <code class="docutils literal notranslate"><span class="pre">bash</span></code> commands, it can find <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>, inspect the available functions, import them, and execute them itself. We no longer need o turn every possible operation into a separate tool first. This is the kind of setup used by coding agents such as Claude Code, Codex, Cursor, OpenHands and Pi.</p>
+<p>The advantage is flexibility: the agent can work with code and files that were not individually prepared for it in advance.</p>
+<p>The disadvantage is that there are now many more possible ways to perform the same task. The agent may be able to run the analysis, but that does not mean it automatically knows how we want the analysis to be done.</p>
 </section>
-<section id="the-new-problem-how-do-you-give-such-an-agent-know-how">
-<h2>1. The new problem: how do you give such an agent know-how?<a class="headerlink" href="#the-new-problem-how-do-you-give-such-an-agent-know-how" title="Link to this heading">#</a></h2>
-<p>A coding agent with <code class="docutils literal notranslate"><span class="pre">bash</span></code> + files can do almost anything, but it doesn’t
-know your specifics: your procedure for interpreting MOFA factors, that it
-must load the cached model rather than re-fit, your house answer format, the
-biomedical-caution rules. Cramming all that into the system prompt costs tokens
-every turn and becomes a junk drawer.</p>
+<section id="the-new-problem-how-do-we-tell-the-agent-how-to-do-the-task">
+<h2>1. The new problem: how do we tell the agent how to do the task?<a class="headerlink" href="#the-new-problem-how-do-we-tell-the-agent-how-to-do-the-task" title="Link to this heading">#</a></h2>
+<p>Consider our MOFA analysis.</p>
+<p>A general-purpose coding agent can inspect the repository and run Python. But from those capabilities alone, it does not know things such as:</p>
+<ul class="simple">
+<li><p>that it should load the cached MOFA model rather than fit a new one,</p></li>
+<li><p>which functions are the intended interface to the analysis,</p></li>
+<li><p>what evidence should support its conclusions,</p></li>
+<li><p>how cautious it should be when interpreting biological results,</p></li>
+<li><p>how we want the final answer to be structured.</p></li>
+</ul>
+<p>We could put all of those instructions into the prompt every time we ask a question. But if we repeatedly perform the same kind of task, it is more useful to save those instructions once and reuse them.</p>
+<p>That reusable set of instructions is a <strong>Skill</strong>.</p>
 <section id="agent-skills-skill-md">
 <h3>Agent Skills &amp; <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code><a class="headerlink" href="#agent-skills-skill-md" title="Link to this heading">#</a></h3>
-<p>Agent Skills package procedural knowledge into a portable, version-controlled
-folder loaded on demand. A skill is a directory with a <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code> (YAML
-frontmatter <code class="docutils literal notranslate"><span class="pre">name</span></code>+<code class="docutils literal notranslate"><span class="pre">description</span></code>, then instructions), optionally <code class="docutils literal notranslate"><span class="pre">scripts/</span></code>,
-<code class="docutils literal notranslate"><span class="pre">references/</span></code>, <code class="docutils literal notranslate"><span class="pre">assets/</span></code>.</p>
-<p>Progressive disclosure makes it scale: three stages, cheapest first:</p>
+<p>An Agent Skill is a reusable set of instructions describing how an agent should approach a particular kind of task.</p>
+<p>A skill is stored as a folder. At its centre is a file called SKILL.md, which contains a short description of when the skill is relevant and the instructions for carrying out the task. The file starts with a small amount of metadata — its name and description — followed by the actual instructions. A skill can also include supporting <code class="docutils literal notranslate"><span class="pre">scripts/</span></code>, <code class="docutils literal notranslate"><span class="pre">references/</span></code> or other <code class="docutils literal notranslate"><span class="pre">assets/</span></code> when needed.</p>
+<p>For our MOFA analysis in this notebook, those instructions include using the cached model rather than refitting it, working through the existing functions in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>, grounding conclusions in results from the analysis, following a consistent answer structure, and being cautious when making biological interpretations.</p>
+<p>These instructions do not give the agent any new capabilities. The agent can already read files and run Python. The skill provides <strong>procedural knowledge</strong>: guidance about how those capabilities should be used for this particular task.</p>
+<p>One useful feature of Agent Skills is that the agent does not need to load every available skill in full. Instead, skills are revealed progressively:</p>
 <ol class="arabic simple">
-<li><p>Discovery: the agent sees only each skill’s <code class="docutils literal notranslate"><span class="pre">name</span></code> + <code class="docutils literal notranslate"><span class="pre">description</span></code>.</p></li>
-<li><p>Activation: on a matching task it reads the full <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code>.</p></li>
-<li><p>Execution: it follows the instructions, running bundled scripts only if needed.</p></li>
+<li><p><strong>Discovery:</strong> the agent initially sees only each skill’s <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">description</span></code>.</p></li>
+<li><p><strong>Activation:</strong> if a skill looks relevant to the current task, the agent loads its full <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code>.</p></li>
+<li><p><strong>Execution:</strong> it follows those instructions and can use any supporting scripts or references included with the skill if needed.</p></li>
 </ol>
-<p>So dozens of skills cost almost nothing idle. Agent Skills were released by
-Anthropic as an <a class="reference external" href="https://agentskills.io/specification">open standard</a> and adopted
-across Claude Code, Cursor, Codex, Pi, and others.</p>
+<p>This means an agent can have many skills available without having to place all of their instructions into its context at once.</p>
+<p>Because the format is standardised, the same skill can also be reused across different compatible coding agents. Agent Skills were introduced by Anthropic as an <a class="reference external" href="https://agentskills.io/specification">open standard</a> and are supported by several agent systems, including Claude Code, Cursor, Codex and Pi.</p>
 </section>
-<section id="the-harness">
-<h3>The harness<a class="headerlink" href="#the-harness" title="Link to this heading">#</a></h3>
-<p>The model can’t itself read files or run <code class="docutils literal notranslate"><span class="pre">bash</span></code>, it only emits text/tool-call
-requests. The harness (agent runtime) implements those primitives, runs the
-loop, manages context, and discovers/loads skills. Claude Code, Codex, and Pi
-are harnesses. Model : harness :: engine : car. Skills are a format the harness
-loads, not part of the model.</p>
+<section id="where-does-the-harness-fit">
+<h3>Where does the harness fit?<a class="headerlink" href="#where-does-the-harness-fit" title="Link to this heading">#</a></h3>
+<p>The language model still does not directly read files or execute commands. As in the previous parts, those actions are carried out by the <strong>harness</strong> around the model.</p>
+<p>With a coding agent, the harness provides general-purpose tools such as file access and <code class="docutils literal notranslate"><span class="pre">bash</span></code> commands, runs the agent loop, and makes skills available to the model.</p>
+<p>In this notebook, we use Pi as that harness.</p>
 </section>
 </section>
 <section id="how-skills-overlap-with-tools-and-mcp">
 <h2>2. How skills overlap with tools and MCP<a class="headerlink" href="#how-skills-overlap-with-tools-and-mcp" title="Link to this heading">#</a></h2>
+<p>We have now seen three different ways of extending how an LLM agent can work.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p></p></th>
@@ -535,17 +536,17 @@ loads, not part of the model.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Tools (nb01)</p></td>
+<tr class="row-even"><td><p>Tools (Part1)</p></td>
 <td><p>a new capability</p></td>
 <td><p>a typed function the model calls</p></td>
 <td><p>what can the agent do?</p></td>
 </tr>
-<tr class="row-odd"><td><p>MCP (nb02)</p></td>
+<tr class="row-odd"><td><p>MCP (Part2)</p></td>
 <td><p>the same capabilities, portably</p></td>
 <td><p>a standard server for tools/resources/prompts</p></td>
 <td><p>where do they live, who reuses them?</p></td>
 </tr>
-<tr class="row-even"><td><p>Skills (nb03)</p></td>
+<tr class="row-even"><td><p>Skills (Part3)</p></td>
 <td><p>know-how / workflow</p></td>
 <td><p>a <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code> folder of instructions</p></td>
 <td><p>how should it do it, and when?</p></td>
@@ -553,74 +554,64 @@ loads, not part of the model.</p>
 </tbody>
 </table>
 </div>
+<br>
 <blockquote>
-<div><p>Tools &amp; MCP = what the agent can do. Skills = what it should do, and how.</p>
+<div><p>Tools &amp; MCP determine what an agent can do. Skills help determine <strong>how it should do the task</strong></p>
 </div></blockquote>
-<p>The edges blur honestly: a skill can bundle <code class="docutils literal notranslate"><span class="pre">scripts/</span></code> (functionally tools); a
-skill can tell the agent to use an MCP server; an MCP server also serves
-prompts (templated instructions) which overlap with skills. They compose,
-tools/MCP supply capabilities; skills supply the procedural knowledge that
-decides which to use, in what order, and how to report, loaded only when
-relevant.</p>
+<p>These ideas can also be combined: a skill can tell an agent to use particular tools, including tools provided through MCP. The difference is whether we are giving the agent a <em>capability</em> (a tool) or giving it <em>guidance for using the capabilities it already has</em> (a skill).</p>
 </section>
-<section id="for-this-notebook-pi">
-<h2>3. For this notebook: Pi<a class="headerlink" href="#for-this-notebook-pi" title="Link to this heading">#</a></h2>
-<p>We drive the skill with <strong>Pi</strong>, a minimal terminal coding harness with
-first-class skills support (<a class="reference external" href="https://pi.dev">pi.dev</a>). Install separately:</p>
+<section id="the-coding-agent-we-will-use-pi">
+<h2>3. The coding agent we will use: Pi<a class="headerlink" href="#the-coding-agent-we-will-use-pi" title="Link to this heading">#</a></h2>
+<p>For this notebook, we use <strong>Pi</strong>, a command-line coding agent (<a class="reference external" href="https://pi.dev">pi.dev</a>). Pi gives Claude general-purpose tools for interacting with the project, including reading files and running commands.</p>
+<p>Pi also supports Agent Skills, allowing us to provide the MOFA-specific instructions in <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code>. This means Claude can inspect the repository and run the MOFA analysis without us exposing each MOFA function as an individual tool. We use Pi here as one example, but the same skill could also be used by other compatible coding agents (Claude Code, Codex, etc.).</p>
+<p>Pi is already installed in the workshop environment. Elsewhere, it can be installed with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>--ignore-scripts<span class="w"> </span>@earendil-works/pi-coding-agent
 <span class="c1"># or: curl -fsSL https://pi.dev/install.sh | sh</span>
 </pre></div>
 </div>
-<blockquote>
-<div><p>Different shape. Unlike nb01/nb02 (pure <code class="docutils literal notranslate"><span class="pre">import</span></code> + an in-process loop),
-Pi is a terminal harness, so we drive it via <code class="docutils literal notranslate"><span class="pre">subprocess</span></code>. The same
-<code class="docutils literal notranslate"><span class="pre">skills/mofa-multiomics-agent.SKILL.md</span></code> works with any skills-compatible
-harness (Claude Code, Goose, …), the skill file doesn’t change.</p>
-</div></blockquote>
 </section>
 <section id="setup-and-the-skill-we-ll-hand-to-pi">
 <h2>4. Setup and the skill we’ll hand to Pi<a class="headerlink" href="#setup-and-the-skill-we-ll-hand-to-pi" title="Link to this heading">#</a></h2>
-<p>Bring-your-own-key from <code class="docutils literal notranslate"><span class="pre">.env</span></code>. We locate the Pi CLI and make Pi’s <code class="docutils literal notranslate"><span class="pre">bash</span></code> tool
-use this <strong><code class="docutils literal notranslate"><span class="pre">eccb</span></code></strong> interpreter, so it can <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">src.mofa_tools</span></code> and load the
-cached MOFA model.</p>
+<p>This cell performs the same basic setup as Parts 1 and 2, and additionally locates Pi and our <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code> file. Because Pi will run Python commands itself, we also make it use the <strong>same workshop environment as this notebook</strong>, where the required packages and <code class="docutils literal notranslate"><span class="pre">src.mofa_tools</span></code> are already available.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
 
-<span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
-<span class="n">load_dotenv</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;.env&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">),</span> <span class="s2">&quot;ANTHROPIC_API_KEY not found (.env in project root).&quot;</span>
+<span class="n">SESSION_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">SESSION_DIR</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Session directory not found: </span><span class="si">{</span><span class="n">SESSION_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">DOTENV_PATH</span> <span class="o">=</span> <span class="s2">&quot;/.env&quot;</span>
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="n">SESSION_DIR</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>  <span class="c1"># shared mount on workshop servers</span>
 
-<span class="n">SKILL_PATH</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;skills&quot;</span> <span class="o">/</span> <span class="s2">&quot;mofa-multiomics-agent.SKILL.md&quot;</span>
+<span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">SESSION_DIR</span>            <span class="c1"># anchors imports (src/...) and paths below</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">))</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">DOTENV_PATH</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">),</span> <span class="s2">&quot;ANTHROPIC_API_KEY not found (.env in project root).&quot;</span>
 <span class="n">MODEL</span> <span class="o">=</span> <span class="s2">&quot;anthropic/claude-haiku-4-5&quot;</span>
 
+<span class="c1"># Part 3 also needs to know where the skill file is</span>
+<span class="n">SKILL_PATH</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;skills&quot;</span> <span class="o">/</span> <span class="s2">&quot;mofa-multiomics-agent.SKILL.md&quot;</span>
+
+<span class="c1"># Find the Pi command-line program installed in the workshop environment</span>
 <span class="n">PI</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;pi&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.local&quot;</span> <span class="o">/</span> <span class="s2">&quot;bin&quot;</span> <span class="o">/</span> <span class="s2">&quot;pi&quot;</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">PI</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Pi CLI not found at </span><span class="si">{</span><span class="n">PI</span><span class="si">}</span><span class="s2">. Install it (see https://pi.dev).&quot;</span>
 
-<span class="c1"># Pi answers by running Python via its bash tool, so its shell must use the eccb</span>
-<span class="c1"># interpreter where src.mofa_tools + mofax import.</span>
+<span class="c1"># Pi will later run Python through its bash tool. </span>
+<span class="c1"># We make those commands use the same Python environment as this notebook, </span>
+<span class="c1"># so Pi has access to the same packages and project code, including src.mofa_tools.</span>
 <span class="n">ENV_BIN</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
 <span class="n">PI_ENV</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span> <span class="s2">&quot;PATH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ENV_BIN</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">PI</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PATH&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
-
-<span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">#################################################</span>
-<span class="sd">                YOUR CODE HERE</span>
-<span class="sd">#################################################</span>
-<span class="sd">Print the information about the pi binary location and the SKILL file location</span>
-<span class="sd">    </span>
-<span class="sd">&#39;&#39;&#39;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python    :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>The skill is a valid Agent Skill: YAML frontmatter then markdown. It contains
-no model-specific code, just procedural knowledge: when to use it, the
-“load the cached model, never re-fit” rule, evidence discipline, the fixed answer
-format, biomedical caution, and a verified “how to query this repo” recipe
-pointing at <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>.</p>
+<section id="looking-at-the-skill">
+<h3>Looking at the skill<a class="headerlink" href="#looking-at-the-skill" title="Link to this heading">#</a></h3>
+<p>Before using the skill, let us look at the instructions we are actually giving the agent.</p>
+<p>The next cell simply prints <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code>. Notice that it does not add new analytical capabilities: it provides instructions for how Pi should use the code already available, what evidence it should rely on, and how it should report the results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">SKILL_PATH</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
@@ -629,20 +620,27 @@ pointing at <code class="docutils literal notranslate"><span class="pre">src/mof
 </div>
 </div>
 </section>
-<section id="run-pi-as-a-real-harness-with-the-skill">
-<h2>5. Run Pi as a real harness, with the skill<a class="headerlink" href="#run-pi-as-a-real-harness-with-the-skill" title="Link to this heading">#</a></h2>
-<p>We hand a prompt to a coding agent and let it run the loop, choose its
-<code class="docutils literal notranslate"><span class="pre">read</span></code>/<code class="docutils literal notranslate"><span class="pre">bash</span></code>/<code class="docutils literal notranslate"><span class="pre">edit</span></code>/<code class="docutils literal notranslate"><span class="pre">write</span></code> tools, and load the skill. Command shape:</p>
+</section>
+<section id="run-pi-as-a-harness-with-the-skill">
+<h2>5. Run Pi as a harness, with the skill<a class="headerlink" href="#run-pi-as-a-harness-with-the-skill" title="Link to this heading">#</a></h2>
+<p>We are now ready to give Pi a task. If we were using Pi directly from a terminal, a command would look like this:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pi<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;&lt;task&gt;&quot;</span><span class="w"> </span>--skill<span class="w"> </span>skills/mofa-multiomics-agent.SKILL.md<span class="w"> </span><span class="se">\</span>
 <span class="w">   </span>--model<span class="w"> </span>anthropic/claude-haiku-4-5<span class="w"> </span>--approve
 </pre></div>
 </div>
+<p>Here:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-p</span></code> runs headless; <code class="docutils literal notranslate"><span class="pre">--skill</span></code> loads our skill; <code class="docutils literal notranslate"><span class="pre">--approve</span></code> trusts project-local
-files (Pi runs in <code class="docutils literal notranslate"><span class="pre">PROJECT_ROOT</span></code>, so <code class="docutils literal notranslate"><span class="pre">bash</span></code> can run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;from</span> <span class="pre">src.mofa_tools</span> <span class="pre">import</span> <span class="pre">...&quot;</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">&quot;&lt;task&gt;&quot;</span></code> gives Pi the task to perform;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--skill</span> <span class="pre">...</span></code> loads our MOFA skill;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--model</span> <span class="pre">...</span></code> specifies the language model;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--approve</span></code> allows Pi to work with the project files without stopping for confirmation.</p></li>
 </ul>
-<p>Watch the output follow the skill’s Answer / Evidence Used / Interpretation /
-Limitations structure, that comes from the skill, not from us.</p>
+<p>Once started, Pi runs the agent loop itself. Claude can choose when to read files, run <code class="docutils literal notranslate"><span class="pre">bash</span></code> commands, edit or write files, inspect the results, and continue until the task is complete.</p>
+<section id="launching-pi-prom-python">
+<h3>Launching Pi prom Python<a class="headerlink" href="#launching-pi-prom-python" title="Link to this heading">#</a></h3>
+<p>Because we are working inside a notebook rather than typing commands into a terminal, the next cell wraps this command in a Python function called <code class="docutils literal notranslate"><span class="pre">run_pi()</span></code>.</p>
+<p>The function uses Python’s <code class="docutils literal notranslate"><span class="pre">subprocess</span></code> module, which simply allows Python to start another program and collect its output. Here, that other program is Pi.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">with_skill</span></code> argument determines whether the Pi command includes our <code class="docutils literal notranslate"><span class="pre">--skill</span></code> file or runs with <code class="docutils literal notranslate"><span class="pre">--no-skills</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_pi</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">with_skill</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">MODEL</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">):</span>
@@ -650,6 +648,7 @@ Limitations structure, that comes from the skill, not from us.</p>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">PI</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="s2">&quot;--model&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="s2">&quot;--approve&quot;</span><span class="p">]</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;--skill&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">SKILL_PATH</span><span class="p">)]</span> <span class="k">if</span> <span class="n">with_skill</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;--no-skills&quot;</span><span class="p">]</span>
     <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">PI_ENV</span><span class="p">,</span>
+                          <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>  <span class="c1"># Jupyter&#39;s stdin never closes; pi would wait on it forever</span>
                           <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[pi stderr]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">proc</span><span class="o">.</span><span class="n">stderr</span><span class="p">[</span><span class="o">-</span><span class="mi">2000</span><span class="p">:])</span>
@@ -658,8 +657,70 @@ Limitations structure, that comes from the skill, not from us.</p>
 </div>
 </div>
 </div>
-<section id="query-9-run-the-pipeline-interpret-spends-api-tokens">
-<h3>Query 9: run the pipeline + interpret (spends API tokens)<a class="headerlink" href="#query-9-run-the-pipeline-interpret-spends-api-tokens" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_pi_live</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">with_skill</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">MODEL</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Like run_pi, but streams Pi&#39;s progress live: thinking, tool calls, tool output.&quot;&quot;&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">PI</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="s2">&quot;--model&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="s2">&quot;--approve&quot;</span><span class="p">,</span> <span class="s2">&quot;--mode&quot;</span><span class="p">,</span> <span class="s2">&quot;json&quot;</span><span class="p">]</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;--skill&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">SKILL_PATH</span><span class="p">)]</span> <span class="k">if</span> <span class="n">with_skill</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;--no-skills&quot;</span><span class="p">]</span>
+    <span class="n">stderr_f</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">PI_ENV</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>  <span class="c1"># Jupyter&#39;s stdin never closes; pi would wait on it forever</span>
+                            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">stderr_f</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;▶ pi running (</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">, skill=</span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">with_skill</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">) …&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">final_text</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">block</span> <span class="o">=</span> <span class="p">[],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="s2">&quot;message_update&quot;</span><span class="p">:</span>
+                <span class="n">ev</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;assistantMessageEvent&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="n">et</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">et</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;thinking_delta&quot;</span><span class="p">,</span> <span class="s2">&quot;text_delta&quot;</span><span class="p">):</span>
+                    <span class="n">want</span> <span class="o">=</span> <span class="s2">&quot;💭&quot;</span> <span class="k">if</span> <span class="n">et</span> <span class="o">==</span> <span class="s2">&quot;thinking_delta&quot;</span> <span class="k">else</span> <span class="s2">&quot;🤖&quot;</span>
+                    <span class="k">if</span> <span class="n">block</span> <span class="o">!=</span> <span class="n">want</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">block</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">want</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">block</span> <span class="o">=</span> <span class="n">want</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">et</span> <span class="o">==</span> <span class="s2">&quot;toolcall_end&quot;</span><span class="p">:</span>
+                    <span class="n">tc</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;toolCall&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="n">args</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;arguments&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="n">detail</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">block</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;🔧 </span><span class="si">{</span><span class="n">tc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">detail</span><span class="p">[:</span><span class="mi">300</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">block</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s2">&quot;tool_execution_end&quot;</span><span class="p">:</span>
+                <span class="n">blocks</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
+                    <span class="n">mark</span> <span class="o">=</span> <span class="s2">&quot;❌&quot;</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;isError&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot; ↳&quot;</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mark</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">out</span><span class="p">[:</span><span class="mi">400</span><span class="p">]</span><span class="si">}{</span><span class="s1">&#39; …&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">400</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">block</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s2">&quot;message_end&quot;</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;assistant&quot;</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
+                <span class="n">cost</span> <span class="o">+=</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;usage&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cost&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">final_text</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                              <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)]</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">):</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+        <span class="k">raise</span>
+    <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">stderr_f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[pi stderr]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stderr_f</span><span class="o">.</span><span class="n">read</span><span class="p">()[</span><span class="o">-</span><span class="mi">2000</span><span class="p">:])</span>
+    <span class="n">stderr_f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">💰 total cost: $</span><span class="si">{</span><span class="n">cost</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">final_text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="trying-some-tasks">
+<h3>Trying some tasks<a class="headerlink" href="#trying-some-tasks" title="Link to this heading">#</a></h3>
+<p>We can now give Pi broader tasks and let it decide how to use the repository and its general-purpose tools to complete them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PIPELINE_TASK</span> <span class="o">=</span> <span class="p">(</span>
@@ -667,34 +728,32 @@ Limitations structure, that comes from the skill, not from us.</p>
     <span class="s2">&quot;model (load the cached model, do not re-fit): report which factors are &quot;</span>
     <span class="s2">&quot;active, which factor is most associated with PAM50 subtype, and the held-out &quot;</span>
     <span class="s2">&quot;classification performance. Then give a one-paragraph interpretation.&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">run_pi</span><span class="p">(</span><span class="n">PIPELINE_TASK</span><span class="p">,</span> <span class="n">with_skill</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">run_pi_live</span><span class="p">(</span><span class="n">PIPELINE_TASK</span><span class="p">,</span> <span class="n">with_skill</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 </div>
-</section>
-<section id="query-10-generate-diagnostics-justify-spends-api-tokens">
-<h3>Query 10: generate diagnostics + justify  (spends API tokens)<a class="headerlink" href="#query-10-generate-diagnostics-justify-spends-api-tokens" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PLOTS_TASK</span> <span class="o">=</span> <span class="p">(</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    #################################################</span>
-<span class="sd">                    YOUR CODE HERE</span>
-<span class="sd">    #################################################</span>
-<span class="sd">    Write the prompt to generate the stndar MOFA diagnostic. Additional clue: Be a a little more specific in the question, eg. ask for the specific plot that can support the statement.</span>
-<span class="sd">    </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">run_pi</span><span class="p">(</span><span class="n">PLOTS_TASK</span><span class="p">,</span> <span class="n">with_skill</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#################################################</span>
+<span class="c1"># Write a task asking Pi to generate the standard MOFA diagnostic plots into</span>
+<span class="c1"># outputs/, and say which single plot best supports the claim that MOFA captures</span>
+<span class="c1"># breast-cancer subtype biology, and why.</span>
+<span class="c1">#</span>
+<span class="c1">### WRITE YOUR CODE HERE ###</span>
+<span class="c1">#</span>
+<span class="c1">#################################################</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 </section>
-<section id="run-without-the-skill-compare-behaviour-spends-api-tokens">
-<h2>6. Run without the skill, compare behaviour (spends API tokens)<a class="headerlink" href="#run-without-the-skill-compare-behaviour-spends-api-tokens" title="Link to this heading">#</a></h2>
+<section id="running-the-same-task-without-the-skill">
+<h2>6. Running the same task without the skill<a class="headerlink" href="#running-the-same-task-without-the-skill" title="Link to this heading">#</a></h2>
+<p>Now we run the same <code class="docutils literal notranslate"><span class="pre">PIPELINE_TASK</span></code> again, using the same model and the same general-purpose tools, but without loading the skill.</p>
+<p>Pi can still inspect the repository, run Python and use src/mofa_tools.py. Its <strong>capabilities therefore remain the same</strong>; what is removed is the additional procedural guidance in <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code>.</p>
 <p>Same agent, model, task, but <code class="docutils literal notranslate"><span class="pre">--no-skills</span></code>. Pi can still find
 <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code> by exploring the repo, so the capability is unchanged.
 What changes is behaviour: without the skill it has no instruction to load
@@ -702,28 +761,20 @@ the cached model (it might try to re-fit), to ground every claim in tool output,
 to use the fixed answer format, or to add biomedical caveats.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">run_pi</span><span class="p">(</span><span class="n">PIPELINE_TASK</span><span class="p">,</span> <span class="n">with_skill</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">run_pi_live</span><span class="p">(</span><span class="n">PIPELINE_TASK</span><span class="p">,</span> <span class="n">with_skill</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>compare the two outputs. What does the skill change about the way the model approaches and reports the task?</p>
 </section>
 <section id="reflection">
 <h2>Reflection<a class="headerlink" href="#reflection" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Same backend, three interfaces. nb01 bound the functions as tools, nb02
-served them over MCP, here Pi ran <code class="docutils literal notranslate"><span class="pre">python</span></code> through <code class="docutils literal notranslate"><span class="pre">bash</span></code>, same MOFA results.
-Where does “capability” actually live?</p></li>
-<li><p>What did the skill change? Diff the §5 (with-skill) and §6 (no-skill)
-answers: which differences are format, which evidence discipline, which
-the “don’t re-fit” rule? None are new capabilities.</p></li>
-<li><p>The re-fit trap. Why is “load the cached model, never fit” exactly the kind
-of knowledge that belongs in a skill rather than a tool signature?</p></li>
-<li><p>Progressive disclosure: we passed <code class="docutils literal notranslate"><span class="pre">--skill</span></code> explicitly. Why does
-discovery-by-description matter once you have 50 skills?</p></li>
-<li><p>Overlap: the skill told the agent how to call <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>. If those
-were exposed via the nb02 MCP server instead, what in the skill’s “how to
-query” section changes, and what stays the same?</p></li>
+<li><p>Compare the run <code class="docutils literal notranslate"><span class="pre">with_skill</span></code>  to the run without it. What differences do you notice in how the task is performed?</p></li>
+<li><p>Did the skill change what Pi could do, or how it used its existing capabilities?</p></li>
+<li><p>Here, we explicitly tell Pi which skill to use as there’s only a handful. How would this work if Pi had 50 skills available?</p></li>
+<li><p>if the MOFA functions were accessed through MCP instead of directly through MCP instead of directly through Python, which parts of the skill would stay the same, and which would need to change?</p></li>
 </ul>
 </section>
 </section>
@@ -737,16 +788,16 @@ query” section changes, and what stays the same?</p></li>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb"
+            mode: "python"
         },
         kernelOptions: {
-            name: "eccb",
+            name: "python3",
             path: "./session-3-agentic-llm-workflows/notebooks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -794,21 +845,24 @@ query” section changes, and what stays the same?</p></li>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-tool-calling-to-coding-agents-why-the-paradigm-shifted">0. From tool-calling to coding agents, why the paradigm shifted</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-new-problem-how-do-you-give-such-an-agent-know-how">1. The new problem: how do you give such an agent know-how?</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-specialised-tools-to-a-coding-agent">0. From specialised tools to a coding agent</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-new-problem-how-do-we-tell-the-agent-how-to-do-the-task">1. The new problem: how do we tell the agent how to do the task?</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-skills-skill-md">Agent Skills &amp; <code class="docutils literal notranslate"><span class="pre">SKILL.md</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-harness">The harness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#where-does-the-harness-fit">Where does the harness fit?</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-skills-overlap-with-tools-and-mcp">2. How skills overlap with tools and MCP</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-this-notebook-pi">3. For this notebook: Pi</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-and-the-skill-we-ll-hand-to-pi">4. Setup and the skill we’ll hand to Pi</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-pi-as-a-real-harness-with-the-skill">5. Run Pi as a real harness, with the skill</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query-9-run-the-pipeline-interpret-spends-api-tokens">Query 9: run the pipeline + interpret (spends API tokens)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query-10-generate-diagnostics-justify-spends-api-tokens">Query 10: generate diagnostics + justify  (spends API tokens)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-coding-agent-we-will-use-pi">3. The coding agent we will use: Pi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-and-the-skill-we-ll-hand-to-pi">4. Setup and the skill we’ll hand to Pi</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-at-the-skill">Looking at the skill</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-without-the-skill-compare-behaviour-spends-api-tokens">6. Run without the skill, compare behaviour (spends API tokens)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-pi-as-a-harness-with-the-skill">5. Run Pi as a harness, with the skill</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launching-pi-prom-python">Launching Pi prom Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trying-some-tasks">Trying some tasks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-same-task-without-the-skill">6. Running the same task without the skill</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reflection">Reflection</a></li>
 </ul>
   </nav></div>

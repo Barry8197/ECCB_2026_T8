@@ -504,13 +504,6 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Host: kh066
-Python: /home/bryan/miniconda3/envs/eccb2026/bin/python
-Working dir: /work/gr-fe/bryan/ECCB2026_TEST/sessions/session-4-kg-query-mini-challenge
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -596,211 +589,11 @@ Working dir: /work/gr-fe/bryan/ECCB2026_TEST/sessions/session-4-kg-query-mini-ch
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Omic view dimensions:
-  transcriptomics:   10 patients x  29995 features
-  proteomics     :   10 patients x    464 features
-  methylation    :   10 patients x 200000 features
-
-Subtype counts:
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>subtype
-Unknown    10
-Name: count, dtype: int64
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;transcriptomics&#39;:        ENSG00000000003.15  ENSG00000000005.6  ENSG00000000419.13  \
- Pat_0           10.206609           3.890222           10.963447   
- Pat_1           11.227947           7.885052           10.747011   
- Pat_2           10.858597           3.622629           10.543180   
- Pat_3           11.418415           6.649170           10.675950   
- Pat_4           11.639118           7.683469           10.614152   
- Pat_5           10.006381           3.991210           10.967056   
- Pat_6           11.320906           4.597212           11.209474   
- Pat_7           11.521549           4.382121           11.129100   
- Pat_8           11.692278           4.079725           11.140742   
- Pat_9           12.186842           4.716691           11.855058   
- 
-        ENSG00000000457.14  ENSG00000000460.17  ENSG00000000938.13  \
- Pat_0            9.960213            8.783081            7.883629   
- Pat_1           11.352407            8.963408           11.828274   
- Pat_2           10.480666            8.805772            8.354700   
- Pat_3           11.772228            9.739870            9.070792   
- Pat_4           10.360072            8.960729            9.935186   
- Pat_5            9.476851            8.826529            8.802416   
- Pat_6           10.049028            9.896462            9.213614   
- Pat_7           10.304102            9.837964            8.720828   
- Pat_8           10.533073           10.023556            8.988475   
- Pat_9           10.738790           10.903126            8.964495   
- 
-        ENSG00000000971.16  ENSG00000001036.14  ENSG00000001084.13  \
- Pat_0           11.083770           10.744436           11.751679   
- Pat_1           12.929817           11.243190           11.040297   
- Pat_2           11.695405           10.179517           10.889103   
- Pat_3           12.100870           10.894993            9.977176   
- Pat_4           11.250770           11.529095           10.553126   
- Pat_5           11.684284           11.000672           11.628035   
- Pat_6           10.423992           12.156724           11.485138   
- Pat_7           11.510676           12.033402           10.843561   
- Pat_8           11.263677           10.980872           11.134081   
- Pat_9            9.823592           13.432973           11.613547   
- 
-        ENSG00000001167.14  ...  ENSG00000288611.1  ENSG00000288612.1  \
- Pat_0           11.388343  ...           4.450666           5.667865   
- Pat_1           10.466207  ...           2.843467           6.377397   
- Pat_2           11.436503  ...           4.163000           5.356899   
- Pat_3           11.895307  ...           3.298848           5.391283   
- Pat_4           11.372468  ...           2.843467           5.553009   
- Pat_5           11.608577  ...           3.287055           6.508915   
- Pat_6           11.997321  ...           5.576287           6.716968   
- Pat_7           11.658691  ...           3.471029           6.382145   
- Pat_8           11.812687  ...           3.518504           5.361268   
- Pat_9           12.380097  ...           4.099344           4.571069   
- 
-        ENSG00000288638.1  ENSG00000288648.1  ENSG00000288657.1  \
- Pat_0           2.843467           2.843467           3.375382   
- Pat_1           2.843467           3.345657           2.843467   
- Pat_2           2.843467           2.843467           3.397723   
- Pat_3           2.843467           3.298848           2.843467   
- Pat_4           2.843467           3.329320           2.843467   
- Pat_5           2.843467           2.843467           2.843467   
- Pat_6           2.843467           2.843467           2.843467   
- Pat_7           2.843467           2.843467           3.471029   
- Pat_8           2.843467           2.843467           2.843467   
- Pat_9           2.843467           3.419187           2.843467   
- 
-        ENSG00000288658.1  ENSG00000288663.1  ENSG00000288670.1  \
- Pat_0           3.591567           4.375290           8.897982   
- Pat_1           5.122605           5.929506           7.922134   
- Pat_2           3.622629           4.512358           9.500332   
- Pat_3           3.625866           5.010104           8.810702   
- Pat_4           4.768499           4.901473           8.606419   
- Pat_5           3.468372           6.272242           8.215869   
- Pat_6           4.937380           6.139969           8.373386   
- Pat_7           3.724245           5.185608           8.314728   
- Pat_8           3.666569           5.240143           9.601401   
- Pat_9           3.828054           4.099344           7.871598   
- 
-        ENSG00000288674.1  ENSG00000288675.1  
- Pat_0           4.207402           5.903832  
- Pat_1           4.776614           5.675877  
- Pat_2           3.792194           5.234692  
- Pat_3           4.234930           4.518756  
- Pat_4           4.509409           5.603773  
- Pat_5           4.201095           5.387085  
- Pat_6           3.759852           4.860542  
- Pat_7           3.824557           5.467033  
- Pat_8           4.489482           4.489482  
- Pat_9           3.419187           5.124520  
- 
- [10 rows x 29995 columns],
- &#39;proteomics&#39;:        1433BETA  1433EPSILON  1433ZETA     4EBP1  4EBP1_pS65  4EBP1_pT37T46  \
- Pat_0  0.209990    -0.075390  0.371980 -0.224730   -0.485060      -0.692580   
- Pat_1  0.312400     0.030429  0.253340 -0.611520   -0.201840       0.671530   
- Pat_2  0.127790    -0.070532 -0.027055 -0.582010   -0.450870      -0.473950   
- Pat_3  0.672860     0.454690  0.690000 -0.435830   -0.677050      -0.216300   
- Pat_4  0.151560     0.191260  0.116100  0.007940   -0.475930       0.386940   
- Pat_5 -0.145800     0.105943  0.923275  0.579005   -0.479165      -0.398805   
- Pat_6  0.471200     0.135960  0.229710  0.421070   -0.820150      -0.588590   
- Pat_7  0.266130     0.400270 -0.676650 -0.516900   -0.331410       0.146250   
- Pat_8 -0.064925    -0.012983 -0.019147  0.122100   -0.503420       0.400560   
- Pat_9  0.179010    -0.000011 -0.305770  0.387160   -0.403100      -0.892310   
- 
-        4EBP1_pT70     53BP1  ACC_pS79      ACC1  ...       XPF     XRCC1  \
- Pat_0   -0.237400 -0.067915  0.081168  0.007453  ...  0.260623 -0.099892   
- Pat_1   -0.490780 -0.814960  0.529520  0.870960  ...  0.298706 -0.115650   
- Pat_2   -0.318360  0.360740  1.002400  0.899580  ...  0.620847  0.350880   
- Pat_3   -0.325280 -1.454200  2.059000  0.801960  ...  0.635439 -0.797760   
- Pat_4   -0.402460 -0.066013  0.806990  0.031855  ...  0.325157 -0.015553   
- Pat_5   -0.006398 -0.010776  0.126345  0.721685  ... -0.006203 -0.149885   
- Pat_6    0.402940 -0.669310 -0.067353 -0.189610  ...  0.559783  0.345610   
- Pat_7    0.178840 -0.865140 -0.086904 -0.452800  ...  0.196953  0.150710   
- Pat_8   -0.245610 -0.295440  0.246430  0.367050  ... -0.084701  0.126790   
- Pat_9   -0.103780 -0.602700 -0.336820  0.341820  ... -0.226228 -0.024386   
- 
-             YAP  YAP_pS127       YB1  YB1_pS102    YTHDF2    YTHDF3    ZAP-70  \
- Pat_0 -0.287960  -0.456050 -0.359370  -0.057382 -0.435499 -0.672054  0.516419   
- Pat_1  0.049778   0.223490  0.037169   0.000000 -0.597347 -1.673852 -0.829929   
- Pat_2 -0.272050  -0.422110  0.269720  -0.268640  0.450075 -0.159570 -0.370457   
- Pat_3  1.320500   1.670100 -0.531290   0.322170 -1.465223 -0.971948 -0.591835   
- Pat_4 -0.154470  -0.104590  0.326420  -0.141670 -0.160695  0.429300  1.105883   
- Pat_5 -0.485700  -1.128265  0.203920  -0.249505  0.249155  0.477140 -0.294727   
- Pat_6  0.249630  -0.449320 -0.368930   0.314880 -0.911570 -0.257785  1.340228   
- Pat_7  0.373290   0.214090 -0.328940  -0.029406 -1.517599 -1.559424  0.885328   
- Pat_8 -0.375900  -0.628490 -0.159960  -0.422880  0.027947  0.742192 -0.973856   
- Pat_9 -0.339030  -0.793460 -0.252160   0.010017  0.671120  0.392285 -0.176342   
- 
-            ZEB1  
- Pat_0  0.364914  
- Pat_1  0.282237  
- Pat_2  0.434968  
- Pat_3  0.912490  
- Pat_4  0.431498  
- Pat_5 -0.221702  
- Pat_6  0.511333  
- Pat_7  0.671174  
- Pat_8  0.074150  
- Pat_9 -0.122987  
- 
- [10 rows x 464 columns],
- &#39;methylation&#39;:        cg11738485  cg01893212  cg23179456  cg12466610  cg22473620  cg15690342  \
- Pat_0    0.036465    0.459944    0.765009    0.523401    0.666596    0.171290   
- Pat_1    0.642683    0.366179    0.147451    0.082516    0.234550    0.329291   
- Pat_2    0.587153    0.808454    0.802197    0.598610    0.793824    0.825494   
- Pat_3    0.559811    0.694687    0.661540    0.230455    0.499805    0.755860   
- Pat_4    0.984174    0.585158    0.581683    0.290122    0.598232    0.629066   
- Pat_5    0.015636    0.750984    0.780966    0.469563    0.737902    0.572635   
- Pat_6    0.029568    0.030172    0.660712    0.548529    0.721839    0.184347   
- Pat_7    0.727794    0.039441    0.030866    0.971210    0.345076    0.237567   
- Pat_8    0.981246    0.829965    0.660667    0.055368    0.041200    0.849246   
- Pat_9    0.680905    0.046090    0.837534    0.614237    0.798068    0.886255   
- 
-        cg02467990  cg21885317  cg20399616  cg22831607  ...  cg03082813  \
- Pat_0    0.309456    0.087059    0.146893    0.304569  ...    0.099009   
- Pat_1    0.343183    0.929976    0.146072    0.168229  ...    0.111423   
- Pat_2    0.767110    0.951831    0.768201    0.042451  ...    0.047717   
- Pat_3    0.643704    0.192525    0.652058    0.669029  ...    0.072981   
- Pat_4    0.509020    0.905908    0.616243    0.629752  ...    0.086513   
- Pat_5    0.714676    0.330090    0.758003    0.295251  ...    0.084584   
- Pat_6    0.021985    0.937415    0.039530    0.585501  ...    0.088012   
- Pat_7    0.040871    0.170520    0.099211    0.062540  ...    0.048544   
- Pat_8    0.812736    0.695391    0.802597    0.868684  ...    0.097715   
- Pat_9    0.041928    0.931980    0.742047    0.672269  ...    0.047196   
- 
-        cg13744910  cg09550558  cg09395540  cg13222853  cg06575013  cg23123972  \
- Pat_0    0.964663    0.122532    0.922226    0.869302    0.093457    0.851539   
- Pat_1    0.972984    0.069577    0.948352    0.883429    0.126899    0.910045   
- Pat_2    0.965976    0.064062    0.821157    0.910605    0.078588    0.926255   
- Pat_3    0.973397    0.070123    0.937828    0.911747    0.095471    0.893391   
- Pat_4    0.971771    0.066935    0.938623    0.896895    0.114243    0.882909   
- Pat_5    0.964760    0.064851    0.873053    0.930288    0.093407    0.912283   
- Pat_6    0.958149    0.087123    0.917065    0.863395    0.097908    0.848616   
- Pat_7    0.975608    0.079897    0.934193    0.871475    0.149388    0.933717   
- Pat_8    0.976676    0.079897    0.829877    0.882533    0.105870    0.885309   
- Pat_9    0.976905    0.071415    0.904568    0.928623    0.080946    0.671952   
- 
-        cg10507099  cg03538345  cg14015726  
- Pat_0    0.019959    0.166893    0.941172  
- Pat_1    0.017771    0.127076    0.944468  
- Pat_2    0.017049    0.111346    0.953182  
- Pat_3    0.018662    0.104881    0.918535  
- Pat_4    0.016234    0.087803    0.947652  
- Pat_5    0.020630    0.069685    0.933060  
- Pat_6    0.021112    0.094935    0.812604  
- Pat_7    0.022462    0.163373    0.943986  
- Pat_8    0.017831    0.147168    0.934284  
- Pat_9    0.016314    0.088723    0.943192  
- 
- [10 rows x 200000 columns]}
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The labelled training cohort (TCGA-BRCA) that the MOFA model below was trained on.</span>
-<span class="n">TRAIN_DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../../data_tmp/TCGA-BRCA/&quot;</span><span class="p">)</span>
+<span class="n">TRAIN_DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data/&quot;</span><span class="p">)</span>
 
 <span class="n">X_omics</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_omics</span><span class="p">(</span>
     <span class="n">TRAIN_DATA_DIR</span><span class="p">,</span>
@@ -817,25 +610,6 @@ Name: count, dtype: int64
 <span class="c1"># Split the labels using the same patient IDs used for the omics data.</span>
 <span class="n">y_train</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">]</span>
 <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Omic view dimensions:
-  transcriptomics:  500 patients x  29995 features
-  proteomics     :  500 patients x    464 features
-  methylation    :  500 patients x 200000 features
-
-Subtype counts:
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>paper_BRCA_Subtype_PAM50
-LumA      237
-LumB      100
-Basal      97
-Her2       41
-Normal     25
-Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
@@ -860,19 +634,6 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MOFA+ model: mofa pretrained
-Samples (cells): 375
-Features: 4464
-Groups: TCGA-BRCA_train (375)
-Views: methylation (2000), proteomics (464), transcriptomics (2000)
-Factors: 10
-Expectations: W, Z
-(375, 4464)
-Factor column names look like: [&#39;Factor1&#39;, &#39;Factor2&#39;, &#39;Factor3&#39;]
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="project-the-challenge-samples-into-the-mofa-factor-space">
@@ -891,10 +652,18 @@ weights the model already learned — without ever touching the (unknown) labels
 <span class="n">X_train_omics</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">X_test_omics</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">X_train_view</span> <span class="ow">in</span> <span class="n">X_train_raw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">selected_features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features_in_mofa</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">X_train_view</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
-    <span class="n">X_train_omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_train_view</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">selected_features</span><span class="p">]</span>
-    <span class="n">X_test_omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_test_raw</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">selected_features</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">------------------</span>
+<span class="sd">YOUR CODE HERE</span>
+<span class="sd">------------------</span>
+<span class="sd">1. Loop over each omics view in X_train_raw</span>
+
+<span class="sd">2. Find which features are shared between MOFA and the current view</span>
+
+<span class="sd">3. Subset the train data to only those features</span>
+
+<span class="sd">4. Subset the test data to the same features</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Feature counts after filtering to MOFA&#39;s feature set:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="p">:</span>
@@ -902,14 +671,6 @@ weights the model already learned — without ever touching the (unknown) labels
         <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">15s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">X_omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">6d</span><span class="si">}</span><span class="s2"> original -&gt; &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">X_train_omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">6d</span><span class="si">}</span><span class="s2"> used by MOFA&quot;</span>
     <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Feature counts after filtering to MOFA&#39;s feature set:
-  transcriptomics:  29995 original -&gt;   2000 used by MOFA
-  proteomics     :    464 original -&gt;    464 used by MOFA
-  methylation    : 200000 original -&gt;   2000 used by MOFA
 </pre></div>
 </div>
 </div>
@@ -1023,9 +784,6 @@ weights the model already learned — without ever touching the (unknown) labels
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/edbdd4c2568676d890fc89e7983bdbb7e5b47107bdeee1c662420012c90c4132.png" src="../_images/edbdd4c2568676d890fc89e7983bdbb7e5b47107bdeee1c662420012c90c4132.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1043,197 +801,6 @@ weights the model already learned — without ever touching the (unknown) labels
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Factor1</th>
-      <th>Factor2</th>
-      <th>Factor3</th>
-      <th>Factor4</th>
-      <th>Factor5</th>
-      <th>Factor6</th>
-      <th>Factor7</th>
-      <th>Factor8</th>
-      <th>Factor9</th>
-      <th>Factor10</th>
-      <th>subtype</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>TCGA-S3-AA0Z</th>
-      <td>-2.677049</td>
-      <td>-4.491632</td>
-      <td>1.438483</td>
-      <td>-0.422795</td>
-      <td>0.741272</td>
-      <td>1.235917</td>
-      <td>1.497584</td>
-      <td>-0.306961</td>
-      <td>0.952876</td>
-      <td>-0.117106</td>
-      <td>Basal</td>
-    </tr>
-    <tr>
-      <th>TCGA-E9-A1N6</th>
-      <td>0.180977</td>
-      <td>-0.561914</td>
-      <td>-3.574715</td>
-      <td>-2.498562</td>
-      <td>-3.337365</td>
-      <td>-2.594017</td>
-      <td>-1.536899</td>
-      <td>1.478458</td>
-      <td>-0.399653</td>
-      <td>1.112885</td>
-      <td>LumB</td>
-    </tr>
-    <tr>
-      <th>TCGA-C8-A26Y</th>
-      <td>-1.037958</td>
-      <td>-2.685832</td>
-      <td>0.221065</td>
-      <td>-2.129348</td>
-      <td>-1.283929</td>
-      <td>-3.698094</td>
-      <td>-2.550864</td>
-      <td>3.238068</td>
-      <td>0.323258</td>
-      <td>0.714914</td>
-      <td>Her2</td>
-    </tr>
-    <tr>
-      <th>TCGA-A7-A0D9</th>
-      <td>0.757382</td>
-      <td>-0.338205</td>
-      <td>-1.839327</td>
-      <td>6.520308</td>
-      <td>-4.192802</td>
-      <td>1.799493</td>
-      <td>-0.594609</td>
-      <td>1.617057</td>
-      <td>-4.788059</td>
-      <td>2.172852</td>
-      <td>LumA</td>
-    </tr>
-    <tr>
-      <th>TCGA-A2-A0CT</th>
-      <td>4.982207</td>
-      <td>-0.566879</td>
-      <td>0.930730</td>
-      <td>-0.789196</td>
-      <td>-1.455145</td>
-      <td>2.251426</td>
-      <td>3.763444</td>
-      <td>1.592921</td>
-      <td>0.738021</td>
-      <td>0.874641</td>
-      <td>LumA</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>Pat_5</th>
-      <td>1.732713</td>
-      <td>1.484934</td>
-      <td>0.798178</td>
-      <td>-0.922396</td>
-      <td>-0.938942</td>
-      <td>2.177108</td>
-      <td>-1.136659</td>
-      <td>0.900399</td>
-      <td>-0.561686</td>
-      <td>-0.393969</td>
-      <td>Unknown</td>
-    </tr>
-    <tr>
-      <th>Pat_6</th>
-      <td>0.525045</td>
-      <td>-0.649719</td>
-      <td>0.079504</td>
-      <td>-1.348195</td>
-      <td>1.465892</td>
-      <td>0.453576</td>
-      <td>-1.885745</td>
-      <td>0.881061</td>
-      <td>-0.181360</td>
-      <td>0.944625</td>
-      <td>Unknown</td>
-    </tr>
-    <tr>
-      <th>Pat_7</th>
-      <td>-0.511048</td>
-      <td>1.179021</td>
-      <td>-1.281183</td>
-      <td>-0.298532</td>
-      <td>0.825806</td>
-      <td>-0.048020</td>
-      <td>-1.702661</td>
-      <td>-0.368831</td>
-      <td>0.132252</td>
-      <td>0.810454</td>
-      <td>Unknown</td>
-    </tr>
-    <tr>
-      <th>Pat_8</th>
-      <td>2.410831</td>
-      <td>1.197439</td>
-      <td>1.041670</td>
-      <td>-1.269500</td>
-      <td>-0.668765</td>
-      <td>0.721102</td>
-      <td>0.172933</td>
-      <td>-1.027378</td>
-      <td>-0.076351</td>
-      <td>0.376981</td>
-      <td>Unknown</td>
-    </tr>
-    <tr>
-      <th>Pat_9</th>
-      <td>0.916728</td>
-      <td>0.003875</td>
-      <td>0.923834</td>
-      <td>-0.510366</td>
-      <td>0.090924</td>
-      <td>-0.598543</td>
-      <td>-1.956078</td>
-      <td>0.735629</td>
-      <td>0.040657</td>
-      <td>-0.187265</td>
-      <td>Unknown</td>
-    </tr>
-  </tbody>
-</table>
-<p>385 rows × 11 columns</p>
-</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1260,9 +827,6 @@ weights the model already learned — without ever touching the (unknown) labels
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/57c128697b283424a438276fd287b56abee6c7bab2804ab6405cef0e822f33f3.png" src="../_images/57c128697b283424a438276fd287b56abee6c7bab2804ab6405cef0e822f33f3.png" />
 </div>
 </div>
 <section id="compare-subtypes-across-a-wider-set-of-factors">
@@ -1292,9 +856,6 @@ sample is likely to belong to before formally classifying it in Section 5.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/e4f8b686e37a642403c986336fcda27cff347b3b23dbaafc80a99947d09666c3.png" src="../_images/e4f8b686e37a642403c986336fcda27cff347b3b23dbaafc80a99947d09666c3.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1328,9 +889,6 @@ sample is likely to belong to before formally classifying it in Section 5.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/cefffa52a51ce6b5b010dded1ec5297680b40aabbcbb7dea490eae20fbbb4c9d.png" src="../_images/cefffa52a51ce6b5b010dded1ec5297680b40aabbcbb7dea490eae20fbbb4c9d.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1346,9 +904,6 @@ sample is likely to belong to before formally classifying it in Section 5.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/9d42fa2db97df30221ce24a45d426a7cbe20040f4d89f6cad8e639cd73b7e8ba.png" src="../_images/9d42fa2db97df30221ce24a45d426a7cbe20040f4d89f6cad8e639cd73b7e8ba.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1403,13 +958,6 @@ sample is likely to belong to before formally classifying it in Section 5.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/4124673/ipykernel_920994/1113544594.py:46: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
-  plt.tight_layout()
-</pre></div>
-</div>
-<img alt="../_images/685222be27741f42203f52fc4c738cd404f821b01b3454fba7aa42f763feca0c.png" src="../_images/685222be27741f42203f52fc4c738cd404f821b01b3454fba7aa42f763feca0c.png" />
-</div>
 </div>
 </section>
 </section>
@@ -1421,56 +969,38 @@ factors — trained on the labelled cohort — gives us a first, quantitative
 pass at this split, which we can combine with the visual read from Section 4.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1) Get y_train as a 1D Series of subtype labels.</span>
-<span class="n">subtype_labels</span> <span class="o">=</span> <span class="n">y_train</span>
-<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subtype_labels</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s2">&quot;paper_BRCA_Subtype_PAM50&quot;</span> <span class="ow">in</span> <span class="n">subtype_labels</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">subtype_labels</span> <span class="o">=</span> <span class="n">subtype_labels</span><span class="p">[</span><span class="s2">&quot;paper_BRCA_Subtype_PAM50&quot;</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="s2">&quot;subtype&quot;</span> <span class="ow">in</span> <span class="n">subtype_labels</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">subtype_labels</span> <span class="o">=</span> <span class="n">subtype_labels</span><span class="p">[</span><span class="s2">&quot;subtype&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not find a subtype column in y_train.&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">------------------</span>
+<span class="sd">YOUR CODE HERE</span>
+<span class="sd">------------------</span>
+<span class="sd">1. Extract the subtype labels from y_train, handling the case where </span>
+<span class="sd">   it is a DataFrame by pulling out the relevant column</span>
 
-<span class="c1"># 2) Align train X and y by sample IDs.</span>
-<span class="n">common_ids</span> <span class="o">=</span> <span class="n">train_factors_mfx</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">subtype_labels</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-<span class="n">X_train_clf</span> <span class="o">=</span> <span class="n">train_factors_mfx</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">common_ids</span><span class="p">]</span>
-<span class="n">y_train_clf</span> <span class="o">=</span> <span class="n">subtype_labels</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">common_ids</span><span class="p">]</span>
+<span class="sd">2. Align the training samples so that only samples present in both </span>
+<span class="sd">   the MOFA factors and the subtype labels are kept</span>
 
-<span class="c1"># 3) Fit a simple multi-class logistic regression on all factors.</span>
-<span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">RANDOM_STATE</span><span class="p">)</span>
-<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_clf</span><span class="p">,</span> <span class="n">y_train_clf</span><span class="p">)</span>
+<span class="sd">3. Train a logistic regression classifier on the aligned training data</span>
 
-<span class="c1"># 4) Predict on the challenge (unknown) samples.</span>
-<span class="n">test_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_factors_mfx</span><span class="p">)</span>
-<span class="n">predicted_subtype</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">test_pred</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">test_factors_mfx</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;predicted_subtype&quot;</span><span class="p">)</span>
-
-<span class="n">predicted_subtype</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pat_0    LumA
-Pat_1    LumA
-Pat_2    LumA
-Pat_3    LumA
-Pat_4    LumA
-Pat_5    LumA
-Pat_6    LumB
-Pat_7    LumA
-Pat_8    LumA
-Pat_9    LumB
-Name: predicted_subtype, dtype: object
+<span class="sd">4. Predict subtypes for the test samples and store the results as a </span>
+<span class="sd">   Series</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predicted_proba</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_factors_mfx</span><span class="p">),</span>
-    <span class="n">index</span><span class="o">=</span><span class="n">test_factors_mfx</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-    <span class="n">columns</span><span class="o">=</span><span class="n">clf</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">------------------</span>
+<span class="sd">YOUR CODE HERE</span>
+<span class="sd">------------------</span>
+<span class="sd">1. Use the trained classifier to predict the probability of each </span>
+<span class="sd">   subtype for every test sample</span>
+
+<span class="sd">2. Store the results as a DataFrame, with samples as rows and </span>
+<span class="sd">   subtypes as columns</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">predicted_proba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
 
@@ -1496,117 +1026,6 @@ Name: predicted_subtype, dtype: object
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/a276700e0ba0d00f01877558ef42114890ce7a82e2e3f60b51535c2547a71cc0.png" src="../_images/a276700e0ba0d00f01877558ef42114890ce7a82e2e3f60b51535c2547a71cc0.png" />
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Basal</th>
-      <th>Her2</th>
-      <th>LumA</th>
-      <th>LumB</th>
-      <th>Normal</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Pat_0</th>
-      <td>3.847440e-05</td>
-      <td>0.013562</td>
-      <td>0.671983</td>
-      <td>0.310265</td>
-      <td>0.004151</td>
-    </tr>
-    <tr>
-      <th>Pat_1</th>
-      <td>2.466155e-04</td>
-      <td>0.000998</td>
-      <td>0.926213</td>
-      <td>0.051993</td>
-      <td>0.020549</td>
-    </tr>
-    <tr>
-      <th>Pat_2</th>
-      <td>2.847282e-07</td>
-      <td>0.000012</td>
-      <td>0.719408</td>
-      <td>0.280566</td>
-      <td>0.000013</td>
-    </tr>
-    <tr>
-      <th>Pat_3</th>
-      <td>2.101006e-05</td>
-      <td>0.000099</td>
-      <td>0.947450</td>
-      <td>0.049191</td>
-      <td>0.003239</td>
-    </tr>
-    <tr>
-      <th>Pat_4</th>
-      <td>1.386258e-05</td>
-      <td>0.000172</td>
-      <td>0.923490</td>
-      <td>0.074452</td>
-      <td>0.001872</td>
-    </tr>
-    <tr>
-      <th>Pat_5</th>
-      <td>4.128784e-07</td>
-      <td>0.000006</td>
-      <td>0.683015</td>
-      <td>0.316967</td>
-      <td>0.000012</td>
-    </tr>
-    <tr>
-      <th>Pat_6</th>
-      <td>2.432563e-03</td>
-      <td>0.068885</td>
-      <td>0.081754</td>
-      <td>0.841215</td>
-      <td>0.005713</td>
-    </tr>
-    <tr>
-      <th>Pat_7</th>
-      <td>3.578692e-04</td>
-      <td>0.004467</td>
-      <td>0.770673</td>
-      <td>0.206939</td>
-      <td>0.017563</td>
-    </tr>
-    <tr>
-      <th>Pat_8</th>
-      <td>4.269855e-07</td>
-      <td>0.000212</td>
-      <td>0.761841</td>
-      <td>0.237774</td>
-      <td>0.000172</td>
-    </tr>
-    <tr>
-      <th>Pat_9</th>
-      <td>1.166027e-03</td>
-      <td>0.016971</td>
-      <td>0.281572</td>
-      <td>0.682959</td>
-      <td>0.017332</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 </section>
 <section id="explain-each-unknown-sample-driving-genes-diseases">
@@ -1668,36 +1087,23 @@ resolve every <code class="docutils literal notranslate"><span class="pre">Pat_i
 <span class="c1"># top_genes_by_sample: {sample_id -&gt; list of top driving gene names}</span>
 <span class="n">top_genes_by_sample</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="k">for</span> <span class="n">sample_id</span> <span class="ow">in</span> <span class="n">unknown_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-    <span class="n">genes_for_this_sample</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factors_to_explain</span><span class="p">:</span>
-        <span class="n">top</span> <span class="o">=</span> <span class="n">top_features_weighted_by_expression</span><span class="p">(</span>
-            <span class="n">mofa_model_mfx</span><span class="p">,</span>
-            <span class="n">X_test_omics</span><span class="p">[</span><span class="n">view</span><span class="p">],</span>
-            <span class="n">sample_id</span><span class="o">=</span><span class="n">sample_id</span><span class="p">,</span>
-            <span class="n">factor</span><span class="o">=</span><span class="n">factor</span><span class="p">,</span>
-            <span class="n">view</span><span class="o">=</span><span class="n">view</span><span class="p">,</span>
-            <span class="n">top_n</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">genes_for_this_sample</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">top</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="n">top_genes_by_sample</span><span class="p">[</span><span class="n">sample_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">genes_for_this_sample</span><span class="p">))</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">------------------</span>
+<span class="sd">YOUR CODE HERE</span>
+<span class="sd">------------------</span>
+<span class="sd">1. Loop over each unknown test sample</span>
+
+<span class="sd">2. For each sample, loop over each MOFA factor of interest and </span>
+<span class="sd">   retrieve the top 25 most important genes for that factor</span>
+
+<span class="sd">3. Collect all the genes across all factors for that sample, </span>
+<span class="sd">   removing duplicates and sorting them</span>
+
+<span class="sd">4. Store the final gene list for each sample in top_genes_by_sample</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="k">for</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">genes</span> <span class="ow">in</span> <span class="n">top_genes_by_sample</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">genes</span><span class="p">)</span><span class="si">}</span><span class="s2"> candidate driving genes&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pat_0: 84 candidate driving genes
-Pat_1: 89 candidate driving genes
-Pat_2: 85 candidate driving genes
-Pat_3: 91 candidate driving genes
-Pat_4: 82 candidate driving genes
-Pat_5: 85 candidate driving genes
-Pat_6: 83 candidate driving genes
-Pat_7: 78 candidate driving genes
-Pat_8: 85 candidate driving genes
-Pat_9: 83 candidate driving genes
 </pre></div>
 </div>
 </div>
@@ -1710,28 +1116,6 @@ Pat_9: 83 candidate driving genes
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of nodes: 881
-Number of edges: 1768
-Graph type: undirected
-
-Nodes by type:
-     760  gene
-      90  disease
-      31  icd10
-Edges by type:
-   1,656  associated_with
-      81  is_a
-      31  maps_to
-
-Self-loops: 0
-Graph density: 0.004561
-Connected components: 1
-Largest component: 881 nodes (100.0% of the graph)
-Average clustering coefficient: 0.0137
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1740,986 +1124,23 @@ Average clustering coefficient: 0.0137
 <span class="c1"># the clinical notes at the top of the notebook.</span>
 <span class="n">disease_hits_by_sample</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="k">for</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">genes</span> <span class="ow">in</span> <span class="n">top_genes_by_sample</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">mapped</span> <span class="o">=</span> <span class="n">map_genes_to_kg</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">genes</span><span class="p">)</span>
-    <span class="n">n_in_kg</span> <span class="o">=</span> <span class="n">mapped</span><span class="p">[</span><span class="s2">&quot;in_kg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">------------------</span>
+<span class="sd">YOUR CODE HERE</span>
+<span class="sd">------------------</span>
+<span class="sd">1. Loop over each sample and its associated top genes</span>
 
-    <span class="n">diseases</span> <span class="o">=</span> <span class="n">diseases_for_genes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-    <span class="n">disease_hits_by_sample</span><span class="p">[</span><span class="n">sample_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">diseases</span>
+<span class="sd">2. Map the genes to the knowledge graph and count how many are found</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== </span><span class="si">{</span><span class="n">sample_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">n_in_kg</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mapped</span><span class="p">)</span><span class="si">}</span><span class="s2"> genes found in KG ===&quot;</span><span class="p">)</span>
-    <span class="n">display</span><span class="p">(</span><span class="n">diseases</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="sd">3. Retrieve the top 30 diseases associated with those genes from the </span>
+<span class="sd">   knowledge graph</span>
+
+<span class="sd">4. Store the disease results and print a summary showing how many </span>
+<span class="sd">   genes were matched, then display the top 10 diseases</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_0: 8 / 84 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0006512</td>
-      <td>estrogen-receptor positive breast cancer</td>
-      <td>4</td>
-      <td>0.342725</td>
-      <td>ARHGEF38, CCDC170, ESR1, NEK10</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0000618</td>
-      <td>Her2-receptor negative breast cancer</td>
-      <td>4</td>
-      <td>0.237250</td>
-      <td>CCDC170, DNER, ESR1, NEK10</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0006513</td>
-      <td>estrogen-receptor negative breast cancer</td>
-      <td>3</td>
-      <td>0.305100</td>
-      <td>CCDC170, ESR1, NEK10</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0007254</td>
-      <td>breast cancer</td>
-      <td>2</td>
-      <td>0.681400</td>
-      <td>ERBB2, ESR1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0004950</td>
-      <td>gastric carcinoma</td>
-      <td>2</td>
-      <td>0.432450</td>
-      <td>ERBB2, ESR1</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0004989</td>
-      <td>breast carcinoma</td>
-      <td>2</td>
-      <td>0.704800</td>
-      <td>ERBB2, ESR1</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>MONDO_0006244</td>
-      <td>HER2 positive breast carcinoma</td>
-      <td>2</td>
-      <td>0.541300</td>
-      <td>ERBB2, ESR1</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0021115</td>
-      <td>luminal B breast carcinoma</td>
-      <td>2</td>
-      <td>0.373450</td>
-      <td>CCDC170, ESR1</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>MONDO_0004988</td>
-      <td>breast adenocarcinoma</td>
-      <td>2</td>
-      <td>0.581300</td>
-      <td>ERBB2, ESR1</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0005298</td>
-      <td>osteoporosis</td>
-      <td>2</td>
-      <td>0.567900</td>
-      <td>CCDC170, ESR1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_1: 8 / 89 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0021115</td>
-      <td>luminal B breast carcinoma</td>
-      <td>3</td>
-      <td>0.331667</td>
-      <td>ESR1, FOXA1, GATA3</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0004988</td>
-      <td>breast adenocarcinoma</td>
-      <td>3</td>
-      <td>0.548900</td>
-      <td>ESR1, FOXA1, GATA3</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0006116</td>
-      <td>breast carcinoma by gene expression profile</td>
-      <td>3</td>
-      <td>0.370000</td>
-      <td>ESR1, FOXA1, GATA3</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0005590</td>
-      <td>breast ductal adenocarcinoma</td>
-      <td>3</td>
-      <td>0.379933</td>
-      <td>ESR1, FOXA1, GATA3</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0005298</td>
-      <td>osteoporosis</td>
-      <td>2</td>
-      <td>0.577850</td>
-      <td>ESR1, PGR</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0000552</td>
-      <td>breast lobular carcinoma</td>
-      <td>2</td>
-      <td>0.379500</td>
-      <td>ESR1, FOXA1</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>EFO_0009782</td>
-      <td>progesterone-receptor positive breast cancer</td>
-      <td>2</td>
-      <td>0.178700</td>
-      <td>ESR1, THSD4</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0005063</td>
-      <td>medullary breast carcinoma</td>
-      <td>2</td>
-      <td>0.139350</td>
-      <td>ESR1, MUC16</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>MONDO_0004379</td>
-      <td>female breast carcinoma</td>
-      <td>2</td>
-      <td>0.324100</td>
-      <td>ESR1, GATA3</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0000618</td>
-      <td>Her2-receptor negative breast cancer</td>
-      <td>2</td>
-      <td>0.313500</td>
-      <td>ESR1, THSD4</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_2: 4 / 85 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0003024</td>
-      <td>breast angiosarcoma</td>
-      <td>2</td>
-      <td>0.08565</td>
-      <td>ADIPOQ, IL33</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0004979</td>
-      <td>asthma</td>
-      <td>1</td>
-      <td>0.71850</td>
-      <td>IL33</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0008315</td>
-      <td>prostate cancer</td>
-      <td>1</td>
-      <td>0.79930</td>
-      <td>AR</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0005298</td>
-      <td>osteoporosis</td>
-      <td>1</td>
-      <td>0.48990</td>
-      <td>AR</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0005590</td>
-      <td>breast ductal adenocarcinoma</td>
-      <td>1</td>
-      <td>0.37290</td>
-      <td>AR</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0006244</td>
-      <td>HER2 positive breast carcinoma</td>
-      <td>1</td>
-      <td>0.37000</td>
-      <td>AR</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>MONDO_0006043</td>
-      <td>metaplastic breast carcinoma</td>
-      <td>1</td>
-      <td>0.27840</td>
-      <td>AR</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0004379</td>
-      <td>female breast carcinoma</td>
-      <td>1</td>
-      <td>0.27810</td>
-      <td>AR</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>EFO_0009782</td>
-      <td>progesterone-receptor positive breast cancer</td>
-      <td>1</td>
-      <td>0.07400</td>
-      <td>AR</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0005180</td>
-      <td>Parkinson disease</td>
-      <td>1</td>
-      <td>0.61020</td>
-      <td>MAPT</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_3: 11 / 91 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0006512</td>
-      <td>estrogen-receptor positive breast cancer</td>
-      <td>2</td>
-      <td>0.3263</td>
-      <td>ARHGEF38, NEK10</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0006513</td>
-      <td>estrogen-receptor negative breast cancer</td>
-      <td>2</td>
-      <td>0.2624</td>
-      <td>LGR6, NEK10</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0021115</td>
-      <td>luminal B breast carcinoma</td>
-      <td>2</td>
-      <td>0.2775</td>
-      <td>ERBB4, GATA3</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0004988</td>
-      <td>breast adenocarcinoma</td>
-      <td>1</td>
-      <td>0.5676</td>
-      <td>GATA3</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0005298</td>
-      <td>osteoporosis</td>
-      <td>1</td>
-      <td>0.4447</td>
-      <td>PGR</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0005147</td>
-      <td>type 1 diabetes mellitus</td>
-      <td>1</td>
-      <td>0.5100</td>
-      <td>SLC5A1</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>MONDO_0005300</td>
-      <td>chronic kidney disease</td>
-      <td>1</td>
-      <td>0.4716</td>
-      <td>SLC5A1</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0004379</td>
-      <td>female breast carcinoma</td>
-      <td>1</td>
-      <td>0.3700</td>
-      <td>GATA3</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>MONDO_0005590</td>
-      <td>breast ductal adenocarcinoma</td>
-      <td>1</td>
-      <td>0.3731</td>
-      <td>GATA3</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0006256</td>
-      <td>invasive breast carcinoma</td>
-      <td>1</td>
-      <td>0.3772</td>
-      <td>GATA3</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_4: 4 / 82 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0005148</td>
-      <td>type 2 diabetes mellitus</td>
-      <td>1</td>
-      <td>0.8566</td>
-      <td>ABCC8</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0006513</td>
-      <td>estrogen-receptor negative breast cancer</td>
-      <td>1</td>
-      <td>0.2838</td>
-      <td>OSR1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0000552</td>
-      <td>breast lobular carcinoma</td>
-      <td>1</td>
-      <td>0.3700</td>
-      <td>AFF3</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0006116</td>
-      <td>breast carcinoma by gene expression profile</td>
-      <td>1</td>
-      <td>0.2775</td>
-      <td>AFF3</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0003024</td>
-      <td>breast angiosarcoma</td>
-      <td>1</td>
-      <td>0.0681</td>
-      <td>ADIPOQ</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_5: 4 / 85 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0002486</td>
-      <td>lobular neoplasia</td>
-      <td>1</td>
-      <td>0.0812</td>
-      <td>CD36</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0003024</td>
-      <td>breast angiosarcoma</td>
-      <td>1</td>
-      <td>0.0681</td>
-      <td>ADIPOQ</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0005063</td>
-      <td>medullary breast carcinoma</td>
-      <td>1</td>
-      <td>0.0925</td>
-      <td>MUC16</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0006117</td>
-      <td>breast diffuse large B-cell lymphoma</td>
-      <td>1</td>
-      <td>0.0925</td>
-      <td>MUC16</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0006512</td>
-      <td>estrogen-receptor positive breast cancer</td>
-      <td>1</td>
-      <td>0.3104</td>
-      <td>ARHGEF38</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_6: 4 / 83 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0005061</td>
-      <td>lung adenocarcinoma</td>
-      <td>2</td>
-      <td>0.63250</td>
-      <td>EGFR, ERBB4</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0006804</td>
-      <td>inflammatory breast carcinoma</td>
-      <td>2</td>
-      <td>0.12815</td>
-      <td>EGFR, ERBB4</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0005301</td>
-      <td>multiple sclerosis</td>
-      <td>1</td>
-      <td>0.59030</td>
-      <td>KCNG1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0007254</td>
-      <td>breast cancer</td>
-      <td>1</td>
-      <td>0.67900</td>
-      <td>EGFR</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0008170</td>
-      <td>ovarian cancer</td>
-      <td>1</td>
-      <td>0.53470</td>
-      <td>FOLR1</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0018177</td>
-      <td>glioblastoma</td>
-      <td>1</td>
-      <td>0.65510</td>
-      <td>EGFR</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>MONDO_0005575</td>
-      <td>colorectal cancer</td>
-      <td>1</td>
-      <td>0.61490</td>
-      <td>EGFR</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0006043</td>
-      <td>metaplastic breast carcinoma</td>
-      <td>1</td>
-      <td>0.27970</td>
-      <td>EGFR</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>MONDO_0000616</td>
-      <td>progesterone-receptor negative breast cancer</td>
-      <td>1</td>
-      <td>0.07400</td>
-      <td>EGFR</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0004950</td>
-      <td>gastric carcinoma</td>
-      <td>1</td>
-      <td>0.37980</td>
-      <td>ERBB4</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_7: 6 / 78 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0007254</td>
-      <td>breast cancer</td>
-      <td>1</td>
-      <td>0.6138</td>
-      <td>TOP2A</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0008170</td>
-      <td>ovarian cancer</td>
-      <td>1</td>
-      <td>0.5534</td>
-      <td>TOP2A</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0004988</td>
-      <td>breast adenocarcinoma</td>
-      <td>1</td>
-      <td>0.3787</td>
-      <td>TOP2A</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0006804</td>
-      <td>inflammatory breast carcinoma</td>
-      <td>1</td>
-      <td>0.2988</td>
-      <td>TOP2A</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0006256</td>
-      <td>invasive breast carcinoma</td>
-      <td>1</td>
-      <td>0.2895</td>
-      <td>TOP2A</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0005023</td>
-      <td>ductal breast carcinoma in situ</td>
-      <td>1</td>
-      <td>0.2668</td>
-      <td>TOP2A</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>MONDO_0006116</td>
-      <td>breast carcinoma by gene expression profile</td>
-      <td>1</td>
-      <td>0.2775</td>
-      <td>NTRK3</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0005051</td>
-      <td>invasive lobular breast carcinoma</td>
-      <td>1</td>
-      <td>0.0833</td>
-      <td>NTRK3</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>MONDO_0005300</td>
-      <td>chronic kidney disease</td>
-      <td>1</td>
-      <td>0.5778</td>
-      <td>AGTR1</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0005090</td>
-      <td>schizophrenia</td>
-      <td>1</td>
-      <td>0.5300</td>
-      <td>GPM6A</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_8: 5 / 85 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0005298</td>
-      <td>osteoporosis</td>
-      <td>2</td>
-      <td>0.57785</td>
-      <td>ESR1, PGR</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0021115</td>
-      <td>luminal B breast carcinoma</td>
-      <td>2</td>
-      <td>0.35875</td>
-      <td>ESR1, FOXA1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>MONDO_0004988</td>
-      <td>breast adenocarcinoma</td>
-      <td>2</td>
-      <td>0.53955</td>
-      <td>ESR1, FOXA1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MONDO_0000552</td>
-      <td>breast lobular carcinoma</td>
-      <td>2</td>
-      <td>0.37950</td>
-      <td>ESR1, FOXA1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>MONDO_0006513</td>
-      <td>estrogen-receptor negative breast cancer</td>
-      <td>2</td>
-      <td>0.34155</td>
-      <td>ESR1, OSR1</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>MONDO_0005590</td>
-      <td>breast ductal adenocarcinoma</td>
-      <td>2</td>
-      <td>0.38335</td>
-      <td>ESR1, FOXA1</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>MONDO_0006116</td>
-      <td>breast carcinoma by gene expression profile</td>
-      <td>2</td>
-      <td>0.37000</td>
-      <td>ESR1, FOXA1</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>MONDO_0004989</td>
-      <td>breast carcinoma</td>
-      <td>1</td>
-      <td>0.71190</td>
-      <td>ESR1</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>MONDO_0006244</td>
-      <td>HER2 positive breast carcinoma</td>
-      <td>1</td>
-      <td>0.46140</td>
-      <td>ESR1</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>MONDO_0005628</td>
-      <td>male breast carcinoma</td>
-      <td>1</td>
-      <td>0.42640</td>
-      <td>ESR1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Pat_9: 3 / 83 genes found in KG ===
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>disease_id</th>
-      <th>name</th>
-      <th>n_genes</th>
-      <th>mean_score</th>
-      <th>genes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>MONDO_0003024</td>
-      <td>breast angiosarcoma</td>
-      <td>2</td>
-      <td>0.09795</td>
-      <td>MMP7, PIGR</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>MONDO_0005148</td>
-      <td>type 2 diabetes mellitus</td>
-      <td>1</td>
-      <td>0.85660</td>
-      <td>ABCC8</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 </section>
 <section id="your-answer-match-each-sample-to-a-patient">
@@ -2741,20 +1162,6 @@ and your final answer should contain 5 Luminal A and 5 Luminal B matches.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Pat_0&#39;: None,
- &#39;Pat_1&#39;: None,
- &#39;Pat_2&#39;: None,
- &#39;Pat_3&#39;: None,
- &#39;Pat_4&#39;: None,
- &#39;Pat_5&#39;: None,
- &#39;Pat_6&#39;: None,
- &#39;Pat_7&#39;: None,
- &#39;Pat_8&#39;: None,
- &#39;Pat_9&#39;: None}
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2771,20 +1178,6 @@ and your final answer should contain 5 Luminal A and 5 Luminal B matches.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AssertionError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">26</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Sanity checks before you submit.</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sample_to_patient</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="s2">&quot;Every Pat_i needs a match.&quot;</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">sample_to_patient</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">missing_ids</span><span class="p">),</span> <span class="s2">&quot;Every TCGA ID should be used exactly once.&quot;</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> 
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">n_luma</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicted_subtype</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sample_to_patient</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="s2">&quot;LumA&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-
-<span class="ne">AssertionError</span>: Every Pat_i needs a match.
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 </section>
@@ -2798,16 +1191,16 @@ and your final answer should contain 5 Luminal A and 5 Luminal B matches.</p>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "eccb_2026"
         },
         kernelOptions: {
-            name: "python3",
+            name: "eccb_2026",
             path: "./session-4-kg-query-mini-challenge"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'eccb_2026'</script>
 
                 </article>
               

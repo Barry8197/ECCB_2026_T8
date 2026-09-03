@@ -64,7 +64,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Part 3 — Practical: Querying the Knowledge Graph" href="part-3-querying-the-knowledge-graph.html" />
-    <link rel="prev" title="Part 1 — What is a Network, and What is a Knowledge Graph?" href="part-1-networks-and-knowledge-graphs.html" />
+    <link rel="prev" title="Part 1 — Networks and Knowledge Graphs: Key Concepts" href="part-1-networks-and-knowledge-graphs.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -396,7 +396,7 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html">Part 1 — What is a Network, and What is a Knowledge Graph?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html">Part 1 — Networks and Knowledge Graphs: Key Concepts</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 2 — Building a Knowledge Graph with NetworkX</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-3-querying-the-knowledge-graph.html">Part 3 — Practical: Querying the Knowledge Graph</a></li>
 
@@ -548,8 +548,8 @@ that nothing is magic. A knowledge graph is <em>just</em> a loop over two tables
 </div>
 </div>
 </div>
-<section id="undirected-with-the-direction-kept">
-<h3>Undirected, with the direction kept<a class="headerlink" href="#undirected-with-the-direction-kept" title="Link to this heading">#</a></h3>
+<section id="keeping-track-of-directionality">
+<h3>Keeping track of directionality<a class="headerlink" href="#keeping-track-of-directionality" title="Link to this heading">#</a></h3>
 <p>We are building an <strong>undirected</strong> graph, because degree and components behave more
 intuitively that way. But <code class="docutils literal notranslate"><span class="pre">is_a</span></code> genuinely <em>is</em> directional, and an undirected graph
 does not remember which way round an edge was added.</p>
@@ -573,8 +573,8 @@ rather than an error.</p>
 </div>
 </section>
 </section>
-<section id="what-have-we-got">
-<h2>3. What have we got?<a class="headerlink" href="#what-have-we-got" title="Link to this heading">#</a></h2>
+<section id="exploring-the-graph">
+<h2>3. Exploring the graph<a class="headerlink" href="#exploring-the-graph" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">print_graph_info</span></code> is the original summary function, extended to break the counts
 down by type — on a typed graph the totals alone hide most of what matters.</p>
 <div class="cell docutils container">
@@ -601,8 +601,8 @@ diseases connect to genes, but genes rarely connect to genes. Remember this numb
 — it is why the projection in Part 3 is necessary.</p></li>
 </ul>
 </details></section>
-<section id="degree-who-is-connected-to-what">
-<h2>4. Degree: who is connected to what?<a class="headerlink" href="#degree-who-is-connected-to-what" title="Link to this heading">#</a></h2>
+<section id="degree-how-are-connections-distributed-around-nodes">
+<h2>4. Degree: how are connections distributed around nodes<a class="headerlink" href="#degree-how-are-connections-distributed-around-nodes" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span><span class="o">.</span><span class="n">plot_degree_distribution</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">by_type</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -622,17 +622,16 @@ Let us see what is actually in the tail.</p>
 <section id="the-hubs-are-all-diseases-and-that-is-a-construction-artefact">
 <h3>The hubs are all diseases — and that is a construction artefact<a class="headerlink" href="#the-hubs-are-all-diseases-and-that-is-a-construction-artefact" title="Link to this heading">#</a></h3>
 <p>This is the single most important habit to build today: <strong>when a graph tells us
-something, ask whether the data or the construction said it.</strong></p>
-<p>Here, the answer is construction. <code class="docutils literal notranslate"><span class="pre">build_kg_data.py</span></code> kept the top 30 genes <em>per
+something, ask why?</strong></p>
+<p>Here, the answer is the construction approach. <code class="docutils literal notranslate"><span class="pre">build_kg_data.py</span></code> kept the top 30 genes <em>per
 disease</em>. So every disease has at most 30 gene edges plus its <code class="docutils literal notranslate"><span class="pre">is_a</span></code> edges, while a
 gene only gets an edge for each disease it happens to be top-30 in. Diseases were
 always going to be the hubs.</p>
-<p>Compare that to what a hub means in the inferred co-expression network we built in
+<p>Compare that to what a hub means in the computed co-expression network we built in
 Part 1 §7, where a hub gene really is a gene that correlates with unusually many
 others. That is not free of artefacts either — its top hubs are <code class="docutils literal notranslate"><span class="pre">CD4</span></code>, <code class="docutils literal notranslate"><span class="pre">PTPN22</span></code>,
 <code class="docutils literal notranslate"><span class="pre">IL2RA</span></code> and <code class="docutils literal notranslate"><span class="pre">BTK</span></code>, immune genes that track how much immune infiltrate each tumour
-happens to contain. Both graphs have hubs; in each case the first question is what
-put them there.</p>
+happens to contain. Both graphs have hubs; but they arise for different reasons.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Degree summarised by node type, which makes the asymmetry obvious.</span>
@@ -656,7 +655,7 @@ implicated across many different diseases.</p>
     <span class="p">[{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;degree&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">n</span><span class="p">)}</span>
      <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;gene&quot;</span><span class="p">)]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">gene_degrees</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gene_degrees</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -736,12 +735,13 @@ pipeline saw the two mentioned together.</p>
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> and <code class="docutils literal notranslate"><span class="pre">TUBB</span></code> have almost the same overall score. But <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> scores through
-<code class="docutils literal notranslate"><span class="pre">genetic_association</span></code> and has <strong>no drug evidence at all</strong>, while <code class="docutils literal notranslate"><span class="pre">TUBB</span></code> scores
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>`BRCA1` and `TUBB` have almost the same overall score. But `BRCA1` scores through
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">genetic_association</span></code> and has <strong>no drug evidence at all</strong>, while <code class="docutils literal notranslate"><span class="pre">TUBB</span></code> scores
 through <code class="docutils literal notranslate"><span class="pre">known_drug</span></code> and has <strong>no genetic evidence at all</strong>.</p>
 <p>One is a cause. The other is a treatment target. The overall score, which is what
-most people use, reports them identically. Hold onto that — it is the whole of
-Section B in Part 3.</p>
+most people use, reports them identically. Hold onto that — we return to this in Part 3.</p>
 </section>
 <section id="sparsification-turning-a-dial-and-watching-the-graph-change">
 <h2>7. Sparsification: turning a dial and watching the graph change<a class="headerlink" href="#sparsification-turning-a-dial-and-watching-the-graph-change" title="Link to this heading">#</a></h2>
@@ -785,8 +785,8 @@ node count — and every ontology question we ask it afterwards returns nothing.
 becomes a different graph.</p>
 </section>
 </section>
-<section id="seeing-it">
-<h2>8. Seeing it<a class="headerlink" href="#seeing-it" title="Link to this heading">#</a></h2>
+<section id="visualising-the-knowledge-graph">
+<h2>8. Visualising the knowledge graph<a class="headerlink" href="#visualising-the-knowledge-graph" title="Link to this heading">#</a></h2>
 <p>Layout algorithms on an 881-node graph produce a hairball. That is honest — it <em>is</em>
 a hairball — but colouring by type at least shows the structure.</p>
 <div class="cell docutils container">
@@ -820,8 +820,8 @@ near-zero clustering coefficient predicted.</p>
 </div>
 </div>
 </section>
-<section id="annotation-sparsity-the-edges-that-should-be-there-and-are-not">
-<h2>9. Annotation sparsity: the edges that should be there and are not<a class="headerlink" href="#annotation-sparsity-the-edges-that-should-be-there-and-are-not" title="Link to this heading">#</a></h2>
+<section id="understanding-annotation-sparsity">
+<h2>9. Understanding annotation sparsity<a class="headerlink" href="#understanding-annotation-sparsity" title="Link to this heading">#</a></h2>
 <p>We finish with the most important idea in the notebook.</p>
 <p><code class="docutils literal notranslate"><span class="pre">build_kg_data.py</span></code> asked Open Targets for <strong>99</strong> diseases: breast cancer, its 74
 subtypes from the ontology, and 24 comparison diseases. The graph has <strong>90</strong>. Nine
@@ -882,14 +882,55 @@ recover from case 3 by asking about a parent term instead.</p>
 each whether it is a genuine negative or an annotation gap.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: count the genes attached to each disease and sort ascending</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">#################################################</span>
+<span class="sd">                YOUR CODE HERE</span>
+<span class="sd">#################################################</span>
+
+<span class="sd">Which diseases have the fewest genes attached to them?</span>
+
+<span class="sd">- Make an empty list called `rows`.</span>
+<span class="sd">- Loop over every disease, using `h.nodes_of_type(G, &quot;disease&quot;)`.</span>
+<span class="sd">- For each disease `d`, append a dictionary to `rows` with three keys:</span>
+<span class="sd">      &quot;name&quot;   -&gt; the disease name,       `G.nodes[d][&quot;name&quot;]`</span>
+<span class="sd">      &quot;genes&quot;  -&gt; how many genes it has,  `len(h.genes_for_disease(G, d))`</span>
+<span class="sd">      &quot;degree&quot; -&gt; its total degree,       `G.degree(d)`</span>
+<span class="sd">- Turn `rows` into a DataFrame called `gene_counts`, sorted by &quot;genes&quot;</span>
+<span class="sd">  ascending, so the emptiest diseases come first.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
 <span class="c1">### YOUR CODE HERE ###</span>
 
-<span class="n">gene_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">n_zero</span> <span class="o">=</span> <span class="p">(</span><span class="n">gene_counts</span><span class="p">[</span><span class="s2">&quot;genes&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">n_cap</span> <span class="o">=</span> <span class="p">(</span><span class="n">gene_counts</span><span class="p">[</span><span class="s2">&quot;genes&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_zero</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_counts</span><span class="p">)</span><span class="si">}</span><span class="s2"> diseases have NO gene associations at all&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_cap</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_counts</span><span class="p">)</span><span class="si">}</span><span class="s2"> sit at exactly 30 - the cap the build script applied&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_counts</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">n_zero</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">n_cap</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> are somewhere in between</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">gene_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p><strong>Every one of them is zero — and that is the answer.</strong> Twenty of the ninety
+diseases have no gene associations at all.</p>
+<p>Look at <em>what</em> they are: <code class="docutils literal notranslate"><span class="pre">malignant</span> <span class="pre">breast</span> <span class="pre">phyllodes</span> <span class="pre">tumor</span></code>, <code class="docutils literal notranslate"><span class="pre">mammary</span> <span class="pre">Paget</span> <span class="pre">disease</span></code>, <code class="docutils literal notranslate"><span class="pre">signet</span> <span class="pre">ring</span> <span class="pre">cell</span> <span class="pre">breast</span> <span class="pre">carcinoma</span></code>, <code class="docutils literal notranslate"><span class="pre">breast</span> <span class="pre">leiomyosarcoma</span></code>. Rare
+tumour subtypes. Their only edges are <code class="docutils literal notranslate"><span class="pre">is_a</span></code> links to a parent term — they were
+pulled into the graph because they sit in the ontology underneath something we
+asked for, not because anybody ever recorded a gene for them.</p>
+<p>So which of the three cases above is this? Almost certainly <strong>case 2, an
+annotation gap</strong>. It is not that these tumours have no genetic basis; it is that
+nobody has incorporated this information into the data sources we’re using. Ask this graph “which genes cause mammary Paget
+disease?” and you get an empty set — and an empty set is indistinguishable from
+a confident “none”.</p>
+<p>Now look at the other end of the distribution. <strong>Fifty of the ninety diseases
+have exactly 30 genes.</strong> Not roughly thirty — exactly thirty, every time. That is
+the <code class="docutils literal notranslate"><span class="pre">--top-genes</span> <span class="pre">30</span></code> cap in <code class="docutils literal notranslate"><span class="pre">build_kg_data.py</span></code>, and it is the same thing that
+made every hub a disease a few cells ago.</p>
+<p>So this one column contains both failure modes at once: a fifth of the graph is
+empty because of curation, and more than half of it is flat because of a
+command-line argument. Neither is biology.</p>
 </section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
@@ -920,16 +961,16 @@ the gaps, and finding which diseases share genes.</p>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb_2026"
+            mode: "python"
         },
         kernelOptions: {
-            name: "eccb_2026",
+            name: "python3",
             path: "./session-1-intro-networks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb_2026'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -946,7 +987,7 @@ the gaps, and finding which diseases share genes.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Part 1 — What is a Network, and What is a Knowledge Graph?</p>
+        <p class="prev-next-title">Part 1 — Networks and Knowledge Graphs: Key Concepts</p>
       </div>
     </a>
     <a class="right-next"
@@ -979,11 +1020,11 @@ the gaps, and finding which diseases share genes.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-the-graph-explicitly">2. Building the graph, explicitly</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#undirected-with-the-direction-kept">Undirected, with the direction kept</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#keeping-track-of-directionality">Keeping track of directionality</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-have-we-got">3. What have we got?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-who-is-connected-to-what">4. Degree: who is connected to what?</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-the-graph">3. Exploring the graph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-how-are-connections-distributed-around-nodes">4. Degree: how are connections distributed around nodes</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-hubs-are-all-diseases-and-that-is-a-construction-artefact">The hubs are all diseases — and that is a construction artefact</a></li>
 </ul>
 </li>
@@ -993,8 +1034,8 @@ the gaps, and finding which diseases share genes.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-trap">The trap</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seeing-it">8. Seeing it</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#annotation-sparsity-the-edges-that-should-be-there-and-are-not">9. Annotation sparsity: the edges that should be there and are not</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualising-the-knowledge-graph">8. Visualising the knowledge graph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-annotation-sparsity">9. Understanding annotation sparsity</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 </ul>

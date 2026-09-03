@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Part 1 — What is a Network, and What is a Knowledge Graph? &#8212; ECCB 2026 T8</title>
+    <title>Part 1 — Networks and Knowledge Graphs: Key Concepts &#8212; ECCB 2026 T8</title>
   
   
   
@@ -396,7 +396,7 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 1 — What is a Network, and What is a Knowledge Graph?</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 1 — Networks and Knowledge Graphs: Key Concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-2-building-a-knowledge-graph.html">Part 2 — Building a Knowledge Graph with NetworkX</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-3-querying-the-knowledge-graph.html">Part 3 — Practical: Querying the Knowledge Graph</a></li>
 
@@ -449,7 +449,7 @@
     
     <li class="breadcrumb-item"><a href="intro.html" class="nav-link">Session 1</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 1 — What is a Network, and What is a Knowledge Graph?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Part 1 — Networks and Knowledge Graphs: Key Concepts</span></li>
   </ul>
 </nav>
 </div>
@@ -466,13 +466,13 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="part-1-what-is-a-network-and-what-is-a-knowledge-graph">
-<h1>Part 1 — What is a Network, and What is a Knowledge Graph?<a class="headerlink" href="#part-1-what-is-a-network-and-what-is-a-knowledge-graph" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="part-1-networks-and-knowledge-graphs-key-concepts">
+<h1>Part 1 — Networks and Knowledge Graphs: Key Concepts<a class="headerlink" href="#part-1-networks-and-knowledge-graphs-key-concepts" title="Link to this heading">#</a></h1>
 <p>This notebook covers the vocabulary for the rest of the day. It is deliberately
-light on code: the point is to be able to look at a biological question and say
-what the nodes are, what the edges are, and <em>where the edges came from</em> — because
-that last question turns out to matter more than anything else.</p>
-<p>We then meet the specific knowledge graph used in Sessions 1, 3 and 4: a
+light on code: the aim is to look at a biological question and understand
+what the nodes are, what the edges are, and <em>where the edges come from</em> — because
+that last question turns out to be crucial.</p>
+<p>We then look at the knowledge graph from Sessions 1, 3 and 4: a
 breast-cancer-focused graph built from <a class="reference external" href="https://platform.opentargets.org/">Open Targets</a>
 and the <a class="reference external" href="https://mondo.monarchinitiative.org/">MONDO Disease Ontology</a>.</p>
 <section id="learning-objectives">
@@ -482,7 +482,7 @@ and the <a class="reference external" href="https://mondo.monarchinitiative.org/
 <li><p>Name the parts of a graph: vertex, edge, degree, path, component.</p></li>
 <li><p>Distinguish a <strong>directed</strong> from an <strong>undirected</strong> graph, and say why it matters here.</p></li>
 <li><p>Build a small graph by hand in NetworkX and inspect it.</p></li>
-<li><p>Explain the difference between an <strong>inferred</strong> network and a <strong>curated</strong> knowledge graph.</p></li>
+<li><p>Explain the difference between an <strong>computed</strong> network and a <strong>curated</strong> knowledge graph.</p></li>
 <li><p><strong>Build one of each over the same 737 genes, and say why they disagree.</strong></p></li>
 <li><p>Say what makes a graph a <em>knowledge</em> graph: typed nodes, typed edges, and provenance.</p></li>
 <li><p>Describe where our data comes from and under what licence.</p></li>
@@ -581,10 +581,7 @@ intuitive that way, and keep the direction as an edge attribute so nothing is lo
 </div>
 </div>
 </div>
-<p>Notice that <code class="docutils literal notranslate"><span class="pre">ovarian</span> <span class="pre">cancer</span></code> has degree 1 and <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> has degree 2. In a graph this
-small that is trivia. In a graph of 100,000 nodes, degree is the first thing we
-look at — it tells us which entities the underlying literature has paid attention
-to. Keep that phrasing in mind: <strong>degree measures attention, not importance.</strong></p>
+<p>Notice that <code class="docutils literal notranslate"><span class="pre">ovarian</span> <span class="pre">cancer</span></code> has degree 1 and <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> has degree 2. This mini-graph is a toy, so those particular numbers mean nothing. In a graph of 100,000 nodes degree is one of the first things we look at — but be careful what you read into it. Degree measures <strong>connectivity</strong>; in a curated graph, connectivity mostly reflects how much attention an entity has received. Keep that phrasing in mind: <strong>degree measures attention, not importance.</strong> A low-degree node may simply be one nobody has studied yet.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Neighbours and paths - the two operations that make a graph useful.</span>
@@ -598,18 +595,14 @@ to. Keep that phrasing in mind: <strong>degree measures attention, not importanc
 <p>That path — <code class="docutils literal notranslate"><span class="pre">ovarian</span> <span class="pre">cancer</span> <span class="pre">→</span> <span class="pre">BRCA1</span> <span class="pre">→</span> <span class="pre">breast</span> <span class="pre">cancer</span> <span class="pre">→</span> <span class="pre">BRCA2</span></code> — is a <em>tiny</em> example
 of the thing this whole day is building towards. Nobody recorded a fact linking
 ovarian cancer to BRCA2 directly. The graph produced it by composition.</p>
-<p>That is what a knowledge graph is <em>for</em>: answering questions nobody explicitly
-stored the answer to.</p>
+<p>That is the kind of question that we want to use a knowledge graph <em>for</em>: answering questions that may not be explicitly answered elsewhere. Crucially we also understand (because we know how the knowledge graph was constructed) <strong>why</strong> that relationship exists.</p>
 </section>
 <section id="two-very-different-ways-to-get-a-network">
 <h2>3. Two very different ways to get a network<a class="headerlink" href="#two-very-different-ways-to-get-a-network" title="Link to this heading">#</a></h2>
 <p>Both of the pictures below are networks. They are built from opposite directions,
 and confusing them is the most common mistake in this field.</p>
-<p><img alt="Inferred vs curated" src="../_images/curated_vs_inferred.png" /></p>
-<p><strong>Inferred networks</strong> are <em>computed from measurements</em>. In gene co-expression work
-we take a gene expression matrix, correlate every gene against every other gene,
-and draw an edge wherever the correlation clears a threshold. The edges are a
-<strong>statistical claim about our data</strong>.</p>
+<p><img alt="Computed vs curated" src="../_images/curated_vs_computed.png" /></p>
+<p><strong>Co-expression networks</strong> are <em>computed from measurements</em>. We take a gene expression matrix, calculate the correlation between every gene pair, then draw an edge wherever the correlation clears a threshold. The edges are the result of a <strong>statistical calculation on our data</strong>.</p>
 <ul class="simple">
 <li><p>One node type (genes, or patients).</p></li>
 <li><p>Edge weights are correlations.</p></li>
@@ -617,8 +610,7 @@ and draw an edge wherever the correlation clears a threshold. The edges are a
 <li><p>The network can contain relationships nobody has ever described before. That is
 the point of building it — it is a hypothesis generator.</p></li>
 </ul>
-<p><strong>Curated knowledge graphs</strong> are <em>read out of a database of recorded facts</em>. Somebody
-asserted that this gene is associated with that disease, and the graph records it.</p>
+<p><strong>Curated knowledge graphs</strong> are a <em>representation of assertions compiled from sources of recorded facts</em>. Somebody asserted that a particular gene is associated with a particular disease, and the graph captures that assertion.</p>
 <ul class="simple">
 <li><p>Several node types (genes, diseases, drugs, phenotypes, codes…).</p></li>
 <li><p>Edges are typed: <em>this kind</em> of relationship, not just “related”.</p></li>
@@ -628,34 +620,27 @@ asserted that this gene is associated with that disease, and the graph records i
 </ul>
 <p>A knowledge graph is often described as a <strong>specialised class of network</strong>, and
 that is exactly right — the specialisation is those three bullets. Section 7
-builds both kinds over the same genes so the specialisation is something we can
-see rather than something we are told.</p>
+builds both kinds over the same genes so the specialisation is something we can see directly in those examples.</p>
 <section id="who-is-the-somebody">
 <h3>Who is the “somebody”?<a class="headerlink" href="#who-is-the-somebody" title="Link to this heading">#</a></h3>
-<p>Usually a <strong>curator</strong> — a biologist employed by a database to read the published
-literature and turn its findings into structured entries a computer can use.
-Reading a paper that reports a BRCA1 mutation in a breast cancer family, and
-writing a row that says <em>gene BRCA1, disease breast cancer, evidence PMID 12345</em>,
-is curation. The word covers automated sources too: text-mining pipelines and
-genome-wide association studies contribute entries the same way.</p>
+<p>This is often very hard to pin-down for any given source, but is important to understand as you make decisions about what to include in your knowledge graph. Often that somebody is a <strong>curator</strong> — someone with domain expertise employed to read sources like research papers and turn findings into structured entries. Reading a paper that reports a BRCA1 mutation in a breast cancer family, and writing a row that says <em>gene BRCA1, disease breast cancer, evidence PMID 12345</em>, is an example of curation. Crucially, much curation actually doesn’t involve a “somebody” but is performed computationally through, for example, text-mining and numerical assertions directly in experimental data such as genome-wide association studies. You can see that the fidelity and trustworthiness of those different types of sources are not the same.</p>
 <p>The consequence matters more than the definition. <strong>Every edge exists because a
-person or a pipeline put it there</strong> — which is why a knowledge graph can only ever
-tell us what has already been written down.</p>
+person or a pipeline put it there</strong> — we use these sources to directly build knowledge - understanding the curation processes by which those data arose is essential to have confidence in the graph you’ve built.</p>
 <details>
 <summary><b>Why does this distinction matter so much?</b> (click to expand)</summary>
 <p>Because the two answer different questions, and the failure modes are opposite.</p>
-<p>If we ask an <strong>inferred</strong> network “are these two genes related?” and it says yes,
-the risk is that the correlation is an artefact — batch effect, cell-type
-composition, a confounder.</p>
+<p>If we ask an <strong>computed</strong> network “are these two genes related?” and it says yes,
+the risk is that the correlation is an artefact arising from batch effect, cell-type
+composition, etc.</p>
 <p>If we ask a <strong>curated</strong> knowledge graph the same question and it says <em>no</em>, the
 risk is completely different: the absence of an edge does not mean the absence of
-a relationship. It very often means <strong>nobody has looked yet</strong>.</p>
+a relationship. It may just mean no data source has captured it yet.</p>
 <p>We see this concretely in Part 2, where the disease with the most genes in
 our graph is not the most important disease — it is the most <em>studied</em> one. And in
 Part 3, where a major breast cancer subtype turns out to have no gene associations
 at all, not because it has no genes, but because the evidence was filed under a
 different name.</p>
-<p>An inferred network is biased towards what we measured. A knowledge graph is
+<p>A computed network is biased towards what we measured. A knowledge graph is
 biased towards what somebody published. Neither bias is fixable by better code.</p>
 </details></section>
 </section>
@@ -749,10 +734,7 @@ bridge at the end of Part 3.</p>
 </section>
 <section id="the-data-files">
 <h2>6. The data files<a class="headerlink" href="#the-data-files" title="Link to this heading">#</a></h2>
-<p>The graph ships as four small files in <code class="docutils literal notranslate"><span class="pre">/data/session-1-data/</span></code>, generated by the <strong>developer</strong>
-scripts in <code class="docutils literal notranslate"><span class="pre">data-prep/</span></code> — <code class="docutils literal notranslate"><span class="pre">build_kg_data.py</span></code> downloads about 1.1 GB from Open
-Targets and cuts it down, and <code class="docutils literal notranslate"><span class="pre">build_coexpression_data.py</span></code> subsets the workshop
-expression matrix. We do not need to run either.</p>
+<p>The graph ships as four small files in <code class="docutils literal notranslate"><span class="pre">/data/session1-data/</span></code>, and are derived from scripts we developed for this workshop from downloads of c.1.1 GB from OpenTargets. These generation scripts are quite computationally expensive so we do not provide them here, but they will be made available on the workshop GitHub repo after the workshop.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>File</p></th>
@@ -814,10 +796,10 @@ spread evenly. Working out where it falls is the first exercise in Part 3.</p></
 </section>
 <section id="the-same-genes-two-networks">
 <h2>7. The same genes, two networks<a class="headerlink" href="#the-same-genes-two-networks" title="Link to this heading">#</a></h2>
-<p>Section 3 described inferred and curated networks as opposites. Here we build one
+<p>Section 3 described computed and curated networks as opposites. Here we build one
 of each and look at them, because the difference is much easier to believe once
 seen.</p>
-<p><code class="docutils literal notranslate"><span class="pre">/data/session-1-data/coexpr_expression.csv.gz</span></code> is the TCGA-BRCA transcriptomics matrix used in
+<p><code class="docutils literal notranslate"><span class="pre">coexpr_expression.csv.gz</span></code> is the TCGA-BRCA transcriptomics matrix used in
 Session 2, cut down to <strong>the genes that are already nodes in our graph</strong> — 737 of
 760; the other 23 simply were not measured. Same genes, same identifier space,
 two completely different ways of drawing edges between them.</p>
@@ -836,12 +818,23 @@ directly without any further processing.</p>
 </div>
 <section id="correlate-everything-against-everything">
 <h3>7.1 Correlate everything against everything<a class="headerlink" href="#correlate-everything-against-everything" title="Link to this heading">#</a></h3>
-<p>An inferred network is one line of statistics and one arbitrary decision.</p>
+<p>A computed network is one line of statistics and one arbitrary decision.</p>
 <p>The statistics: correlate all 737 genes pairwise, giving 271,216 gene pairs. The
 arbitrary decision: pick a threshold, and keep the pairs above it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: correlate every gene against every other gene</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">#################################################</span>
+<span class="sd">                YOUR CODE HERE</span>
+<span class="sd">#################################################</span>
+
+<span class="sd">Build the gene-by-gene correlation matrix from the expression data.</span>
+
+<span class="sd">- Use the `h.correlation_matrix` function.</span>
+<span class="sd">- It takes the `expression` DataFrame as its only argument.</span>
+<span class="sd">- Store the result in a variable called `correlations`.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
 <span class="c1">### YOUR CODE HERE ###</span>
 
 <span class="n">coexpr</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">coexpression_network</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">correlations</span><span class="o">=</span><span class="n">correlations</span><span class="p">)</span>
@@ -886,11 +879,25 @@ for its neighbours.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">load_kg</span><span class="p">()</span>
 <span class="n">brca1</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">gene_by_symbol</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;BRCA1&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;INFERRED — genes whose expression tracks BRCA1 across 500 patients:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;COMPUTED - Genes whose expression tracks BRCA1 across 500 patients:&quot;</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">coexpression_partners</span><span class="p">(</span><span class="n">correlations</span><span class="p">,</span> <span class="n">brca1</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
 
-<span class="c1"># TODO: one hop out from BRCA1, keeping disease neighbours</span>
-<span class="c1">### YOUR CODE HERE ###</span>
+
+<span class="c1"># --- WORKED EXAMPLE - read this one, do not write it -------------------------</span>
+<span class="c1"># Build a list of dictionaries, one per disease neighbour, then hand the list to</span>
+<span class="c1"># pandas. This is the commonest shape in the whole session and you will write it</span>
+<span class="c1"># yourself in Part 2, so it is worth following what each line does.</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">brca1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;disease&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;disease&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">brca1</span><span class="p">,</span> <span class="n">n</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">],</span>
+    <span class="p">})</span>
+
+<span class="n">curated</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CURATED — the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">curated</span><span class="p">)</span><span class="si">}</span><span class="s2"> diseases somebody recorded BRCA1 against:&quot;</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">curated</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
@@ -902,7 +909,7 @@ for its neighbours.</p>
 <p>The <strong>curated</strong> side returns diseases: breast cancer, ovarian cancer, hereditary
 breast and ovarian cancer syndrome. That is what BRCA1 is <em>known for</em>, because
 that is what people published about it.</p>
-<p>The <strong>inferred</strong> side returns genes, and they split into two groups:</p>
+<p>The <strong>computed</strong> side returns genes, and they split into two groups:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">PALB2</span></code> and <code class="docutils literal notranslate"><span class="pre">FANCD2</span></code> are genuine partners — BRCA1 works with both in homologous
 recombination repair. The correlation found real biology that the curated graph
@@ -913,13 +920,13 @@ BRCA1 is expressed in dividing cells, and in a tumour cohort <em>everything
 proliferative correlates with everything else proliferative</em>. This is a
 confound, not a discovery — and it outranks the real partners.</p></li>
 </ul>
-<p>That mixture is the honest character of an inferred network: real relationships
+<p>That mixture is the honest character of a computed network: real relationships
 and a dominant confound, arriving in the same list with the same scores, and no
 label distinguishing them. The curated graph would never make this mistake — and
 would also never have found <code class="docutils literal notranslate"><span class="pre">PALB2</span></code>.</p>
 </section>
-<section id="when-the-inferred-network-says-nothing-at-all">
-<h3>7.4 When the inferred network says nothing at all<a class="headerlink" href="#when-the-inferred-network-says-nothing-at-all" title="Link to this heading">#</a></h3>
+<section id="when-the-computed-network-says-nothing-at-all">
+<h3>7.4 When the computed network says nothing at all<a class="headerlink" href="#when-the-computed-network-says-nothing-at-all" title="Link to this heading">#</a></h3>
 <p>Now the same query for <code class="docutils literal notranslate"><span class="pre">TP53</span></code>, which by any measure is the most studied gene in
 cancer.</p>
 <div class="cell docutils container">
@@ -936,7 +943,7 @@ cancer.</p>
 </div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">TP53</span></code> is a <strong>hub</strong> in the curated graph — 27 diseases — and essentially <strong>invisible</strong>
-in the inferred one. Its strongest correlation with any of the other 736 genes is
+in the computed one. Its strongest correlation with any of the other 736 genes is
 about 0.18, well below any threshold we would use.</p>
 <p>Both facts are correct and both are about the method, not about TP53:</p>
 <ul class="simple">
@@ -949,7 +956,7 @@ the work. A method that only reads mRNA cannot see it.</p></li>
 </ul>
 <p>So a gene can be central to one network and absent from the other purely because
 of how each network was built. <strong>Neither absence means “not important”.</strong> In the
-inferred network absence means <em>not transcriptionally variable</em>; in the curated
+computed network absence means <em>not transcriptionally variable</em>; in the curated
 network absence means <em>nobody wrote it down</em>. Part 2 and Part 3 are largely about
 the second kind of silence.</p>
 </section>
@@ -988,7 +995,7 @@ filter curated edges by the <strong>kind</strong> of evidence behind them.</p>
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>A graph is nodes plus edges; degree, paths and components are all derived from those.</p></li>
-<li><p><strong>Inferred</strong> networks are computed from measurements; <strong>curated</strong> knowledge graphs
+<li><p><strong>Computed</strong> networks are calculated from measurements; <strong>curated</strong> knowledge graphs
 are read from recorded facts. Their biases are opposite and neither is fixable by code.</p></li>
 <li><p>A <em>knowledge</em> graph adds typed nodes, typed edges and provenance — that is the
 “specialised” in <em>a specialised class of networks</em>.</p></li>
@@ -997,11 +1004,11 @@ are read from recorded facts. Their biases are opposite and neither is fixable b
 <li><p>Every gene–disease edge also has an evidence breakdown in <code class="docutils literal notranslate"><span class="pre">kg_evidence.csv</span></code>.</p></li>
 <li><p>Genes are keyed by Ensembl ID so the graph joins to the Session 2 omics data —
 which is how Section 7 could build both networks over the same 737 genes.</p></li>
-<li><p>An inferred network has a <strong>threshold to choose</strong> and a curated one does not;
-a curated one has <strong>silences</strong> an inferred one does not. <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> and <code class="docutils literal notranslate"><span class="pre">TP53</span></code> show
+<li><p>A computed network has a <strong>threshold to choose</strong> and a curated one does not;
+a curated one has <strong>silences</strong> a computed one does not. <code class="docutils literal notranslate"><span class="pre">BRCA1</span></code> and <code class="docutils literal notranslate"><span class="pre">TP53</span></code> show
 both failure modes in opposite directions.</p></li>
 </ul>
-<p><strong>Next:</strong> in Part 2 we build the graph in NetworkX and look at what it is shaped like.</p>
+<p><strong>Next:</strong> in Part 2 we build the knowledge graph in NetworkX and explore it.</p>
 </section>
 </section>
 
@@ -1014,16 +1021,16 @@ both failure modes in opposite directions.</p></li>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb_2026"
+            mode: "python"
         },
         kernelOptions: {
-            name: "eccb_2026",
+            name: "python3",
             path: "./session-1-intro-networks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb_2026'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -1093,7 +1100,7 @@ both failure modes in opposite directions.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlate-everything-against-everything">7.1 Correlate everything against everything</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#there-is-no-true-network">7.2 There is no “true” network</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-same-gene-in-both-networks">7.3 The same gene, in both networks</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-the-inferred-network-says-nothing-at-all">7.4 When the inferred network says nothing at all</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-the-computed-network-says-nothing-at-all">7.4 When the computed network says nothing at all</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-sets-up">7.5 What this sets up</a></li>
 </ul>
 </li>

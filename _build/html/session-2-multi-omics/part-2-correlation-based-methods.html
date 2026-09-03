@@ -516,6 +516,13 @@ After fitting MOFA, we ask two questions:</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Host: biomedicalai
+Python: /home/bryan/.conda/envs/eccb_2026/bin/python
+Working dir: /home/bryan/ECCB_2026_T8_CODE/sessions/session-2-multi-omics
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -594,6 +601,25 @@ After fitting MOFA, we ask two questions:</p>
 <span class="c1"># Split the labels with the same patient IDs used for the omics data.</span>
 <span class="n">y_train</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">]</span>
 <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Omic view dimensions:
+  transcriptomics:  603 patients ×  29995 features
+  proteomics     :  603 patients ×    464 features
+  methylation    :  603 patients × 200000 features
+
+Subtype counts:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>transcriptomics
+LumA      322
+LumB      118
+Basal      97
+Her2       41
+Normal     25
+Name: count, dtype: int64
 </pre></div>
 </div>
 </div>

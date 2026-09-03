@@ -396,7 +396,7 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html">Part 1 — What is a Network, and What is a Knowledge Graph?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-1-networks-and-knowledge-graphs.html">Part 1 — Networks and Knowledge Graphs: Key Concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part-2-building-a-knowledge-graph.html">Part 2 — Building a Knowledge Graph with NetworkX</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Part 3 — Practical: Querying the Knowledge Graph</a></li>
 
@@ -471,10 +471,10 @@
 <p><em>Practical Session 1 — 35 minutes</em></p>
 <p>This is the hands-on part. We start from <strong>ICD-10 codes</strong>, the vocabulary a
 hospital actually uses, and try to get from there to genes. It does not work
-straightforwardly, and the ways it fails are the point.</p>
-<p>Then we ask the question the graph is really good at — <em>which diseases
-resemble each other?</em> — connect the graph to the Session 2 omics data, and finish
-by putting the curated graph back alongside the <strong>inferred</strong> co-expression network
+straightforwardly, and the ways it fails is informative.</p>
+<p>We next ask the question that the graph is really good at — <em>which diseases
+resemble each other?</em>, then connect the graph to the Session 2 omics data, and finish
+by putting the curated graph back alongside the <strong>computed</strong> co-expression network
 from Part 1, which is where gene–disease <em>discovery</em> actually happens.</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
@@ -486,7 +486,7 @@ from Part 1, which is where gene–disease <em>discovery</em> actually happens.<
 <li><p>Project a bipartite graph onto one of its node types.</p></li>
 <li><p>Interpret a shared-gene result critically — including spotting a spurious one.</p></li>
 <li><p>Join a knowledge graph to an omics matrix, and avoid the identifier trap.</p></li>
-<li><p>Combine the curated and inferred networks to separate <strong>corroboration</strong> from
+<li><p>Combine the curated and computed networks to separate <strong>corroboration</strong> from
 <strong>candidates</strong> — and recognise when the combination has re-imported a confound.</p></li>
 </ul>
 <div class="cell docutils container">
@@ -504,15 +504,36 @@ from Part 1, which is where gene–disease <em>discovery</em> actually happens.<
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of nodes: 881
+Number of edges: 1768
+Graph type: undirected
+
+Nodes by type:
+     760  gene
+      90  disease
+      31  icd10
+Edges by type:
+   1,656  associated_with
+      81  is_a
+      31  maps_to
+
+Self-loops: 0
+Graph density: 0.004561
+Connected components: 1
+Largest component: 881 nodes (100.0% of the graph)
+Average clustering coefficient: 0.0137
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 </section>
 <hr class="docutils" />
-<section class="tex2jax_ignore mathjax_ignore" id="section-a-starting-from-icd-10">
-<h1>Section A — Starting from ICD-10<a class="headerlink" href="#section-a-starting-from-icd-10" title="Link to this heading">#</a></h1>
-<p><em>≈12 minutes</em></p>
-<section id="a1-what-is-icd-10">
-<h2>A1. What is ICD-10?<a class="headerlink" href="#a1-what-is-icd-10" title="Link to this heading">#</a></h2>
+<section class="tex2jax_ignore mathjax_ignore" id="part-a-icd-10-coding">
+<h1>Part A. ICD-10 Coding<a class="headerlink" href="#part-a-icd-10-coding" title="Link to this heading">#</a></h1>
+<section id="what-is-icd-10">
+<h2>What is ICD-10?<a class="headerlink" href="#what-is-icd-10" title="Link to this heading">#</a></h2>
 <p>The <a class="reference external" href="https://icd.who.int/browse10/2019/en"><strong>International Classification of Diseases, 10th revision</strong></a>
 is the WHO’s clinical coding system. It is the vocabulary in which hospital
 records, death certificates and insurance claims are written. If we ever get
@@ -536,10 +557,144 @@ a specific quadrant of it.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mondo_id</th>
+      <th>disease name</th>
+      <th>icd10_code</th>
+      <th>icd10_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>MONDO_0004658</td>
+      <td>breast carcinoma in situ</td>
+      <td>ICD10CM:D05</td>
+      <td>Carcinoma in situ of breast</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>MONDO_0004975</td>
+      <td>Alzheimer disease</td>
+      <td>ICD10CM:G30</td>
+      <td>Alzheimer's disease</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>MONDO_0004975</td>
+      <td>Alzheimer disease</td>
+      <td>ICD10WHO:G30</td>
+      <td>Alzheimer disease</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>MONDO_0004979</td>
+      <td>asthma</td>
+      <td>ICD10CM:J45</td>
+      <td>Asthma</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>MONDO_0004979</td>
+      <td>asthma</td>
+      <td>ICD10WHO:J45</td>
+      <td>Asthma</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>MONDO_0005011</td>
+      <td>Crohn disease</td>
+      <td>ICD10CM:K50</td>
+      <td>Crohn's disease [regional enteritis]</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>MONDO_0005083</td>
+      <td>psoriasis</td>
+      <td>ICD10CM:L40</td>
+      <td>Psoriasis</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>MONDO_0005083</td>
+      <td>psoriasis</td>
+      <td>ICD10WHO:L40</td>
+      <td>Psoriasis</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>MONDO_0005090</td>
+      <td>schizophrenia</td>
+      <td>ICD10CM:F20</td>
+      <td>Schizophrenia</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>MONDO_0005090</td>
+      <td>schizophrenia</td>
+      <td>ICD10WHO:F20</td>
+      <td>Schizophrenia</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>MONDO_0005101</td>
+      <td>ulcerative colitis</td>
+      <td>ICD10CM:K51</td>
+      <td>Ulcerative colitis</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>MONDO_0005101</td>
+      <td>ulcerative colitis</td>
+      <td>ICD10WHO:K51</td>
+      <td>Ulcerative colitis</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>MONDO_0005147</td>
+      <td>type 1 diabetes mellitus</td>
+      <td>ICD10CM:E10</td>
+      <td>Type 1 diabetes mellitus</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>MONDO_0005147</td>
+      <td>type 1 diabetes mellitus</td>
+      <td>ICD10WHO:E10</td>
+      <td>Type 1 diabetes mellitus</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>MONDO_0005148</td>
+      <td>type 2 diabetes mellitus</td>
+      <td>ICD10CM:E11</td>
+      <td>Type 2 diabetes mellitus</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 </section>
-<section id="a2-exercise-how-good-is-the-coverage">
-<h2>A2. Exercise: how good is the coverage?<a class="headerlink" href="#a2-exercise-how-good-is-the-coverage" title="Link to this heading">#</a></h2>
+<section id="assessing-coverage">
+<h2>Assessing coverage<a class="headerlink" href="#assessing-coverage" title="Link to this heading">#</a></h2>
 <p>But how many of the graph’s <strong>90 diseases</strong> can actually be reached from an
 ICD-10 code?</p>
 <p>Count the diseases that have a <code class="docutils literal notranslate"><span class="pre">maps_to</span></code> edge, and express it as a fraction.</p>
@@ -547,7 +702,20 @@ ICD-10 code?</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diseases</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;disease&quot;</span><span class="p">)</span>
 
-<span class="c1"># TODO: a disease is &quot;covered&quot; if it has at least one maps_to edge</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">#################################################</span>
+<span class="sd">                YOUR CODE HERE</span>
+<span class="sd">#################################################</span>
+
+<span class="sd">How many diseases carry an ICD-10 code recorded directly on them?</span>
+
+<span class="sd">- Make an empty list called `covered`.</span>
+<span class="sd">- Loop over `diseases`.</span>
+<span class="sd">- For each disease `d`, collect the types of all its neighbours:</span>
+<span class="sd">      neighbour_types = [G.nodes[n][&quot;type&quot;] for n in G.neighbors(d)]</span>
+<span class="sd">- If `&quot;icd10&quot;` appears anywhere in that list, append `d` to `covered`.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
 <span class="c1">### YOUR CODE HERE ###</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;diseases with a direct ICD-10 code: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">covered</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">diseases</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -556,11 +724,7 @@ ICD-10 code?</p>
 </div>
 </div>
 </div>
-</section>
-<section id="a3-where-does-the-gap-fall">
-<h2>A3. Where does the gap fall?<a class="headerlink" href="#a3-where-does-the-gap-fall" title="Link to this heading">#</a></h2>
-<p>About one in five. Before assuming the data is broken, look at <em>what</em> is missing —
-and notice that the gap is not spread evenly.</p>
+<p>Only about one in five of our diseases has a direct ICD-10 code. Before assuming the data is broken, we need to look at <em>what</em> is missing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Split the diseases into the fine-grained breast subtypes and everything else.</span>
@@ -581,8 +745,14 @@ and notice that the gap is not spread evenly.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>breast subtypes      3 of  63 have an ICD-10 code (5%)
+everything else     16 of  27 have an ICD-10 code (59%)
+</pre></div>
 </div>
-<p>There it is. <strong>3 of 63</strong> breast subtypes have a code, against <strong>16 of 27</strong> other
+</div>
+</div>
+<p>There it is. <strong>3 of 63</strong> breast subtypes have a code, versus <strong>16 of 27</strong> other
 diseases. Asthma, multiple sclerosis, Parkinson disease and type 1 diabetes are
 all coded fine. The failure is specific to the fine-grained subtypes — histological
 (lobular, ductal, medullary, apocrine) and molecular (triple-negative, HER2
@@ -619,8 +789,8 @@ separate classification, <a class="reference external" href="https://www.who.int
 <strong>granularity mismatch</strong>: the clinical vocabulary and the molecular vocabulary
 describe the disease at different resolutions.</p>
 </section>
-<section id="a4-recovering-the-mapping-by-climbing-the-ontology">
-<h2>A4. Recovering the mapping by climbing the ontology<a class="headerlink" href="#a4-recovering-the-mapping-by-climbing-the-ontology" title="Link to this heading">#</a></h2>
+<section id="recovering-the-mapping-by-climbing-the-ontology">
+<h2>Recovering the mapping by climbing the ontology<a class="headerlink" href="#recovering-the-mapping-by-climbing-the-ontology" title="Link to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">is_a</span></code> edges give us a way out. If a subtype has no code of its own, its
 <em>parent</em> might.</p>
 <p><img alt="Climbing the ontology" src="../_images/ontology_climb.png" /></p>
@@ -638,6 +808,18 @@ describe the disease at different resolutions.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>start: triple-negative breast carcinoma
+
+  1 hop(s) up: progesterone-receptor negative breast cancer
+  1 hop(s) up: Her2-receptor negative breast cancer
+  1 hop(s) up: estrogen-receptor negative breast cancer
+  2 hop(s) up: breast carcinoma by gene expression profile
+  3 hop(s) up: breast carcinoma
+  4 hop(s) up: breast cancer   &lt;-- [&#39;ICD10CM:C50&#39;]
+</pre></div>
+</div>
+</div>
 </div>
 <p>Notice that <strong>three</strong> diseases sit one hop up: estrogen-receptor negative,
 progesterone-receptor negative and Her2-receptor negative. That is not a quirk of
@@ -648,15 +830,35 @@ receptors, and the ontology records it as three separate <code class="docutils l
 helper sorts and searches by depth so the answer is the <em>closest</em> coded ancestor,
 and is identical every time we run it.</p>
 </section>
-<section id="a5-exercise-resolve-every-disease">
-<h2>A5. Exercise: resolve every disease<a class="headerlink" href="#a5-exercise-resolve-every-disease" title="Link to this heading">#</a></h2>
+<section id="mapping-every-disease">
+<h2>Mapping every disease<a class="headerlink" href="#mapping-every-disease" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">h.icd10_for_disease(G,</span> <span class="pre">disease_id)</span></code> wraps that climb. It returns the code, the
 node it was found on, and how many hops it took — the <code class="docutils literal notranslate"><span class="pre">steps</span></code> field, where 0
 means the disease carries the code itself.</p>
 <p>Apply it to all 90 diseases and count how many can now be resolved.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: resolve each disease and collect the results into a frame</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">#################################################</span>
+<span class="sd">                YOUR CODE HERE</span>
+<span class="sd">#################################################</span>
+
+<span class="sd">Climb the ontology for every disease and record what comes back.</span>
+
+<span class="sd">`h.icd10_for_disease(G, d)` returns a dictionary. Call it once per disease and</span>
+<span class="sd">store it, rather than calling it again for each key you need.</span>
+
+<span class="sd">- Make an empty list called `rows`.</span>
+<span class="sd">- Loop over `diseases`.</span>
+<span class="sd">- For each disease `d`, call `h.icd10_for_disease(G, d)` and put the result in</span>
+<span class="sd">  a variable called `result`.</span>
+<span class="sd">- Append a dictionary to `rows` with three keys:</span>
+<span class="sd">      &quot;disease&quot; -&gt; the disease name,        `G.nodes[d][&quot;name&quot;]`</span>
+<span class="sd">      &quot;icd10&quot;   -&gt; the codes as one string, `&quot;, &quot;.join(result[&quot;icd10&quot;])`</span>
+<span class="sd">      &quot;steps&quot;   -&gt; how far we climbed,      `result[&quot;steps&quot;]`</span>
+<span class="sd">- Turn `rows` into a DataFrame called `resolved`.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
 <span class="c1">### YOUR CODE HERE ###</span>
 
 <span class="n">n_resolved</span> <span class="o">=</span> <span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;icd10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -679,6 +881,82 @@ the information a molecular study cares about.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>disease</th>
+      <th>icd10</th>
+      <th>steps</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>30</th>
+      <td>gastric carcinoma</td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>coronary artery disorder</td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>lung adenocarcinoma</td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>melanoma</td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>pancreatic ductal adenocarcinoma</td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>colorectal cancer</td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>80</th>
+      <td>rheumatoid arthritis</td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>glioblastoma</td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>These eight are genuine dead ends, and for a <strong>different reason</strong> from the subtypes.</p>
 <p>Colorectal cancer, melanoma, glioblastoma, rheumatoid arthritis — every one of
@@ -694,10 +972,9 @@ as the same silence.</p>
 <hr class="docutils" />
 <section class="tex2jax_ignore mathjax_ignore" id="section-b-which-diseases-share-genes">
 <h1>Section B — Which diseases share genes?<a class="headerlink" href="#section-b-which-diseases-share-genes" title="Link to this heading">#</a></h1>
-<p><em>≈18 minutes — this is the heart of the practical</em></p>
 <p>ICD-10 got us in the door. Now the question the graph is genuinely good at.</p>
-<section id="b1-bipartite-projection">
-<h2>B1. Bipartite projection<a class="headerlink" href="#b1-bipartite-projection" title="Link to this heading">#</a></h2>
+<section id="bipartite-projection">
+<h2>Bipartite projection<a class="headerlink" href="#bipartite-projection" title="Link to this heading">#</a></h2>
 <p>Our graph is close to <strong>bipartite</strong>: genes connect to diseases, and diseases to
 genes, but genes almost never connect to genes. (That is why the clustering
 coefficient in Part 2 was near zero.)</p>
@@ -708,21 +985,38 @@ onto the diseases alone — joining two diseases whenever they share genes.</p>
 over the size of the union. Using the raw count instead would just rank
 well-studied diseases highest, since they share genes with everything.</p>
 </section>
-<section id="b2-exercise-breast-vs-ovarian-cancer">
-<h2>B2. Exercise: breast vs ovarian cancer<a class="headerlink" href="#b2-exercise-breast-vs-ovarian-cancer" title="Link to this heading">#</a></h2>
+<section id="comparing-breast-and-ovarian-cancer">
+<h2>Comparing breast and ovarian cancer<a class="headerlink" href="#comparing-breast-and-ovarian-cancer" title="Link to this heading">#</a></h2>
 <p>Find the genes shared by breast cancer (<code class="docutils literal notranslate"><span class="pre">MONDO_0007254</span></code>) and ovarian cancer
 (<code class="docutils literal notranslate"><span class="pre">MONDO_0008170</span></code>), and compute the Jaccard index by hand before using the helper.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">breast</span><span class="p">,</span> <span class="n">ovarian</span> <span class="o">=</span> <span class="s2">&quot;MONDO_0007254&quot;</span><span class="p">,</span> <span class="s2">&quot;MONDO_0008170&quot;</span>
 
-<span class="c1"># TODO: intersect the two gene sets, then divide by the union</span>
-<span class="c1">### YOUR CODE HERE ###</span>
+
+<span class="c1"># --- WORKED EXAMPLE - read this one, do not write it -------------------------</span>
+<span class="c1"># Two gene sets, then the intersection. The very next exercise is these same</span>
+<span class="c1"># three lines on a different graph, so read them now and you will be able to</span>
+<span class="c1"># write them in a moment.</span>
+<span class="n">genes_breast</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">breast</span><span class="p">)</span>
+<span class="n">genes_ovarian</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">ovarian</span><span class="p">)</span>
+
+<span class="n">shared</span> <span class="o">=</span> <span class="n">genes_breast</span> <span class="o">&amp;</span> <span class="n">genes_ovarian</span>
+<span class="n">jaccard</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shared</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">genes_breast</span> <span class="o">|</span> <span class="n">genes_ovarian</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;breast:  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">genes_breast</span><span class="p">)</span><span class="si">}</span><span class="s2"> genes&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ovarian: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">genes_ovarian</span><span class="p">)</span><span class="si">}</span><span class="s2"> genes&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;shared:  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">shared</span><span class="p">)</span><span class="si">}</span><span class="s2"> genes,  Jaccard = </span><span class="si">{</span><span class="n">jaccard</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">shared</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>breast:  30 genes
+ovarian: 30 genes
+shared:  11 genes,  Jaccard = 0.22
+
+[&#39;BRCA1&#39;, &#39;BRCA2&#39;, &#39;BRIP1&#39;, &#39;PIK3CA&#39;, &#39;TOP1&#39;, &#39;TOP2A&#39;, &#39;TP53&#39;, &#39;TUBA1B&#39;, &#39;TUBA1C&#39;, &#39;TUBB&#39;, &#39;TUBB3&#39;]
 </pre></div>
 </div>
 </div>
@@ -734,9 +1028,21 @@ derived it from graph structure alone.</p>
 reason a BRCA1 carrier is counselled about both. We did not tell the graph that
 these two diseases were related. We asked which genes they had in common, and the
 syndrome fell out.</p>
+<blockquote>
+<div><p><strong>A caveat about that 0.22.</strong> Both diseases have <em>exactly</em> 30 genes here,
+because both hit the <code class="docutils literal notranslate"><span class="pre">--top-genes</span> <span class="pre">30</span></code> cap in the build script. Breast cancer’s
+weakest kept gene scores <strong>0.61</strong> and ovarian’s scores <strong>0.53</strong>, against a
+stated cutoff of 0.05 — so everything between 0.05 and those values was
+discarded before we ever saw it.</p>
+<p>That means the union is pinned at 49 by construction, and the Jaccard index is
+measuring <em>overlap between two top-30 lists</em>, not overlap between two gene
+sets. The <strong>identity</strong> of the shared genes is trustworthy; the <strong>number</strong> is a
+property of the build script. Exactly the question this notebook keeps asking:
+did the data say that, or did the construction?</p>
+</div></blockquote>
 </section>
-<section id="b3-the-trap-not-all-shared-genes-mean-the-same-thing">
-<h2>B3. The trap: not all shared genes mean the same thing<a class="headerlink" href="#b3-the-trap-not-all-shared-genes-mean-the-same-thing" title="Link to this heading">#</a></h2>
+<section id="not-all-shared-genes-mean-the-same-thing">
+<h2>Not all ‘shared’ genes mean the same thing<a class="headerlink" href="#not-all-shared-genes-mean-the-same-thing" title="Link to this heading">#</a></h2>
 <p>Look at the rest of that list: <code class="docutils literal notranslate"><span class="pre">TUBA1B</span></code>, <code class="docutils literal notranslate"><span class="pre">TUBA1C</span></code>, <code class="docutils literal notranslate"><span class="pre">TUBB</span></code>, <code class="docutils literal notranslate"><span class="pre">TUBB3</span></code> — <strong>tubulins</strong>,
 structural proteins of the cytoskeleton present in every cell in the body. Plus
 <code class="docutils literal notranslate"><span class="pre">TOP1</span></code> and <code class="docutils literal notranslate"><span class="pre">TOP2A</span></code>, topoisomerases. None of these is a breast cancer gene in any
@@ -761,13 +1067,27 @@ share a genetic basis”</em>.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- BRCA2 -&gt; breast cancer
+           datatype  weight
+         literature  0.9878
+genetic_association  0.9390
+ genetic_literature  0.6083
+
+--- TUBB -&gt; breast cancer
+  datatype  weight
+known_drug  0.9869
+literature  0.6869
+</pre></div>
+</div>
+</div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">BRCA2</span></code> has genetic evidence and <strong>no drug evidence</strong>. <code class="docutils literal notranslate"><span class="pre">TUBB</span></code> has drug evidence and
 <strong>no genetic evidence</strong>. They are cleanly separable — but only if we look at the
 evidence types rather than the single score.</p>
 </section>
-<section id="b4-exercise-separate-cause-from-treatment">
-<h2>B4. Exercise: separate cause from treatment<a class="headerlink" href="#b4-exercise-separate-cause-from-treatment" title="Link to this heading">#</a></h2>
+<section id="exercise-separate-cause-from-treatment">
+<h2>Exercise: Separate cause from treatment<a class="headerlink" href="#exercise-separate-cause-from-treatment" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">h.filter_by_datatype(G,</span> <span class="pre">evidence,</span> <span class="pre">datatypes)</span></code> keeps only the <code class="docutils literal notranslate"><span class="pre">associated_with</span></code>
 edges supported by particular kinds of evidence. <code class="docutils literal notranslate"><span class="pre">h.CAUSAL_DATATYPES</span></code> is
 <code class="docutils literal notranslate"><span class="pre">(&quot;genetic_association&quot;,</span> <span class="pre">&quot;somatic_mutation&quot;)</span></code> — the two that assert the gene has
@@ -775,7 +1095,22 @@ something to do with <em>causing</em> the disease.</p>
 <p>Build a causal-only graph and recompute the breast/ovarian overlap.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: keep only causal evidence, then intersect the gene sets again</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">#################################################</span>
+<span class="sd">                YOUR CODE HERE</span>
+<span class="sd">#################################################</span>
+
+<span class="sd">Now do exactly the same thing again, but on a graph that keeps only causal</span>
+<span class="sd">evidence. The three lines mirror the exercise above one for one.</span>
+
+<span class="sd">- `h.filter_by_datatype(G, evidence, h.CAUSAL_DATATYPES)` returns a NEW graph</span>
+<span class="sd">  containing only edges backed by genetic or somatic evidence. Call it `causal`.</span>
+<span class="sd">- Get the two gene sets from `causal` exactly as before, with</span>
+<span class="sd">  `h.genes_for_disease(causal, ...)`. Call them `causal_breast` and</span>
+<span class="sd">  `causal_ovarian`.</span>
+<span class="sd">- Intersect them with `&amp;` and call the result `shared_causal`.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
 <span class="c1">### YOUR CODE HERE ###</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;all evidence:   &quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">shared</span><span class="p">))</span>
@@ -798,8 +1133,8 @@ sort genes into clean bins; it tells us which claim we are relying on.</p>
 <p>This is the answer to a question we should ask of every knowledge graph edge:
 <strong>what kind of statement is this, and is it the kind we need?</strong></p>
 </section>
-<section id="b5-the-whole-picture-do-the-diseases-group-themselves">
-<h2>B5. The whole picture: do the diseases group themselves?<a class="headerlink" href="#b5-the-whole-picture-do-the-diseases-group-themselves" title="Link to this heading">#</a></h2>
+<section id="getting-the-whole-picture-can-we-recover-disease-groups">
+<h2>Getting the whole picture: Can we recover disease groups?<a class="headerlink" href="#getting-the-whole-picture-can-we-recover-disease-groups" title="Link to this heading">#</a></h2>
 <p>Now the payoff. Project <em>all</em> the non-breast diseases onto each other using causal
 evidence only, and run community detection — which knows nothing about cancer,
 autoimmunity or the clinic. It only sees which diseases share genes.</p>
@@ -820,6 +1155,34 @@ autoimmunity or the clinic. It only sees which diseases share genes.</p>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Community </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">d</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">community</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27 diseases, 69 shared-gene edges, 3 communities
+
+Community 1:
+    acute myeloid leukemia
+    colorectal cancer
+    gastric carcinoma
+    glioblastoma
+    lung adenocarcinoma
+    melanoma
+    ovarian cancer
+    pancreatic ductal adenocarcinoma
+    prostate cancer
+Community 2:
+    Crohn disease
+    coronary artery disorder
+    multiple sclerosis
+    psoriasis
+    rheumatoid arthritis
+    systemic lupus erythematosus
+    type 1 diabetes mellitus
+    ulcerative colitis
+Community 3:
+    chronic kidney disease
+    type 2 diabetes mellitus
 </pre></div>
 </div>
 </div>
@@ -846,6 +1209,9 @@ autoimmunity or the clinic. It only sees which diseases share genes.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/bfcdd6089869062b05a48fac75da44050481de460b8f827ae971ca7ed3a94015.png" src="../_images/bfcdd6089869062b05a48fac75da44050481de460b8f827ae971ca7ed3a94015.png" />
 </div>
 </div>
 <details>
@@ -890,8 +1256,8 @@ that carries the practical. Nothing later depends on finishing it live.</p>
 </div></blockquote>
 <p>This graph is not a closed world. It is keyed to join onto the molecular data from
 Session 2.</p>
-<section id="c1-the-identifier-trap">
-<h2>C1. The identifier trap<a class="headerlink" href="#c1-the-identifier-trap" title="Link to this heading">#</a></h2>
+<section id="the-identifier-trap">
+<h2>The identifier trap<a class="headerlink" href="#the-identifier-trap" title="Link to this heading">#</a></h2>
 <p>The TCGA transcriptomics matrix uses <strong>versioned</strong> Ensembl IDs — <code class="docutils literal notranslate"><span class="pre">ENSG00000012048.23</span></code>.
 Open Targets uses <strong>unversioned</strong> ones — <code class="docutils literal notranslate"><span class="pre">ENSG00000012048</span></code>. The suffix is the
 annotation release the gene model came from.</p>
@@ -900,7 +1266,7 @@ because an empty join is not an error, it looks like a real biological result.</
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set this to wherever the Session 2 omics pickle lives.</span>
-<span class="n">OMICS_PATH</span> <span class="o">=</span> <span class="s2">&quot;/home/bmai/Documents/eccb_omics/omics.pkl&quot;</span>
+<span class="n">OMICS_PATH</span> <span class="o">=</span> <span class="s2">&quot;/data/omics.pkl&quot;</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">layers</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">load_omics</span><span class="p">(</span><span class="n">OMICS_PATH</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;transcriptomics&quot;</span><span class="p">,))</span>
@@ -915,6 +1281,12 @@ because an empty join is not an error, it looks like a real biological result.</
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>transcriptomics: 500 patients x 29,995 genes
+subtype labels:  {&#39;LumA&#39;: 237, &#39;LumB&#39;: 100, &#39;Basal&#39;: 97, &#39;Her2&#39;: 41, &#39;Normal&#39;: 25}
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -926,6 +1298,12 @@ because an empty join is not an error, it looks like a real biological result.</
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;matched WITHOUT stripping the version: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">kg_genes</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">omics_raw</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;matched AFTER stripping the version:   </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">kg_genes</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">omics_stripped</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">&quot;</span>
           <span class="sa">f</span><span class="s2">&quot;  (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">kg_genes</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">omics_stripped</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">kg_genes</span><span class="p">)</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> of KG genes)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>matched WITHOUT stripping the version:    0
+matched AFTER stripping the version:    737  (97.0% of KG genes)
 </pre></div>
 </div>
 </div>
@@ -960,6 +1338,34 @@ it, and treat any disagreement as a bug until it has been explained.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>23 KG genes are not in the transcriptomics matrix:
+   CASR
+   CHRM2
+   CTRB1
+   CTRB2
+   DRD3
+   HTR3B
+   HTR3C
+   HTR3D
+   HTR3E
+   HTR5A
+   IL17A
+   IL17F
+   INS
+   MIF
+   NEUROD1
+   OPRM1
+   PAX4
+   PDE4C
+   SLC2A2
+   TNP1
+   TREX1
+   TYR
+   ZAR1L
+</pre></div>
+</div>
+</div>
 </div>
 <p>Read that list and the pattern is obvious. <code class="docutils literal notranslate"><span class="pre">INS</span></code>, <code class="docutils literal notranslate"><span class="pre">PAX4</span></code>, <code class="docutils literal notranslate"><span class="pre">SLC2A2</span></code> and <code class="docutils literal notranslate"><span class="pre">CTRB1/2</span></code>
 are pancreatic; <code class="docutils literal notranslate"><span class="pre">HTR3B</span></code>–<code class="docutils literal notranslate"><span class="pre">HTR3E</span></code>, <code class="docutils literal notranslate"><span class="pre">HTR5A</span></code>, <code class="docutils literal notranslate"><span class="pre">DRD3</span></code>, <code class="docutils literal notranslate"><span class="pre">CHRM2</span></code> and <code class="docutils literal notranslate"><span class="pre">OPRM1</span></code> are
@@ -976,8 +1382,8 @@ silently corrupt the join. Checking for duplicates after stripping costs one lin
 and this matrix has none.</p>
 </section>
 </section>
-<section id="c2-the-pam50-subtypes-are-nodes-in-this-graph">
-<h2>C2. The PAM50 subtypes are nodes in this graph<a class="headerlink" href="#c2-the-pam50-subtypes-are-nodes-in-this-graph" title="Link to this heading">#</a></h2>
+<section id="the-pam50-subtypes-are-nodes-in-this-graph">
+<h2>The PAM50 subtypes are nodes in this graph<a class="headerlink" href="#the-pam50-subtypes-are-nodes-in-this-graph" title="Link to this heading">#</a></h2>
 <p>Session 2 predicts a patient’s PAM50 subtype: LumA, LumB, Basal, Her2 or Normal.</p>
 <p>Every one of those five labels is a disease node here. So a prediction from
 Session 2 is not just a string — it is an entry point into the knowledge graph.</p>
@@ -998,6 +1404,76 @@ Session 2 is not just a string — it is an entry point into the knowledge graph
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PAM50</th>
+      <th>patients</th>
+      <th>MONDO id</th>
+      <th>name in graph</th>
+      <th>genes in graph</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>LumA</td>
+      <td>237</td>
+      <td>MONDO_0021116</td>
+      <td>luminal A breast carcinoma</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>LumB</td>
+      <td>100</td>
+      <td>MONDO_0021115</td>
+      <td>luminal B breast carcinoma</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Basal</td>
+      <td>97</td>
+      <td>MONDO_0004984</td>
+      <td>basal-like breast carcinoma</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Her2</td>
+      <td>41</td>
+      <td>MONDO_0006244</td>
+      <td>HER2 positive breast carcinoma</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Normal</td>
+      <td>25</td>
+      <td>MONDO_0006324</td>
+      <td>normal breast-like subtype of breast carcinoma</td>
+      <td>19</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>Note <code class="docutils literal notranslate"><span class="pre">Basal</span></code> again: 97 patients in the omics data, 0 genes in the graph. The
 molecular data has plenty to say about these patients; the <em>knowledge</em> graph does
@@ -1005,16 +1481,21 @@ not, because of the vocabulary mismatch from Part 2. Sending a Basal patient’s
 list into this graph, we would need to reason about <code class="docutils literal notranslate"><span class="pre">triple-negative</span> <span class="pre">breast</span> <span class="pre">carcinoma</span></code> instead — which is precisely the kind of step an agent has to get right
 in Session 4.</p>
 </section>
-<section id="c3-exercise-from-a-gene-list-to-a-disease">
-<h2>C3. Exercise: from a gene list to a disease<a class="headerlink" href="#c3-exercise-from-a-gene-list-to-a-disease" title="Link to this heading">#</a></h2>
+<section id="exercise-from-a-gene-list-to-a-disease">
+<h2>Exercise: from a gene list to a disease<a class="headerlink" href="#exercise-from-a-gene-list-to-a-disease" title="Link to this heading">#</a></h2>
 <p>The smallest useful knowledge graph query, and the shape of every query in
 Sessions 3 and 4: given a set of genes, which diseases do they touch?</p>
 <p>Take the most variable genes in the transcriptomics matrix and look them up.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">OMICS_AVAILABLE</span><span class="p">:</span>
-    <span class="c1"># TODO: rank genes by variance across patients, take the top 200</span>
-    <span class="c1">### YOUR CODE HERE ###</span>
+
+        <span class="c1"># --- WORKED EXAMPLE ------------------------------------------------------</span>
+    <span class="c1"># Rank the genes by variance and keep the top 200. Given rather than asked</span>
+    <span class="c1"># because this section is optional and depends on the omics file.</span>
+    <span class="n">gene_variance</span> <span class="o">=</span> <span class="n">transcriptomics</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">gene_variance</span> <span class="o">=</span> <span class="n">gene_variance</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">variable_genes</span> <span class="o">=</span> <span class="n">gene_variance</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
 
     <span class="n">mapped</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">map_genes_to_kg</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">variable_genes</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mapped</span><span class="p">[</span><span class="s1">&#39;in_kg&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mapped</span><span class="p">)</span><span class="si">}</span><span class="s2"> most-variable genes &quot;</span>
@@ -1023,6 +1504,119 @@ Sessions 3 and 4: given a set of genes, which diseases do they touch?</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 of 200 most-variable genes are in the knowledge graph
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>input_id</th>
+      <th>ensembl_id</th>
+      <th>in_kg</th>
+      <th>symbol</th>
+      <th>degree</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>21</th>
+      <td>ENSG00000181092.10</td>
+      <td>ENSG00000181092</td>
+      <td>True</td>
+      <td>ADIPOQ</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>ENSG00000164756.12</td>
+      <td>ENSG00000164756</td>
+      <td>True</td>
+      <td>SLC30A8</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>ENSG00000082175.15</td>
+      <td>ENSG00000082175</td>
+      <td>True</td>
+      <td>PGR</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>ENSG00000162896.6</td>
+      <td>ENSG00000162896</td>
+      <td>True</td>
+      <td>PIGR</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>ENSG00000091831.24</td>
+      <td>ENSG00000091831</td>
+      <td>True</td>
+      <td>ESR1</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>ENSG00000181143.15</td>
+      <td>ENSG00000181143</td>
+      <td>True</td>
+      <td>MUC16</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>124</th>
+      <td>ENSG00000156234.7</td>
+      <td>ENSG00000156234</td>
+      <td>True</td>
+      <td>CXCL13</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>126</th>
+      <td>ENSG00000129514.8</td>
+      <td>ENSG00000129514</td>
+      <td>True</td>
+      <td>FOXA1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>130</th>
+      <td>ENSG00000179023.8</td>
+      <td>ENSG00000179023</td>
+      <td>True</td>
+      <td>KLHDC7A</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>191</th>
+      <td>ENSG00000178568.15</td>
+      <td>ENSG00000178568</td>
+      <td>True</td>
+      <td>ERBB4</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1031,6 +1625,116 @@ Sessions 3 and 4: given a set of genes, which diseases do they touch?</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>disease_id</th>
+      <th>name</th>
+      <th>n_genes</th>
+      <th>mean_score</th>
+      <th>genes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>MONDO_0021115</td>
+      <td>luminal B breast carcinoma</td>
+      <td>3</td>
+      <td>0.331667</td>
+      <td>ERBB4, ESR1, FOXA1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>MONDO_0003024</td>
+      <td>breast angiosarcoma</td>
+      <td>2</td>
+      <td>0.074850</td>
+      <td>ADIPOQ, PIGR</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>MONDO_0004988</td>
+      <td>breast adenocarcinoma</td>
+      <td>2</td>
+      <td>0.539550</td>
+      <td>ESR1, FOXA1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>MONDO_0005298</td>
+      <td>osteoporosis</td>
+      <td>2</td>
+      <td>0.577850</td>
+      <td>ESR1, PGR</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>MONDO_0000552</td>
+      <td>breast lobular carcinoma</td>
+      <td>2</td>
+      <td>0.379500</td>
+      <td>ESR1, FOXA1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>MONDO_0004950</td>
+      <td>gastric carcinoma</td>
+      <td>2</td>
+      <td>0.382250</td>
+      <td>ERBB4, ESR1</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>MONDO_0006116</td>
+      <td>breast carcinoma by gene expression profile</td>
+      <td>2</td>
+      <td>0.370000</td>
+      <td>ESR1, FOXA1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>MONDO_0005590</td>
+      <td>breast ductal adenocarcinoma</td>
+      <td>2</td>
+      <td>0.383350</td>
+      <td>ESR1, FOXA1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>MONDO_0005063</td>
+      <td>medullary breast carcinoma</td>
+      <td>2</td>
+      <td>0.139350</td>
+      <td>ESR1, MUC16</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>MONDO_0003624</td>
+      <td>acinic cell breast carcinoma</td>
+      <td>2</td>
+      <td>0.231250</td>
+      <td>ERBB4, ESR1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>Whatever comes back, apply the scepticism from Section B before believing it. Ask:</p>
 <ul class="simple">
@@ -1041,21 +1745,21 @@ this graph’s 90 diseases <em>are</em> breast cancer subtypes?</p></li>
 that the most variable genes in a breast tumour matrix are the hormone-receptor
 genes, which are also the best-annotated breast cancer genes in Open Targets?</p></li>
 </ul>
-<p>The circularity is real and worth naming out loud. Notice, though, that
+<p>The circularity is real and worth stating. Notice, though, that
 <code class="docutils literal notranslate"><span class="pre">osteoporosis</span></code> and <code class="docutils literal notranslate"><span class="pre">gastric</span> <span class="pre">carcinoma</span></code> also appear — diseases that share <code class="docutils literal notranslate"><span class="pre">ESR1</span></code>
 for genuinely different reasons. Working out which hits are informative and which
 are structural is the whole skill.</p>
 </section>
 </section>
 <hr class="docutils" />
-<section class="tex2jax_ignore mathjax_ignore" id="section-d-both-networks-at-once">
-<h1>Section D — Both networks at once<a class="headerlink" href="#section-d-both-networks-at-once" title="Link to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="section-d-combining-networks">
+<h1>Section D — Combining networks<a class="headerlink" href="#section-d-combining-networks" title="Link to this heading">#</a></h1>
 <blockquote>
 <div><p><strong>Closing section.</strong> Unlike Section C this needs no external file: the
-expression matrix is committed in <code class="docutils literal notranslate"><span class="pre">../../data/session-1-data/</span></code>. If time is short, read the results
+expression matrix is committed in <code class="docutils literal notranslate"><span class="pre">/data/session-1-data/</span></code>. If time is short, read the results
 rather than running them.</p>
 </div></blockquote>
-<p>Part 1 built two networks over the same 737 genes — an <strong>inferred</strong> co-expression
+<p>Part 1 built two networks over the same 737 genes — an <strong>computed</strong> co-expression
 network computed from measurements, and this <strong>curated</strong> knowledge graph read from
 recorded facts. Section B then taught us to filter curated edges by the <em>kind</em> of
 evidence behind them.</p>
@@ -1104,9 +1808,15 @@ what comes back by what the graph already says about it.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>breast cancer: 30 genes, 16 of them causal, 16 of those measured
+[&#39;ATM&#39;, &#39;BARD1&#39;, &#39;BRCA1&#39;, &#39;BRCA2&#39;, &#39;BRIP1&#39;, &#39;CCND1&#39;, &#39;CHEK2&#39;, &#39;EGFR&#39;, &#39;ESR1&#39;, &#39;FGFR2&#39;, &#39;NBN&#39;, &#39;PALB2&#39;, &#39;PIK3CA&#39;, &#39;PRIM1&#39;, &#39;TP53&#39;, &#39;VEGFA&#39;]
+</pre></div>
 </div>
-<section id="d1-do-the-causal-genes-corroborate-each-other">
-<h2>D1. Do the causal genes corroborate each other?<a class="headerlink" href="#d1-do-the-causal-genes-corroborate-each-other" title="Link to this heading">#</a></h2>
+</div>
+</div>
+<section id="do-the-causal-genes-corroborate-each-other">
+<h2>Do the causal genes corroborate each other?<a class="headerlink" href="#do-the-causal-genes-corroborate-each-other" title="Link to this heading">#</a></h2>
 <p>Before looking for anything new, a sanity check. If co-expression carries real
 signal about breast cancer biology, the genes we <em>already</em> believe cause breast
 cancer should show some of it among themselves.</p>
@@ -1126,6 +1836,73 @@ cancer should show some of it among themselves.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 of 120 causal gene pairs co-express at |r| &gt;= 0.5
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gene_a</th>
+      <th>gene_b</th>
+      <th>r</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>93</th>
+      <td>BRIP1</td>
+      <td>BRCA2</td>
+      <td>0.659</td>
+    </tr>
+    <tr>
+      <th>92</th>
+      <td>BRIP1</td>
+      <td>BARD1</td>
+      <td>0.658</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>BARD1</td>
+      <td>BRCA2</td>
+      <td>0.600</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>BRIP1</td>
+      <td>PRIM1</td>
+      <td>0.581</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>ESR1</td>
+      <td>CCND1</td>
+      <td>0.571</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>BRCA1</td>
+      <td>PRIM1</td>
+      <td>0.569</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>Ten of 120 pairs — and look at which ten. <code class="docutils literal notranslate"><span class="pre">BRCA2</span></code>–<code class="docutils literal notranslate"><span class="pre">BRIP1</span></code>, <code class="docutils literal notranslate"><span class="pre">BARD1</span></code>–<code class="docutils literal notranslate"><span class="pre">BRIP1</span></code>,
 <code class="docutils literal notranslate"><span class="pre">BARD1</span></code>–<code class="docutils literal notranslate"><span class="pre">BRCA2</span></code>: the homologous-recombination repair complex, recovered from
@@ -1138,14 +1915,41 @@ available to us.</p>
 breast cancer and have no reason to co-express. Corroboration is a bonus when it
 appears, never a requirement.</p>
 </section>
-<section id="d2-what-else-tracks-the-causal-genes">
-<h2>D2. What else tracks the causal genes?<a class="headerlink" href="#d2-what-else-tracks-the-causal-genes" title="Link to this heading">#</a></h2>
+<section id="what-else-tracks-the-causal-genes">
+<h2>What else tracks the causal genes?<a class="headerlink" href="#what-else-tracks-the-causal-genes" title="Link to this heading">#</a></h2>
 <p>Now outwards. Which genes co-express with the causal set, and what does the graph
 already say about them?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: count how many causal seeds each other gene tracks</span>
-<span class="c1">### YOUR CODE HERE ###</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- WORKED EXAMPLE - read this one, do not write it -------------------------</span>
+<span class="c1"># The same list-of-dictionaries shape once more, with a three-way if/elif/else</span>
+<span class="c1"># deciding what the graph already says about each gene. Given rather than asked</span>
+<span class="c1"># so the session can end on the result instead of on the typing.</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">correlations</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="n">n_partners</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">correlations</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gene</span><span class="p">,</span> <span class="n">seeds</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">n_partners</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">causal_genes</span><span class="p">:</span>
+        <span class="n">kg_link</span> <span class="o">=</span> <span class="s2">&quot;causal&quot;</span>
+    <span class="k">elif</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">all_breast_genes</span><span class="p">:</span>
+        <span class="n">kg_link</span> <span class="o">=</span> <span class="s2">&quot;non-causal&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">kg_link</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;n_causal_partners&quot;</span><span class="p">:</span> <span class="n">n_partners</span><span class="p">,</span>
+        <span class="s2">&quot;kg_link&quot;</span><span class="p">:</span> <span class="n">kg_link</span><span class="p">,</span>
+    <span class="p">})</span>
+
+<span class="n">candidates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+<span class="n">candidates</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;n_causal_partners&quot;</span><span class="p">,</span> <span class="s2">&quot;symbol&quot;</span><span class="p">],</span>
+                                    <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">candidates</span><span class="p">[</span><span class="s2">&quot;kg_link&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">non-causal breast cancer edges among them:&quot;</span><span class="p">,</span>
@@ -1154,6 +1958,131 @@ already say about them?</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>kg_link
+none          184
+non-causal      7
+
+non-causal breast cancer edges among them: [&#39;CDK6&#39;, &#39;TOP1&#39;, &#39;TOP2A&#39;, &#39;TUBA1B&#39;, &#39;TUBA1C&#39;, &#39;TUBB&#39;, &#39;TYMS&#39;]
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>symbol</th>
+      <th>n_causal_partners</th>
+      <th>kg_link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>116</th>
+      <td>BUB1B</td>
+      <td>6</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>HMMR</td>
+      <td>6</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>TOP2A</td>
+      <td>6</td>
+      <td>non-causal</td>
+    </tr>
+    <tr>
+      <th>177</th>
+      <td>BLM</td>
+      <td>5</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>146</th>
+      <td>EXO1</td>
+      <td>5</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>FANCD2</td>
+      <td>5</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>KNL1</td>
+      <td>5</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>POLA1</td>
+      <td>5</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>150</th>
+      <td>TYMS</td>
+      <td>5</td>
+      <td>non-causal</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>MCM8</td>
+      <td>4</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>MSH6</td>
+      <td>4</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>POLE2</td>
+      <td>4</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>PPAT</td>
+      <td>4</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>104</th>
+      <td>PRIM2</td>
+      <td>4</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>RAD51</td>
+      <td>4</td>
+      <td>none</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>Read the <code class="docutils literal notranslate"><span class="pre">kg_link</span></code> column before the gene names.</p>
 <p><strong>Seven genes carry a non-causal breast cancer edge</strong>: <code class="docutils literal notranslate"><span class="pre">TOP2A</span></code>, <code class="docutils literal notranslate"><span class="pre">TYMS</span></code>, <code class="docutils literal notranslate"><span class="pre">TUBA1B</span></code>,
@@ -1253,16 +2182,16 @@ is what those agents have to get right, and what we need to check them against.<
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb_2026"
+            mode: "python"
         },
         kernelOptions: {
-            name: "eccb_2026",
+            name: "python3",
             path: "./session-1-intro-networks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb_2026'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -1313,34 +2242,33 @@ is what those agents have to get right, and what we need to check them against.<
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#section-a-starting-from-icd-10">Section A — Starting from ICD-10</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-what-is-icd-10">A1. What is ICD-10?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-exercise-how-good-is-the-coverage">A2. Exercise: how good is the coverage?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-where-does-the-gap-fall">A3. Where does the gap fall?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a4-recovering-the-mapping-by-climbing-the-ontology">A4. Recovering the mapping by climbing the ontology</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a5-exercise-resolve-every-disease">A5. Exercise: resolve every disease</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-icd-10-coding">Part A. ICD-10 Coding</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-icd-10">What is ICD-10?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessing-coverage">Assessing coverage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recovering-the-mapping-by-climbing-the-ontology">Recovering the mapping by climbing the ontology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping-every-disease">Mapping every disease</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#section-b-which-diseases-share-genes">Section B — Which diseases share genes?</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b1-bipartite-projection">B1. Bipartite projection</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b2-exercise-breast-vs-ovarian-cancer">B2. Exercise: breast vs ovarian cancer</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b3-the-trap-not-all-shared-genes-mean-the-same-thing">B3. The trap: not all shared genes mean the same thing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b4-exercise-separate-cause-from-treatment">B4. Exercise: separate cause from treatment</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b5-the-whole-picture-do-the-diseases-group-themselves">B5. The whole picture: do the diseases group themselves?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bipartite-projection">Bipartite projection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-breast-and-ovarian-cancer">Comparing breast and ovarian cancer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#not-all-shared-genes-mean-the-same-thing">Not all ‘shared’ genes mean the same thing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-separate-cause-from-treatment">Exercise: Separate cause from treatment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-the-whole-picture-can-we-recover-disease-groups">Getting the whole picture: Can we recover disease groups?</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#section-c-connecting-to-the-omics-data">Section C — Connecting to the omics data</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-the-identifier-trap">C1. The identifier trap</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-identifier-trap">The identifier trap</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-zero-is-the-safe-answer">Why zero is the <em>safe</em> answer</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c2-the-pam50-subtypes-are-nodes-in-this-graph">C2. The PAM50 subtypes are nodes in this graph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c3-exercise-from-a-gene-list-to-a-disease">C3. Exercise: from a gene list to a disease</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pam50-subtypes-are-nodes-in-this-graph">The PAM50 subtypes are nodes in this graph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-from-a-gene-list-to-a-disease">Exercise: from a gene list to a disease</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#section-d-both-networks-at-once">Section D — Both networks at once</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d1-do-the-causal-genes-corroborate-each-other">D1. Do the causal genes corroborate each other?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d2-what-else-tracks-the-causal-genes">D2. What else tracks the causal genes?</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#section-d-combining-networks">Section D — Combining networks</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#do-the-causal-genes-corroborate-each-other">Do the causal genes corroborate each other?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-else-tracks-the-causal-genes">What else tracks the causal genes?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 </ul>
 </li>
