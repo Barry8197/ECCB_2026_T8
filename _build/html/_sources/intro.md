@@ -7,6 +7,8 @@ We've designed our tutorial to show end-to-end working examples using real data 
 
 During the tutorial all you will need is a laptop as we have built a dedicated [JupyterHub](https://biomedicalai.inf.ed.ac.uk/jupyter/hub/login) server where you will be able to code live on a pre-installed environment. We have also made a JupyterBook of the tutorial that will be publicly available via our GitHub. All data and code will also be placed on the University of Edinburgh DataShare resource with a permanent DOI so it is available in perpetuity.
 
+LINK TO CRYPT CODE : https://cryptpad.fr/code/#/2/code/edit/5cVl1gFjS9tcixj6wVFH7liM/ 
+
 ## Schedule of Events
 ```
 Tutorial 8: From Multi-Omics to Gene–Disease Discovery: Knowledge Graphs and LLM-Augmented Analysis
