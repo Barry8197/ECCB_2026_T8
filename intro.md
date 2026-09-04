@@ -1,13 +1,14 @@
 # From Multi-Omics to Gene–Disease Discovery: Knowledge Graphs and LLM-Augmented Analysis
 
+## Access to data via Zenodo 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22297463.svg)](https://doi.org/10.5281/zenodo.22297463)
+
 ## Welcome Note
 Welcome to our tutorial on the use of the use of multi-omics, knowledge graphs, and LLM for gene-disease discovery. We are very much looking forward to welcoming you to ECCB 2026 in Geneva this September.
 
 We've designed our tutorial to show end-to-end working examples using real data from various disease datasets, including from cancer (from The Cancer Genome Atlas) and Autism (from published Gene Expression studies), as well as public health (from the Generation Scotland study). We've worked hard to create a series of detailed Python notebooks and accompanying data that you can take away with you after the tutorial and modify for use in your own study and research.
 
 During the tutorial all you will need is a laptop as we have built a dedicated [JupyterHub](https://biomedicalai.inf.ed.ac.uk/jupyter/hub/login) server where you will be able to code live on a pre-installed environment. We have also made a JupyterBook of the tutorial that will be publicly available via our GitHub. All data and code will also be placed on the University of Edinburgh DataShare resource with a permanent DOI so it is available in perpetuity.
-
-LINK TO CRYPT CODE : https://cryptpad.fr/code/#/2/code/edit/5cVl1gFjS9tcixj6wVFH7liM/ 
 
 ## Schedule of Events
 ```
