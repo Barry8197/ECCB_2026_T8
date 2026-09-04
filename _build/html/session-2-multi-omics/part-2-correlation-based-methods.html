@@ -474,7 +474,6 @@ After fitting MOFA, we ask two questions:</p>
 <li><p>Which omics layers and molecular features contribute to those factors?</p></li>
 </ul>
 <p>This notebook is written as a first introduction. You do not need prior knowledge of MOFA, factor models, or latent variable models before starting.</p>
-<p><img alt="MOFA diagram" src="../_images/mofa.png" /></p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this notebook you should be able to:</p>
@@ -518,8 +517,8 @@ After fitting MOFA, we ask two questions:</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Host: biomedicalai
-Python: /home/bryan/.conda/envs/eccb_2026/bin/python
-Working dir: /home/bryan/ECCB_2026_T8_CODE/sessions/session-2-multi-omics
+Python: /opt/conda/envs/eccb_t8/bin/python
+Working dir: /home/clee/ECCB2026_TEST/sessions/session-2-multi-omics
 </pre></div>
 </div>
 </div>
@@ -606,16 +605,16 @@ Working dir: /home/bryan/ECCB_2026_T8_CODE/sessions/session-2-multi-omics
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Omic view dimensions:
-  transcriptomics:  603 patients ×  29995 features
-  proteomics     :  603 patients ×    464 features
-  methylation    :  603 patients × 200000 features
+  transcriptomics:  500 patients ×  29995 features
+  proteomics     :  500 patients ×    464 features
+  methylation    :  500 patients × 200000 features
 
 Subtype counts:
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>transcriptomics
-LumA      322
-LumB      118
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>paper_BRCA_Subtype_PAM50
+LumA      237
+LumB      100
 Basal      97
 Her2       41
 Normal     25
@@ -660,6 +659,14 @@ Name: count, dtype: int64
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">15s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">X_omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">6d</span><span class="si">}</span><span class="s2"> original -&gt; &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">X_train_omics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">6d</span><span class="si">}</span><span class="s2"> used for MOFA&quot;</span>
     <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Feature counts after variance filtering:
+transcriptomics:  29995 original -&gt;   2000 used for MOFA
+proteomics     :    464 original -&gt;    464 used for MOFA
+methylation    : 200000 original -&gt;   2000 used for MOFA
 </pre></div>
 </div>
 </div>
@@ -737,18 +744,50 @@ Name: count, dtype: int64
 <span class="c1"># For strict prediction, MOFA is fitted on training patients only.</span>
 <span class="n">mofa_data</span><span class="p">,</span> <span class="n">view_names</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="n">sample_names</span><span class="p">,</span> <span class="n">group_names</span> <span class="o">=</span> <span class="n">build_mofa_matrix_input</span><span class="p">(</span><span class="n">X_train_omics</span><span class="p">)</span>
 
-
-<span class="c1">### Exercise 1: Explore the multi-omics data</span>
-<span class="c1">### For each omics view:</span>
-<span class="c1">### 1. Print the name of the View + the number of patients and features. (ex: transcriptomics: (375, 2000))</span>
-<span class="c1">### 2. For each view, print the 3 first features names and 3 first training patients names. (ex: transcriptomics: first 3 features: [&#39;ENSG00000110484.7&#39;, &#39;ENSG00000166509.12&#39;, &#39;ENSG00000153002.12&#39;], first 3 patients: [&#39;TCGA-S3-AA0Z&#39;, &#39;TCGA-E9-A1N6&#39;, &#39;TCGA-C8-A26Y&#39;])</span>
-<span class="c1">### 3. For each view, display the first first 3 x 3 values (ex: transcriptomics: first 3 x 3 values: [[6.5552697 2.8434672 5.016912], [5.556552  8.19825   6.1988907], [5.6827602 4.590756  2.8434672]])</span>
-
+<span class="c1"># Quick shape check: each view should have the same number of training patients.</span>
+<span class="c1"># Also print a tiny preview so we can see what is being passed to MOFA.</span>
 <span class="k">for</span> <span class="n">view_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">view_name</span><span class="p">,</span> <span class="n">matrix</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">view_names</span><span class="p">,</span> <span class="n">mofa_data</span><span class="p">)):</span>
-    <span class="c1"># -----------------</span>
-    <span class="c1"># YOUR CODE HERE</span>
-    <span class="c1"># -----------------</span>
-    <span class="k">pass</span>
+    <span class="n">view_matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># one group: TCGA-BRCA_train</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">view_name</span><span class="si">:</span><span class="s2">15s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">view_matrix</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  first 3 training patients:&quot;</span><span class="p">,</span> <span class="n">sample_names</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  first 3 features:&quot;</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">[</span><span class="n">view_idx</span><span class="p">][:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  first 3 x 3 values:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">view_matrix</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Group names&quot;</span><span class="p">,</span> <span class="n">group_names</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> transcriptomics: (375, 2000)
+  first 3 training patients: [&#39;TCGA-S3-AA0Z&#39;, &#39;TCGA-E9-A1N6&#39;, &#39;TCGA-C8-A26Y&#39;]
+  first 3 features: [&#39;ENSG00000110484.7&#39;, &#39;ENSG00000166509.12&#39;, &#39;ENSG00000153002.12&#39;]
+  first 3 x 3 values:
+[[6.5552697 2.8434672 5.016912 ]
+ [5.556552  8.19825   6.1988907]
+ [5.6827602 4.590756  2.8434672]]
+
+
+ proteomics     : (375, 464)
+  first 3 training patients: [&#39;TCGA-S3-AA0Z&#39;, &#39;TCGA-E9-A1N6&#39;, &#39;TCGA-C8-A26Y&#39;]
+  first 3 features: [&#39;1433BETA&#39;, &#39;1433EPSILON&#39;, &#39;1433ZETA&#39;]
+  first 3 x 3 values:
+[[ 0.022889  0.25171   0.27433 ]
+ [ 0.30788   0.22643  -0.16134 ]
+ [ 0.23062  -0.075639 -0.44508 ]]
+
+
+ methylation    : (375, 2000)
+  first 3 training patients: [&#39;TCGA-S3-AA0Z&#39;, &#39;TCGA-E9-A1N6&#39;, &#39;TCGA-C8-A26Y&#39;]
+  first 3 features: [&#39;cg11738485&#39;, &#39;cg12466610&#39;, &#39;cg01893212&#39;]
+  first 3 x 3 values:
+[[0.01856231 0.03304229 0.02396981]
+ [0.9842885  0.04287856 0.6445241 ]
+ [0.79413193 0.97176045 0.03665907]]
+
+
+ Group names [&#39;TCGA-BRCA_train&#39;]
 </pre></div>
 </div>
 </div>
@@ -855,6 +894,61 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>        #########################################################
+        ###           __  __  ____  ______                    ### 
+        ###          |  \/  |/ __ \|  ____/\    _             ### 
+        ###          | \  / | |  | | |__ /  \ _| |_           ### 
+        ###          | |\/| | |  | |  __/ /\ \_   _|          ###
+        ###          | |  | | |__| | | / ____ \|_|            ###
+        ###          |_|  |_|\____/|_|/_/    \_\              ###
+        ###                                                   ### 
+        ######################################################### 
+         
+
+
+use_float32 set to True: replacing float64 arrays by float32 arrays to speed up computations...
+
+Scaling views to unit variance...
+
+Successfully loaded view=&#39;transcriptomics&#39; group=&#39;TCGA-BRCA_train&#39; with N=375 samples and D=2000 features...
+Successfully loaded view=&#39;proteomics&#39; group=&#39;TCGA-BRCA_train&#39; with N=375 samples and D=464 features...
+Successfully loaded view=&#39;methylation&#39; group=&#39;TCGA-BRCA_train&#39; with N=375 samples and D=2000 features...
+
+
+Model options:
+- Automatic Relevance Determination prior on the factors: True
+- Automatic Relevance Determination prior on the weights: True
+- Spike-and-slab prior on the factors: False
+- Spike-and-slab prior on the weights: True
+Likelihoods:
+- View 0 (transcriptomics): gaussian
+- View 1 (proteomics): gaussian
+- View 2 (methylation): gaussian
+
+
+
+
+######################################
+## Training the model with seed 42 ##
+######################################
+
+
+
+Converged!
+
+
+
+#######################
+## Training finished ##
+#######################
+
+
+Saving model in /home/clee/ECCB2026_TEST/sessions/session-2-multi-omics/outputs/trained_mofaplus_train_var2000_max10_ard_model.hdf5...
+Saved MOFA model to: /home/clee/ECCB2026_TEST/sessions/session-2-multi-omics/outputs/trained_mofaplus_train_var2000_max10_ard_model.hdf5
+</pre></div>
+</div>
+</div>
 </div>
 <section id="correlation-between-factors">
 <h3>Correlation between factors<a class="headerlink" href="#correlation-between-factors" title="Link to this heading">#</a></h3>
@@ -886,6 +980,9 @@ Name: count, dtype: int64
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f82ff7fac41cc753cf2e6f55bd0d8699d67bc07e18ca36c37b0b633d32407d8c.png" src="../_images/f82ff7fac41cc753cf2e6f55bd0d8699d67bc07e18ca36c37b0b633d32407d8c.png" />
 </div>
 </div>
 <p><strong>Discussion of the factor weight correlation plot.</strong></p>
@@ -938,6 +1035,154 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected 10 active factors out of 10 initialized factors.
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>factor</th>
+      <th>total_r2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Factor1</td>
+      <td>34.643906</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Factor2</td>
+      <td>29.115903</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Factor3</td>
+      <td>17.221707</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Factor4</td>
+      <td>10.650456</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Factor5</td>
+      <td>8.870322</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Factor6</td>
+      <td>6.501359</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Factor7</td>
+      <td>5.926788</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Factor8</td>
+      <td>4.949772</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Factor9</td>
+      <td>4.626852</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Factor10</td>
+      <td>3.979939</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>view</th>
+      <th>group</th>
+      <th>factor</th>
+      <th>r2</th>
+      <th>group_mofax</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>transcriptomics</td>
+      <td>all</td>
+      <td>Factor1</td>
+      <td>1.426017</td>
+      <td>TCGA-BRCA_train</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>proteomics</td>
+      <td>all</td>
+      <td>Factor1</td>
+      <td>0.810981</td>
+      <td>TCGA-BRCA_train</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>methylation</td>
+      <td>all</td>
+      <td>Factor1</td>
+      <td>32.406908</td>
+      <td>TCGA-BRCA_train</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>transcriptomics</td>
+      <td>all</td>
+      <td>Factor2</td>
+      <td>14.932364</td>
+      <td>TCGA-BRCA_train</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>proteomics</td>
+      <td>all</td>
+      <td>Factor2</td>
+      <td>8.091247</td>
+      <td>TCGA-BRCA_train</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -982,6 +1227,9 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/f75f7fe9698d7c2f3a2f52a650fec705e440e472db302dee5f55ea94f573e449.png" src="../_images/f75f7fe9698d7c2f3a2f52a650fec705e440e472db302dee5f55ea94f573e449.png" />
+</div>
 </div>
 <p><strong>Discussion of the overall R2 heatmaps.</strong></p>
 <p>These heatmaps show the official MOFA variance explained values read with <code class="docutils literal notranslate"><span class="pre">mofax</span></code>. They ask how much variance each training-fitted factor explains in each omics view. Darker blue means a larger MOFA R2 percentage, so that factor explains more of that view.</p>
@@ -1018,13 +1266,21 @@ Name: count, dtype: int64
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;MOFA R2 (%)&quot;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
 
-<span class="c1"># Top right: grouped bars compare factors within each omics view. </span>
-<span class="c1">### Exercise 2: Compare factors within each omics view - Use the same code as above, but group by factor instead of view.</span>
-<span class="c1">### **Question:** Which factor explains the most variance in each omics view?</span>
-
-<span class="c1"># -----------------</span>
-<span class="c1"># YOUR CODE HERE</span>
-<span class="c1"># -----------------</span>
+<span class="c1"># Top right: grouped bars compare factors within each omics view.</span>
+<span class="n">mfx</span><span class="o">.</span><span class="n">plot_r2_barplot</span><span class="p">(</span>
+    <span class="n">mofa_model_mfx</span><span class="p">,</span>
+    <span class="n">factors</span><span class="o">=</span><span class="n">active_factor_indices</span><span class="p">,</span>
+    <span class="n">view</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;View&quot;</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;Factor&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">factor_colors</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Grouped MOFA R2 by view&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Omics view&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;MOFA R2 (%)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">borderaxespad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># For stacked panels, use the same official mofax R2 table.</span>
 <span class="n">r2_for_bars</span> <span class="o">=</span> <span class="n">mofa_model_mfx</span><span class="o">.</span><span class="n">get_r2</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="n">active_factor_indices</span><span class="p">,</span> <span class="n">per_factor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1044,20 +1300,25 @@ Name: count, dtype: int64
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">)</span>
 
 <span class="c1"># Bottom right: each view is one bar, stacked by factor.</span>
-<span class="c1">### Exercise 3: Create a stacked R² bar plot - Use the same code as above, but pivot by view instead of factor.</span>
-<span class="c1">### **Questions**</span>
-<span class="c1">### 1. Which omics view has the largest total variance explained?</span>
-<span class="c1">### 2. Is each view dominated by one factor or several factors?</span>
-<span class="c1">### 3. How does the stacked plot complement the grouped plot?</span>
-
-<span class="c1"># -----------------</span>
-<span class="c1"># YOUR CODE HERE</span>
-<span class="c1"># -----------------</span>
+<span class="n">r2_stacked_by_view</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">r2_for_bars</span>
+    <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;View&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;R2&quot;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">view_names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">active_factor_cols</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">r2_stacked_by_view</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">stacked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">factor_colors</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Stacked MOFA R2 by view&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Omics view&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;MOFA R2 (%)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">borderaxespad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e9ce38049f951fdd0e8e54a4d9af1049251b9dff1bcb1f573f68fdaa6f8a72ba.png" src="../_images/e9ce38049f951fdd0e8e54a4d9af1049251b9dff1bcb1f573f68fdaa6f8a72ba.png" />
 </div>
 </div>
 <p><strong>Discussion of the variance-explained barplots.</strong></p>
@@ -1190,6 +1451,244 @@ Each factor represents a different pattern of variation across patients. It comb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using 10 active MOFA factors downstream: [&#39;Factor1&#39;, &#39;Factor2&#39;, &#39;Factor3&#39;, &#39;Factor4&#39;, &#39;Factor5&#39;, &#39;Factor6&#39;, &#39;Factor7&#39;, &#39;Factor8&#39;, &#39;Factor9&#39;, &#39;Factor10&#39;]
+Training factor table: (375, 10)
+Projected test factor table: (125, 10)
+Combined factors_df: (500, 12)
+</pre></div>
+</div>
+<div class="output text_html"><style type="text/css">
+</style>
+<table id="T_ba821">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_ba821_level0_col0" class="col_heading level0 col0" >Factor1</th>
+      <th id="T_ba821_level0_col1" class="col_heading level0 col1" >Factor2</th>
+      <th id="T_ba821_level0_col2" class="col_heading level0 col2" >Factor3</th>
+      <th id="T_ba821_level0_col3" class="col_heading level0 col3" >Factor4</th>
+      <th id="T_ba821_level0_col4" class="col_heading level0 col4" >Factor5</th>
+      <th id="T_ba821_level0_col5" class="col_heading level0 col5" >Factor6</th>
+      <th id="T_ba821_level0_col6" class="col_heading level0 col6" >Factor7</th>
+      <th id="T_ba821_level0_col7" class="col_heading level0 col7" >Factor8</th>
+      <th id="T_ba821_level0_col8" class="col_heading level0 col8" >Factor9</th>
+      <th id="T_ba821_level0_col9" class="col_heading level0 col9" >Factor10</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >split</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+      <th class="blank col5" >&nbsp;</th>
+      <th class="blank col6" >&nbsp;</th>
+      <th class="blank col7" >&nbsp;</th>
+      <th class="blank col8" >&nbsp;</th>
+      <th class="blank col9" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_ba821_level0_row0" class="row_heading level0 row0" >test</th>
+      <td id="T_ba821_row0_col0" class="data row0 col0" >0.127</td>
+      <td id="T_ba821_row0_col1" class="data row0 col1" >-0.037</td>
+      <td id="T_ba821_row0_col2" class="data row0 col2" >-0.037</td>
+      <td id="T_ba821_row0_col3" class="data row0 col3" >0.125</td>
+      <td id="T_ba821_row0_col4" class="data row0 col4" >-0.085</td>
+      <td id="T_ba821_row0_col5" class="data row0 col5" >0.021</td>
+      <td id="T_ba821_row0_col6" class="data row0 col6" >-0.040</td>
+      <td id="T_ba821_row0_col7" class="data row0 col7" >0.008</td>
+      <td id="T_ba821_row0_col8" class="data row0 col8" >0.083</td>
+      <td id="T_ba821_row0_col9" class="data row0 col9" >-0.020</td>
+    </tr>
+    <tr>
+      <th id="T_ba821_level0_row1" class="row_heading level0 row1" >train</th>
+      <td id="T_ba821_row1_col0" class="data row1 col0" >-0.000</td>
+      <td id="T_ba821_row1_col1" class="data row1 col1" >-0.000</td>
+      <td id="T_ba821_row1_col2" class="data row1 col2" >-0.000</td>
+      <td id="T_ba821_row1_col3" class="data row1 col3" >-0.000</td>
+      <td id="T_ba821_row1_col4" class="data row1 col4" >-0.000</td>
+      <td id="T_ba821_row1_col5" class="data row1 col5" >-0.000</td>
+      <td id="T_ba821_row1_col6" class="data row1 col6" >-0.000</td>
+      <td id="T_ba821_row1_col7" class="data row1 col7" >-0.000</td>
+      <td id="T_ba821_row1_col8" class="data row1 col8" >-0.000</td>
+      <td id="T_ba821_row1_col9" class="data row1 col9" >0.000</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="output text_html"><style type="text/css">
+</style>
+<table id="T_2f916">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_2f916_level0_col0" class="col_heading level0 col0" >Factor1</th>
+      <th id="T_2f916_level0_col1" class="col_heading level0 col1" >Factor2</th>
+      <th id="T_2f916_level0_col2" class="col_heading level0 col2" >Factor3</th>
+      <th id="T_2f916_level0_col3" class="col_heading level0 col3" >Factor4</th>
+      <th id="T_2f916_level0_col4" class="col_heading level0 col4" >Factor5</th>
+      <th id="T_2f916_level0_col5" class="col_heading level0 col5" >Factor6</th>
+      <th id="T_2f916_level0_col6" class="col_heading level0 col6" >Factor7</th>
+      <th id="T_2f916_level0_col7" class="col_heading level0 col7" >Factor8</th>
+      <th id="T_2f916_level0_col8" class="col_heading level0 col8" >Factor9</th>
+      <th id="T_2f916_level0_col9" class="col_heading level0 col9" >Factor10</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >split</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+      <th class="blank col5" >&nbsp;</th>
+      <th class="blank col6" >&nbsp;</th>
+      <th class="blank col7" >&nbsp;</th>
+      <th class="blank col8" >&nbsp;</th>
+      <th class="blank col9" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_2f916_level0_row0" class="row_heading level0 row0" >test</th>
+      <td id="T_2f916_row0_col0" class="data row0 col0" >1.501</td>
+      <td id="T_2f916_row0_col1" class="data row0 col1" >2.346</td>
+      <td id="T_2f916_row0_col2" class="data row0 col2" >0.869</td>
+      <td id="T_2f916_row0_col3" class="data row0 col3" >1.429</td>
+      <td id="T_2f916_row0_col4" class="data row0 col4" >1.952</td>
+      <td id="T_2f916_row0_col5" class="data row0 col5" >1.256</td>
+      <td id="T_2f916_row0_col6" class="data row0 col6" >1.207</td>
+      <td id="T_2f916_row0_col7" class="data row0 col7" >0.610</td>
+      <td id="T_2f916_row0_col8" class="data row0 col8" >0.782</td>
+      <td id="T_2f916_row0_col9" class="data row0 col9" >0.498</td>
+    </tr>
+    <tr>
+      <th id="T_2f916_level0_row1" class="row_heading level0 row1" >train</th>
+      <td id="T_2f916_row1_col0" class="data row1 col0" >2.168</td>
+      <td id="T_2f916_row1_col1" class="data row1 col1" >2.517</td>
+      <td id="T_2f916_row1_col2" class="data row1 col2" >1.860</td>
+      <td id="T_2f916_row1_col3" class="data row1 col3" >2.427</td>
+      <td id="T_2f916_row1_col4" class="data row1 col4" >2.676</td>
+      <td id="T_2f916_row1_col5" class="data row1 col5" >1.631</td>
+      <td id="T_2f916_row1_col6" class="data row1 col6" >2.119</td>
+      <td id="T_2f916_row1_col7" class="data row1 col7" >1.185</td>
+      <td id="T_2f916_row1_col8" class="data row1 col8" >1.203</td>
+      <td id="T_2f916_row1_col9" class="data row1 col9" >1.013</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Factor1</th>
+      <th>Factor2</th>
+      <th>Factor3</th>
+      <th>Factor4</th>
+      <th>Factor5</th>
+      <th>Factor6</th>
+      <th>Factor7</th>
+      <th>Factor8</th>
+      <th>Factor9</th>
+      <th>Factor10</th>
+      <th>subtype</th>
+      <th>split</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>TCGA-AQ-A1H2</th>
+      <td>1.902690</td>
+      <td>2.492167</td>
+      <td>1.920890</td>
+      <td>-3.347955</td>
+      <td>-4.100233</td>
+      <td>1.010781</td>
+      <td>-3.148175</td>
+      <td>-1.100768</td>
+      <td>-2.079268</td>
+      <td>-1.337117</td>
+      <td>LumA</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>TCGA-A1-A0SF</th>
+      <td>1.060549</td>
+      <td>1.746495</td>
+      <td>0.347418</td>
+      <td>1.224337</td>
+      <td>2.153381</td>
+      <td>-0.659559</td>
+      <td>-0.345273</td>
+      <td>1.182050</td>
+      <td>-1.338544</td>
+      <td>0.153271</td>
+      <td>LumA</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>TCGA-AR-A255</th>
+      <td>0.741092</td>
+      <td>0.715161</td>
+      <td>-0.729635</td>
+      <td>1.069572</td>
+      <td>-0.146923</td>
+      <td>-0.696867</td>
+      <td>-0.546454</td>
+      <td>-0.009447</td>
+      <td>0.233467</td>
+      <td>-0.460903</td>
+      <td>LumA</td>
+      <td>test</td>
+    </tr>
+    <tr>
+      <th>TCGA-E2-A1BD</th>
+      <td>2.617779</td>
+      <td>2.203989</td>
+      <td>2.255468</td>
+      <td>-0.840693</td>
+      <td>-3.178044</td>
+      <td>-1.067212</td>
+      <td>2.438388</td>
+      <td>1.580262</td>
+      <td>-0.420639</td>
+      <td>0.918719</td>
+      <td>LumA</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>TCGA-A2-A0YI</th>
+      <td>-0.052230</td>
+      <td>2.582332</td>
+      <td>0.694501</td>
+      <td>0.603238</td>
+      <td>3.286869</td>
+      <td>-0.067978</td>
+      <td>0.886452</td>
+      <td>0.614959</td>
+      <td>0.703973</td>
+      <td>-0.708303</td>
+      <td>LumA</td>
+      <td>train</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 </section>
 <section id="read-the-combined-factor-table">
@@ -1204,17 +1703,141 @@ Each factor represents a different pattern of variation across patients. It comb
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Exercise 4: Summarize the MOFA factor values</span>
-<span class="c1"># Use the describe() method to calculate summary statistics</span>
-<span class="c1"># for the active MOFA factors.</span>
-<span class="c1"># -----------------</span>
-<span class="c1"># YOUR CODE HERE</span>
-<span class="c1"># -----------------</span>
-<span class="c1">#</span>
-<span class="c1"># This is easy but reinforces that factors_df contains patients as rows and factors as columns. </span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inspect the scale of the factor values.</span>
+<span class="n">factor_summary</span> <span class="o">=</span> <span class="n">factors_df</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="c1"># Format the table with regular decimal numbers instead of scientific notation.</span>
+<span class="n">display</span><span class="p">(</span><span class="n">factor_summary</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style type="text/css">
+</style>
+<table id="T_cd6ad">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_cd6ad_level0_col0" class="col_heading level0 col0" >Factor1</th>
+      <th id="T_cd6ad_level0_col1" class="col_heading level0 col1" >Factor2</th>
+      <th id="T_cd6ad_level0_col2" class="col_heading level0 col2" >Factor3</th>
+      <th id="T_cd6ad_level0_col3" class="col_heading level0 col3" >Factor4</th>
+      <th id="T_cd6ad_level0_col4" class="col_heading level0 col4" >Factor5</th>
+      <th id="T_cd6ad_level0_col5" class="col_heading level0 col5" >Factor6</th>
+      <th id="T_cd6ad_level0_col6" class="col_heading level0 col6" >Factor7</th>
+      <th id="T_cd6ad_level0_col7" class="col_heading level0 col7" >Factor8</th>
+      <th id="T_cd6ad_level0_col8" class="col_heading level0 col8" >Factor9</th>
+      <th id="T_cd6ad_level0_col9" class="col_heading level0 col9" >Factor10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_cd6ad_level0_row0" class="row_heading level0 row0" >count</th>
+      <td id="T_cd6ad_row0_col0" class="data row0 col0" >500.000</td>
+      <td id="T_cd6ad_row0_col1" class="data row0 col1" >500.000</td>
+      <td id="T_cd6ad_row0_col2" class="data row0 col2" >500.000</td>
+      <td id="T_cd6ad_row0_col3" class="data row0 col3" >500.000</td>
+      <td id="T_cd6ad_row0_col4" class="data row0 col4" >500.000</td>
+      <td id="T_cd6ad_row0_col5" class="data row0 col5" >500.000</td>
+      <td id="T_cd6ad_row0_col6" class="data row0 col6" >500.000</td>
+      <td id="T_cd6ad_row0_col7" class="data row0 col7" >500.000</td>
+      <td id="T_cd6ad_row0_col8" class="data row0 col8" >500.000</td>
+      <td id="T_cd6ad_row0_col9" class="data row0 col9" >500.000</td>
+    </tr>
+    <tr>
+      <th id="T_cd6ad_level0_row1" class="row_heading level0 row1" >mean</th>
+      <td id="T_cd6ad_row1_col0" class="data row1 col0" >0.032</td>
+      <td id="T_cd6ad_row1_col1" class="data row1 col1" >-0.009</td>
+      <td id="T_cd6ad_row1_col2" class="data row1 col2" >-0.009</td>
+      <td id="T_cd6ad_row1_col3" class="data row1 col3" >0.031</td>
+      <td id="T_cd6ad_row1_col4" class="data row1 col4" >-0.021</td>
+      <td id="T_cd6ad_row1_col5" class="data row1 col5" >0.005</td>
+      <td id="T_cd6ad_row1_col6" class="data row1 col6" >-0.010</td>
+      <td id="T_cd6ad_row1_col7" class="data row1 col7" >0.002</td>
+      <td id="T_cd6ad_row1_col8" class="data row1 col8" >0.021</td>
+      <td id="T_cd6ad_row1_col9" class="data row1 col9" >-0.005</td>
+    </tr>
+    <tr>
+      <th id="T_cd6ad_level0_row2" class="row_heading level0 row2" >std</th>
+      <td id="T_cd6ad_row2_col0" class="data row2 col0" >2.021</td>
+      <td id="T_cd6ad_row2_col1" class="data row2 col1" >2.474</td>
+      <td id="T_cd6ad_row2_col2" class="data row2 col2" >1.667</td>
+      <td id="T_cd6ad_row2_col3" class="data row2 col3" >2.219</td>
+      <td id="T_cd6ad_row2_col4" class="data row2 col4" >2.513</td>
+      <td id="T_cd6ad_row2_col5" class="data row2 col5" >1.544</td>
+      <td id="T_cd6ad_row2_col6" class="data row2 col6" >1.931</td>
+      <td id="T_cd6ad_row2_col7" class="data row2 col7" >1.070</td>
+      <td id="T_cd6ad_row2_col8" class="data row2 col8" >1.113</td>
+      <td id="T_cd6ad_row2_col9" class="data row2 col9" >0.911</td>
+    </tr>
+    <tr>
+      <th id="T_cd6ad_level0_row3" class="row_heading level0 row3" >min</th>
+      <td id="T_cd6ad_row3_col0" class="data row3 col0" >-3.904</td>
+      <td id="T_cd6ad_row3_col1" class="data row3 col1" >-6.921</td>
+      <td id="T_cd6ad_row3_col2" class="data row3 col2" >-6.796</td>
+      <td id="T_cd6ad_row3_col3" class="data row3 col3" >-4.031</td>
+      <td id="T_cd6ad_row3_col4" class="data row3 col4" >-8.243</td>
+      <td id="T_cd6ad_row3_col5" class="data row3 col5" >-5.032</td>
+      <td id="T_cd6ad_row3_col6" class="data row3 col6" >-7.143</td>
+      <td id="T_cd6ad_row3_col7" class="data row3 col7" >-6.066</td>
+      <td id="T_cd6ad_row3_col8" class="data row3 col8" >-3.840</td>
+      <td id="T_cd6ad_row3_col9" class="data row3 col9" >-2.826</td>
+    </tr>
+    <tr>
+      <th id="T_cd6ad_level0_row4" class="row_heading level0 row4" >25%</th>
+      <td id="T_cd6ad_row4_col0" class="data row4 col0" >-1.570</td>
+      <td id="T_cd6ad_row4_col1" class="data row4 col1" >-1.200</td>
+      <td id="T_cd6ad_row4_col2" class="data row4 col2" >-0.765</td>
+      <td id="T_cd6ad_row4_col3" class="data row4 col3" >-1.530</td>
+      <td id="T_cd6ad_row4_col4" class="data row4 col4" >-1.621</td>
+      <td id="T_cd6ad_row4_col5" class="data row4 col5" >-0.916</td>
+      <td id="T_cd6ad_row4_col6" class="data row4 col6" >-1.226</td>
+      <td id="T_cd6ad_row4_col7" class="data row4 col7" >-0.588</td>
+      <td id="T_cd6ad_row4_col8" class="data row4 col8" >-0.680</td>
+      <td id="T_cd6ad_row4_col9" class="data row4 col9" >-0.561</td>
+    </tr>
+    <tr>
+      <th id="T_cd6ad_level0_row5" class="row_heading level0 row5" >50%</th>
+      <td id="T_cd6ad_row5_col0" class="data row5 col0" >-0.012</td>
+      <td id="T_cd6ad_row5_col1" class="data row5 col1" >0.873</td>
+      <td id="T_cd6ad_row5_col2" class="data row5 col2" >0.273</td>
+      <td id="T_cd6ad_row5_col3" class="data row5 col3" >-0.318</td>
+      <td id="T_cd6ad_row5_col4" class="data row5 col4" >-0.179</td>
+      <td id="T_cd6ad_row5_col5" class="data row5 col5" >0.055</td>
+      <td id="T_cd6ad_row5_col6" class="data row5 col6" >0.356</td>
+      <td id="T_cd6ad_row5_col7" class="data row5 col7" >0.019</td>
+      <td id="T_cd6ad_row5_col8" class="data row5 col8" >0.060</td>
+      <td id="T_cd6ad_row5_col9" class="data row5 col9" >-0.091</td>
+    </tr>
+    <tr>
+      <th id="T_cd6ad_level0_row6" class="row_heading level0 row6" >75%</th>
+      <td id="T_cd6ad_row6_col0" class="data row6 col0" >1.573</td>
+      <td id="T_cd6ad_row6_col1" class="data row6 col1" >1.826</td>
+      <td id="T_cd6ad_row6_col2" class="data row6 col2" >1.128</td>
+      <td id="T_cd6ad_row6_col3" class="data row6 col3" >1.223</td>
+      <td id="T_cd6ad_row6_col4" class="data row6 col4" >1.574</td>
+      <td id="T_cd6ad_row6_col5" class="data row6 col5" >1.054</td>
+      <td id="T_cd6ad_row6_col6" class="data row6 col6" >1.387</td>
+      <td id="T_cd6ad_row6_col7" class="data row6 col7" >0.594</td>
+      <td id="T_cd6ad_row6_col8" class="data row6 col8" >0.705</td>
+      <td id="T_cd6ad_row6_col9" class="data row6 col9" >0.441</td>
+    </tr>
+    <tr>
+      <th id="T_cd6ad_level0_row7" class="row_heading level0 row7" >max</th>
+      <td id="T_cd6ad_row7_col0" class="data row7 col0" >4.997</td>
+      <td id="T_cd6ad_row7_col1" class="data row7 col1" >3.820</td>
+      <td id="T_cd6ad_row7_col2" class="data row7 col2" >2.920</td>
+      <td id="T_cd6ad_row7_col3" class="data row7 col3" >7.689</td>
+      <td id="T_cd6ad_row7_col4" class="data row7 col4" >6.872</td>
+      <td id="T_cd6ad_row7_col5" class="data row7 col5" >4.106</td>
+      <td id="T_cd6ad_row7_col6" class="data row7 col6" >4.952</td>
+      <td id="T_cd6ad_row7_col7" class="data row7 col7" >3.102</td>
+      <td id="T_cd6ad_row7_col8" class="data row7 col8" >3.797</td>
+      <td id="T_cd6ad_row7_col9" class="data row7 col9" >4.385</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
 </div>
 <p>This table summarizes the scale of the MOFA factors. Factor values are usually centered around zero, but different factors can have different spreads. This means that a value such as <code class="docutils literal notranslate"><span class="pre">2</span></code> should be interpreted relative to the distribution of the same factor, not as an absolute score shared across all factors.</p>
 <p>A wider factor distribution does not automatically mean that the factor is more biologically important. Factor importance should be assessed by combining several diagnostics: variance explained, subtype association, view contributions, and feature weights/loadings.</p>
@@ -1232,25 +1855,15 @@ Each factor represents a different pattern of variation across patients. It comb
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Exercise 5: Predict subtype using the MOFA factors</span>
-<span class="c1">#</span>
-<span class="c1"># Use the fit_factor_classifier() function defined previously.</span>
-<span class="c1">#</span>
-<span class="c1"># Questions:</span>
-<span class="c1"># 1. What data should be passed as predictor variables?</span>
-<span class="c1"># 2. Which metric is more appropriate when subtype classes are unbalanced?</span>
-
-<span class="c1"># -----------------</span>
-<span class="c1"># YOUR CODE HERE</span>
-<span class="c1"># -----------------</span>
-
-<span class="c1"># mofa_clf, mofa_pred, mofa_metrics = fit_factor_classifier(</span>
-<span class="c1">#     factors_df=...,       # TODO: Patient-by-factor table</span>
-<span class="c1">#     y=...,                # TODO: Subtype labels</span>
-<span class="c1">#     train_ids=...,        # TODO: Training patient IDs</span>
-<span class="c1">#     test_ids=...,         # TODO: Test patient IDs</span>
-<span class="c1">#     model_name= &quot;MOFA factors + Logistic Regression&quot;</span>
-<span class="c1"># )</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train logistic regression on training patients and predict held-out patients.</span>
+<span class="c1"># The classifier receives training MOFA factor values and projected test factor values, not the original omics matrices or weights.</span>
+<span class="n">mofa_factor_clf</span><span class="p">,</span> <span class="n">mofa_pred</span><span class="p">,</span> <span class="n">mofa_metrics</span> <span class="o">=</span> <span class="n">fit_factor_classifier</span><span class="p">(</span>
+    <span class="n">factors_df</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">train_ids</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
+    <span class="n">test_ids</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
+    <span class="s2">&quot;MOFA factors + logistic regression&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># Store metrics in a table so this result can be compared with later models.</span>
 <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">mofa_metrics</span><span class="p">])</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1270,6 +1883,61 @@ Each factor represents a different pattern of variation across patients. It comb
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MOFA factors + logistic regression
+──────────────────────────────────
+  Accuracy          : 0.776 
+  Balanced accuracy : 0.814
+</pre></div>
+</div>
+<img alt="../_images/51aa2cde60271737c41306c93bac67b1342038e12055563356536cae3269c0b5.png" src="../_images/51aa2cde60271737c41306c93bac67b1342038e12055563356536cae3269c0b5.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>MOFA factors + logistic regression</td>
+      <td>0.776</td>
+      <td>0.814333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              precision    recall  f1-score   support
+
+       Basal       1.00      0.96      0.98        24
+        Her2       0.88      0.70      0.78        10
+        LumA       0.90      0.73      0.81        60
+        LumB       0.57      0.68      0.62        25
+      Normal       0.40      1.00      0.57         6
+
+    accuracy                           0.78       125
+   macro avg       0.75      0.81      0.75       125
+weighted avg       0.83      0.78      0.79       125
+</pre></div>
+</div>
+<img alt="../_images/6a8441c06168c26a94ed8dd8fb184efd3951cf28114e3c5a53778c35234b2071.png" src="../_images/6a8441c06168c26a94ed8dd8fb184efd3951cf28114e3c5a53778c35234b2071.png" />
 </div>
 </div>
 <p><strong>Conclusion from this prediction step.</strong></p>
@@ -1332,6 +2000,83 @@ Each factor represents a different pattern of variation across patients. It comb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>factor</th>
+      <th>eta_squared</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>Factor2</td>
+      <td>0.824362</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Factor6</td>
+      <td>0.372969</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Factor1</td>
+      <td>0.280520</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Factor4</td>
+      <td>0.180798</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Factor8</td>
+      <td>0.154022</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Factor9</td>
+      <td>0.085889</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Factor10</td>
+      <td>0.080315</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Factor3</td>
+      <td>0.048551</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Factor5</td>
+      <td>0.045927</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Factor7</td>
+      <td>0.018362</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p><strong>Discussion of the eta-squared results.</strong></p>
 <p>This table ranks factors by how strongly their training-patient factor values differ across subtypes. Here, <code class="docutils literal notranslate"><span class="pre">Factor2</span></code> is clearly the most subtype-associated factor, with eta-squared around <code class="docutils literal notranslate"><span class="pre">0.73</span></code>. This means that a large fraction of the variation in <code class="docutils literal notranslate"><span class="pre">Factor2</span></code> values can be explained by subtype group differences.</p>
@@ -1366,6 +2111,9 @@ Each factor represents a different pattern of variation across patients. It comb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/dd9643ff7e66cfc34ee6d95eafeaf05b24d1bfc4f2f7645b0ead611fe7d410a0.png" src="../_images/dd9643ff7e66cfc34ee6d95eafeaf05b24d1bfc4f2f7645b0ead611fe7d410a0.png" />
+</div>
 </div>
 <p><strong>Discussion of the scatter grid.</strong></p>
 <p>This grid uses <code class="docutils literal notranslate"><span class="pre">Factor2</span></code>, the most subtype-associated factor from the eta-squared ranking, as the common x-axis. Each panel then compares <code class="docutils literal notranslate"><span class="pre">Factor2</span></code> with another highly ranked factor: <code class="docutils literal notranslate"><span class="pre">Factor1</span></code>, <code class="docutils literal notranslate"><span class="pre">Factor6</span></code>, and <code class="docutils literal notranslate"><span class="pre">Factor4</span></code>. Each point is a training patient, colored by subtype.</p>
@@ -1396,6 +2144,9 @@ Each factor represents a different pattern of variation across patients. It comb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/f5fc53c499e44e0724b95987cb38e433e6110e318d6996cc5dd0757ad09a0099.png" src="../_images/f5fc53c499e44e0724b95987cb38e433e6110e318d6996cc5dd0757ad09a0099.png" />
+</div>
 </div>
 <p><strong>Discussion of the boxplots.</strong></p>
 <p>These boxplots summarize the same training-patient factor values by subtype. Compared with the scatter grid, they make it easier to see which subtype groups have shifted factor-value distributions.</p>
@@ -1421,6 +2172,9 @@ Each factor represents a different pattern of variation across patients. It comb
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/05551c77175d4961fd121df34700a0103143cb6665cf4266c221304b6df6aac7.png" src="../_images/05551c77175d4961fd121df34700a0103143cb6665cf4266c221304b6df6aac7.png" />
 </div>
 </div>
 <p><strong>Discussion of the factor activity heatmap.</strong></p>
@@ -1466,6 +2220,100 @@ Each factor represents a different pattern of variation across patients. It comb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>view</th>
+      <th>methylation</th>
+      <th>proteomics</th>
+      <th>transcriptomics</th>
+    </tr>
+    <tr>
+      <th>factor</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Factor1</th>
+      <td>0.243858</td>
+      <td>0.009112</td>
+      <td>0.025149</td>
+    </tr>
+    <tr>
+      <th>Factor10</th>
+      <td>0.098817</td>
+      <td>0.080587</td>
+      <td>0.048054</td>
+    </tr>
+    <tr>
+      <th>Factor2</th>
+      <td>0.075452</td>
+      <td>0.060811</td>
+      <td>0.118125</td>
+    </tr>
+    <tr>
+      <th>Factor3</th>
+      <td>0.000002</td>
+      <td>0.163776</td>
+      <td>0.000635</td>
+    </tr>
+    <tr>
+      <th>Factor4</th>
+      <td>0.003055</td>
+      <td>0.009754</td>
+      <td>0.092777</td>
+    </tr>
+    <tr>
+      <th>Factor5</th>
+      <td>0.016799</td>
+      <td>0.017325</td>
+      <td>0.037195</td>
+    </tr>
+    <tr>
+      <th>Factor6</th>
+      <td>0.042308</td>
+      <td>0.038054</td>
+      <td>0.078025</td>
+    </tr>
+    <tr>
+      <th>Factor7</th>
+      <td>0.067125</td>
+      <td>0.000063</td>
+      <td>0.006195</td>
+    </tr>
+    <tr>
+      <th>Factor8</th>
+      <td>0.025039</td>
+      <td>0.042037</td>
+      <td>0.120810</td>
+    </tr>
+    <tr>
+      <th>Factor9</th>
+      <td>0.110088</td>
+      <td>0.018009</td>
+      <td>0.052665</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p><strong>Discussion of the view-level weight summary.</strong></p>
 <p>This table summarizes the average absolute MOFA weight for each factor and each omics view. It asks a different question from R2: R2 tells us how much variance a factor explains in a view, while these mean absolute weights tell us <strong>how strongly, on average, the features in that view contribute to the factor.</strong></p>
@@ -1528,6 +2376,149 @@ Each factor represents a different pattern of variation across patients. It comb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>view</th>
+      <th>factor</th>
+      <th>rank</th>
+      <th>feature</th>
+      <th>feature_id</th>
+      <th>weight</th>
+      <th>abs_weight</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>270</th>
+      <td>methylation</td>
+      <td>Factor1</td>
+      <td>1</td>
+      <td>cg01893212</td>
+      <td>cg01893212</td>
+      <td>0.441102</td>
+      <td>0.441102</td>
+    </tr>
+    <tr>
+      <th>271</th>
+      <td>methylation</td>
+      <td>Factor1</td>
+      <td>2</td>
+      <td>cg20399616</td>
+      <td>cg20399616</td>
+      <td>0.437138</td>
+      <td>0.437138</td>
+    </tr>
+    <tr>
+      <th>272</th>
+      <td>methylation</td>
+      <td>Factor1</td>
+      <td>3</td>
+      <td>cg14416371</td>
+      <td>cg14416371</td>
+      <td>0.435026</td>
+      <td>0.435026</td>
+    </tr>
+    <tr>
+      <th>280</th>
+      <td>proteomics</td>
+      <td>Factor1</td>
+      <td>1</td>
+      <td>ERALPHA</td>
+      <td>ERALPHA</td>
+      <td>0.166270</td>
+      <td>0.166270</td>
+    </tr>
+    <tr>
+      <th>281</th>
+      <td>proteomics</td>
+      <td>Factor1</td>
+      <td>2</td>
+      <td>GATA3</td>
+      <td>GATA3</td>
+      <td>0.140571</td>
+      <td>0.140571</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>proteomics</td>
+      <td>Factor9</td>
+      <td>2</td>
+      <td>PDCD4</td>
+      <td>PDCD4</td>
+      <td>-0.125958</td>
+      <td>0.125958</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>proteomics</td>
+      <td>Factor9</td>
+      <td>3</td>
+      <td>G6PD</td>
+      <td>G6PD</td>
+      <td>0.102346</td>
+      <td>0.102346</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>transcriptomics</td>
+      <td>Factor9</td>
+      <td>1</td>
+      <td>ENSG00000244468.1</td>
+      <td>ENSG00000244468.1</td>
+      <td>0.370346</td>
+      <td>0.370346</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>transcriptomics</td>
+      <td>Factor9</td>
+      <td>2</td>
+      <td>ENSG00000100867.15</td>
+      <td>ENSG00000100867.15</td>
+      <td>0.272151</td>
+      <td>0.272151</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>transcriptomics</td>
+      <td>Factor9</td>
+      <td>3</td>
+      <td>ENSG00000160183.17</td>
+      <td>ENSG00000160183.17</td>
+      <td>-0.271782</td>
+      <td>0.271782</td>
+    </tr>
+  </tbody>
+</table>
+<p>90 rows × 7 columns</p>
+</div></div></div>
 </div>
 <p><strong>Discussion of the top-loading feature table.</strong></p>
 <p>This table shows individual features with the largest absolute weights for each selected factor and each omics view. These features contribute most strongly to the molecular pattern represented by the factor. The weight sign indicates the direction of the relationship, while its absolute value indicates its strength. In the next section, we <strong>visualize</strong> these weights to make their patterns across factors and omics views easier to compare.</p>
@@ -1562,6 +2553,9 @@ Each factor represents a different pattern of variation across patients. It comb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/541fce909193c27a21318792579490f9229a3ab918d4f56714ebaf8319898377.png" src="../_images/541fce909193c27a21318792579490f9229a3ab918d4f56714ebaf8319898377.png" />
+</div>
 </div>
 <p><strong>Discussion of the ranked weight plots.</strong></p>
 <p>These plots are focused examples of <code class="docutils literal notranslate"><span class="pre">mofax.plot_weights_ranked</span></code>. Each panel ranks transcriptomic features for one selected factor by their signed MOFA weight. Features at the positive and negative extremes are the strongest loadings for that factor, while features near zero contribute little to that factor.</p>
@@ -1585,6 +2579,9 @@ Each factor represents a different pattern of variation across patients. It comb
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4204a7f693c851dfe668766dd6365a92a5d104ce33fb3800ed070bec12b27c0e.png" src="../_images/4204a7f693c851dfe668766dd6365a92a5d104ce33fb3800ed070bec12b27c0e.png" />
 </div>
 </div>
 <p><strong>Discussion of the multi-view weight overview.</strong></p>
@@ -1624,6 +2621,9 @@ Each factor represents a different pattern of variation across patients. It comb
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/aa0a2e541ca9a53bb3ace2aadd3a36fb3af8fa8479004534abefcba68421c2f0.png" src="../_images/aa0a2e541ca9a53bb3ace2aadd3a36fb3af8fa8479004534abefcba68421c2f0.png" />
 </div>
 </div>
 <p><strong>Discussion of the loading scatter plots.</strong></p>
@@ -1665,6 +2665,10 @@ Each factor represents a different pattern of variation across patients. It comb
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ea3ea3906a254e3e4e88e5bce5460fa46951d371f35728e7f53da4017dbc3a96.png" src="../_images/ea3ea3906a254e3e4e88e5bce5460fa46951d371f35728e7f53da4017dbc3a96.png" />
+<img alt="../_images/30c37e43db230dc738e4bc26a07f15b40e22cba6f65fb1d3ae579e694ae9d8b2.png" src="../_images/30c37e43db230dc738e4bc26a07f15b40e22cba6f65fb1d3ae579e694ae9d8b2.png" />
 </div>
 </div>
 <p><strong>Discussion of the transcriptomics weight heatmap and dotplot.</strong></p>
@@ -1716,6 +2720,11 @@ Each factor represents a different pattern of variation across patients. It comb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved outputs to: /home/clee/ECCB2026_TEST/sessions/session-2-multi-omics/outputs
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="common-pitfalls">
@@ -1761,16 +2770,16 @@ Each factor represents a different pattern of variation across patients. It comb
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb_2026"
+            mode: "eccb_t8"
         },
         kernelOptions: {
-            name: "eccb_2026",
+            name: "eccb_t8",
             path: "./session-2-multi-omics"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb_2026'</script>
+    <script>kernelName = 'eccb_t8'</script>
 
                 </article>
               

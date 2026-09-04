@@ -899,7 +899,17 @@ each whether it is a genuine negative or an annotation gap.</p>
 <span class="sd">  ascending, so the emptiest diseases come first.</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="c1">### YOUR CODE HERE ###</span>
+<span class="c1"># --- SOLUTION ---</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">nodes_of_type</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;disease&quot;</span><span class="p">):</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">d</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;genes&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">d</span><span class="p">)),</span>
+        <span class="s2">&quot;degree&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">d</span><span class="p">),</span>
+    <span class="p">})</span>
+
+<span class="n">gene_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;genes&quot;</span><span class="p">)</span>
+<span class="c1"># --- END SOLUTION ---</span>
 
 <span class="n">n_zero</span> <span class="o">=</span> <span class="p">(</span><span class="n">gene_counts</span><span class="p">[</span><span class="s2">&quot;genes&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 <span class="n">n_cap</span> <span class="o">=</span> <span class="p">(</span><span class="n">gene_counts</span><span class="p">[</span><span class="s2">&quot;genes&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>

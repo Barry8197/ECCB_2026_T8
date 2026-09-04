@@ -580,7 +580,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
 
-<span class="n">SESSION_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="n">SESSION_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s2">&quot;ECCB_SESSION3_DIR&quot;</span><span class="p">,</span>
+    <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;ECCB2026_TEST/sessions/session-3-agentic-llm-workflows&quot;</span><span class="p">))</span>
 <span class="k">assert</span> <span class="n">SESSION_DIR</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Session directory not found: </span><span class="si">{</span><span class="n">SESSION_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="n">DOTENV_PATH</span> <span class="o">=</span> <span class="s2">&quot;/.env&quot;</span>
 <span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="n">SESSION_DIR</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>  <span class="c1"># shared mount on workshop servers</span>
@@ -607,6 +609,11 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>python    : /opt/conda/envs/eccb_t8/bin/python
+</pre></div>
+</div>
+</div>
 </div>
 <section id="looking-at-the-skill">
 <h3>Looking at the skill<a class="headerlink" href="#looking-at-the-skill" title="Link to this heading">#</a></h3>
@@ -615,6 +622,115 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">SKILL_PATH</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>---
+name: mofa-multiomics-agent
+description: Analyse a fitted MOFA multi-omics model of TCGA breast-cancer data — interpret latent factors, associate factors with PAM50 subtype, rank factor drivers, predict subtype from factors, and produce diagnostic plots. Use when a task involves MOFA factors, variance explained (R2), factor&lt;-&gt;subtype association, factor weights/drivers, or multi-omics subtype prediction. Enforces tool-grounded evidence, loading the cached model (never re-fitting), a fixed answer format, and biomedical caution.
+---
+
+# MOFA Multi-Omics Agent Skill
+
+## Purpose
+
+Use this skill when answering questions about a fitted MOFA model of TCGA
+breast-cancer multi-omics data (transcriptomics, proteomics, methylation) with
+PAM50 subtype labels: factor interpretation, factor↔subtype association, factor
+drivers (weights), subtype prediction from factors, and diagnostic plots.
+
+## Behaviour
+
+- Always compute results with the repo&#39;s functions before making quantitative
+  claims about factors, R2, associations, weights, or predictions.
+- Load the cached MOFA model; never re-fit. Fitting is expensive and
+  non-deterministic. A fitted model is cached under `outputs/*.hdf5`; load it.
+- Refer to factors by name (`Factor1`…`Factor10`) and subtypes by PAM50 label
+  (LumA, LumB, Basal, Her2, Normal).
+- Distinguish evidence (numbers from the tools) from interpretation (what
+  they suggest biologically).
+- Do not present associations as clinical diagnosis or treatment advice; a
+  gene/probe weighting is a statistical loading, not a validated biomarker.
+- Keep answers concise enough for a workshop participant to inspect.
+
+## Answer Format
+
+Use this structure for substantive answers:
+
+```
+Answer
+&lt;short direct answer&gt;
+
+Evidence Used
+- &lt;function/result the claim rests on, with the key numbers&gt;
+
+Interpretation
+&lt;brief explanation of what the evidence suggests&gt;
+
+Limitations
+&lt;missing data, weak factors, class imbalance, out-of-sample caveats&gt;
+```
+
+## Querying the model in this repository
+
+The pipeline is implemented in `src/mofa_tools.py`. In a coding-agent setting
+(no pre-registered tools), call these functions yourself by running Python from
+the repository root. Key functions:
+
+- `load_omics_data(data_dir)` → `(X_omics, y)` — aligned views + PAM50 labels
+- `make_train_test_split(...)` → shared split + variable-feature selection
+- `select_active_factors(model, MIN_TOTAL_R2, MAX_FACTORS)` → active factors + R2
+- `project_test_patients_to_mofa_factors(...)` → held-out patients in factor space
+- `eta_squared_by_factor(factor_table, labels)` → factor↔subtype association
+- `fit_factor_classifier(...)` → logistic regression on factors + held-out metrics
+- `generate_diagnostic_plots(...)` → the standard R2 / boxplot / confusion / weights PNGs
+
+The commented `main()` in `src/mofa_tools.py` is the reference end-to-end order.
+Load the cached model with `mofax` instead of calling `fit_mofa`.
+
+### Reference recipe (load cached model, then analyse)
+
+```python
+python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    load_omics_data, make_train_test_split, select_active_factors,
+    project_test_patients_to_mofa_factors, eta_squared_by_factor, fit_factor_classifier,
+)
+ROOT = Path.cwd()
+CACHE = ROOT / &quot;outputs&quot; / (f&quot;trained_mofaplus_train_var{N_TOP_VARIABLE_HIGH_DIM_FEATURES}&quot;
+                            f&quot;_max{MAX_FACTORS}_ard_model.hdf5&quot;)
+DATA_DIR = Path(&quot;/data&quot;) if Path(&quot;/data&quot;).exists() else ROOT / &quot;data&quot;
+
+X_omics, y = load_omics_data(DATA_DIR)
+X_tr, X_te, y_tr, y_te, tr, te = make_train_test_split(
+    X_omics, y, TEST_SIZE, RANDOM_STATE, HIGH_DIMENSIONAL_VIEWS, N_TOP_VARIABLE_HIGH_DIM_FEATURES)
+views = list(X_tr.keys()); tr, te = tr.astype(str), te.astype(str)
+
+model = mfx.mofa_model(str(CACHE))                       # LOAD — do not fit
+train_f = model.get_factors(df=True); train_f.index = train_f.index.astype(str)
+test_f = project_test_patients_to_mofa_factors(model, X_tr, X_te, train_f, views)
+factors = pd.concat([train_f, test_f]); factors.columns = factors.columns.astype(str)
+factors = factors.reindex(y.index.astype(str))
+active, r2 = select_active_factors(model, MIN_TOTAL_R2, MAX_FACTORS)
+
+assoc = eta_squared_by_factor(factors.loc[tr, active], y_tr)   # factor&lt;-&gt;subtype
+_, pred, metrics = fit_factor_classifier(factors[active], y, tr, te, &quot;MOFA+LR&quot;)
+print(&quot;top subtype-associated factor:&quot;, assoc.iloc[0].to_dict())
+print(&quot;held-out metrics:&quot;, metrics)
+PY
+```
+
+To generate the diagnostic PNGs, call `generate_diagnostic_plots(...)` with the
+fitted `model`, `factors`, the active factors, the `assoc` table, the train ids,
+`y_train`, `y_test`, and the classifier predictions, writing to `outputs/`.
+
+Always run the functions first and base Evidence Used on their real output,
+never invent factor numbers, R2 values, associations, or metrics.
 </pre></div>
 </div>
 </div>
@@ -733,6 +849,237 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>▶ pi running (anthropic/claude-haiku-4-5, skill=on) …
+💭 The user is asking me to run a full breast-cancer subtype prediction pipeline on a fitted MOFA model. This task matches the description of the &quot;mofa-multiomics-agent&quot; skill. Let me read the skill file first to understand what&#39;s required.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/skills/mofa-multiomics-agent.SKILL.md
+ ↳ ---
+name: mofa-multiomics-agent
+description: Analyse a fitted MOFA multi-omics model of TCGA breast-cancer data — interpret latent factors, associate factors with PAM50 subtype, rank factor drivers, predict subtype from factors, and produce diagnostic plots. Use when a task involves MOFA factors, variance explained (R2), factor&lt;-&gt;subtype association, factor weights/drivers, or multi-omics subtype  …
+💭 Good! I have the skill file. Now I need to follow the recipe provided to:
+1. Load the cached MOFA model
+2. Load the omics data
+3. Make train/test split
+4. Select active factors
+5. Project test patients to MOFA factors
+6. Compute factor↔subtype association (eta squared)
+7. Fit a factor classifier and get held-out metrics
+8. Generate diagnostic plots
+
+The skill provides a reference recipe. Let me run it step by step using the repository&#39;s functions. I&#39;ll execute this Python code from the repository root.
+🔧 bash: python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    load_omics_data, make_train_test_split, select_active_factors,
+    project
+❌ === Loading data and cached model ===
+Omics data loaded: 500 patients, 3 views
+PAM50 subtypes: {&#39;LumA&#39;: 237, &#39;LumB&#39;: 100, &#39;Basal&#39;: 97, &#39;Her2&#39;: 41, &#39;Normal&#39;: 25}
+Train: 375 patients, Test: 125 patients
+
+=== Loading cached model from /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/trained_mofaplus_train_var2000_max10_ard_model.hdf5 ===
+Model loaded successfully (not re-fitt …
+💭 There&#39;s an issue with printing the metrics dictionary – some values are strings not floats. Let me fix that and re-run without the problematic format code.
+🔧 bash: python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    load_omics_data, make_train_test_split, select_active_factors,
+    project
+❌ === Loading data and cached model ===
+Omics data loaded: 500 patients, 3 views
+PAM50 subtypes: {&#39;LumA&#39;: 237, &#39;LumB&#39;: 100, &#39;Basal&#39;: 97, &#39;Her2&#39;: 41, &#39;Normal&#39;: 25}
+Train: 375 patients, Test: 125 patients
+
+=== Loading cached model from /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/trained_mofaplus_train_var2000_max10_ard_model.hdf5 ===
+Model loaded successfully (not re-fitt …
+💭 The issue is in accessing assoc.iloc[0, 0]. Let me check the structure better and adjust the code.
+🔧 bash: python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    load_omics_data, make_train_test_split, select_active_factors,
+    project
+❌ === Loading data and cached model ===
+Omics data loaded: 500 patients, 3 views
+PAM50 subtypes: {&#39;LumA&#39;: 237, &#39;LumB&#39;: 100, &#39;Basal&#39;: 97, &#39;Her2&#39;: 41, &#39;Normal&#39;: 25}
+Train: 375 patients, Test: 125 patients
+
+=== Loading cached model from /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/trained_mofaplus_train_var2000_max10_ard_model.hdf5 ===
+Model loaded successfully (not re-fitt …
+💭 I need to check the signature of generate_diagnostic_plots. Let me look at the source code to see what arguments it needs.
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; grep -A 10 &quot;def generate_diagnostic_plots&quot; src/mofa_tools.py
+ ↳ def generate_diagnostic_plots(mofa_model_mfx, factors_df, factor_r2_summary, view_names,
+                               active_factor_cols, factor_subtype_assoc, train_ids, y_train,
+                               y_test, mofa_pred, output_dir, top_view_for_weights=&quot;transcriptomics&quot;):
+    &quot;&quot;&quot;Generate and save the core MOFA diagnostic plots from the notebook.
+
+    This is a single entry point that w …
+💭 I see, it needs more arguments. Let me check what factors_df and factor_r2_summary should be. Let me look at more of the function and also check if there&#39;s a model.get_factors output structure.
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    lo
+❌ Getting model data to compute R2...
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 36, in &lt;module&gt;
+TypeError: mofa_model.get_data() got an unexpected keyword argument &#39;as_numpy&#39;
+
+
+Command exited with code 1
+💭 Let me check how to get data from the MOFA model more carefully, and look at the mofa_tools.py to see how it handles things.
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    lo
+ ↳ Getting variance explained...
+Variance explained: &lt;class &#39;pandas.DataFrame&#39;&gt;
+      Factor             View            Group         R2
+0    Factor1  transcriptomics  TCGA-BRCA_train   1.426017
+1    Factor1       proteomics  TCGA-BRCA_train   0.810981
+2    Factor1      methylation  TCGA-BRCA_train  32.406908
+3    Factor2  transcriptomics  TCGA-BRCA_train  14.932364
+4    Factor2       proteomics  TC …
+💭 Good! So I can use `model.get_variance_explained()` which returns a DataFrame with R2 values by factor and view. Let me check the generate_diagnostic_plots function more carefully to understand what it needs and then run it properly.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/src/mofa_tools.py
+ ↳ &quot;&quot;&quot;
+Part 2 -- Correlation-Based / Factor-Based Multi-Omic Integration with MOFA
+Minimal working example (.py version)
+
+This script is a condensed version of the original notebook. It keeps the core
+computational steps plus a compact set of the notebook&#39;s diagnostic plots:
+
+1. Load pre-aligned omics tables (transcriptomics, proteomics, methylation) + subtype labels.
+2. Create one shared patient-lev …
+💭 Let me continue reading the file to see the full generate_diagnostic_plots function.
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; grep -A 50 &quot;def generate_diagnostic_plots&quot; src/mofa_tools.py | head -70
+ ↳ def generate_diagnostic_plots(mofa_model_mfx, factors_df, factor_r2_summary, view_names,
+                               active_factor_cols, factor_subtype_assoc, train_ids, y_train,
+                               y_test, mofa_pred, output_dir, top_view_for_weights=&quot;transcriptomics&quot;):
+    &quot;&quot;&quot;Generate and save the core MOFA diagnostic plots from the notebook.
+
+    This is a single entry point that w …
+💭 Now I understand the signature better. I need to pass:
+- mofa_model_mfx: the model object
+- factors_df: the combined factors dataframe
+- factor_r2_summary: the R2 summary from select_active_factors
+- view_names: list of view names
+- active_factor_cols: active factors from select_active_factors
+- factor_subtype_assoc: the eta-squared association table
+- train_ids: training patient IDs
+- y_train: training labels
+- y_test: test labels
+- mofa_pred: predictions dataframe
+- output_dir: output directory
+
+Let me run the complete pipeline again with the correct arguments.
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    lo
+ ↳ === MOFA Breast-Cancer Subtype-Prediction Pipeline ===
+
+Loading data and cached model...
+✓ Omics data loaded: 500 patients, 3 views
+  PAM50 subtypes: {&#39;LumA&#39;: 237, &#39;LumB&#39;: 100, &#39;Basal&#39;: 97, &#39;Her2&#39;: 41, &#39;Normal&#39;: 25}
+✓ Train/test split: 375 train, 125 test
+✓ Cached MOFA model loaded (no re-fitting)
+
+Extracting factors for all patients...
+✓ Factors extracted: 500 patients × 10 factors
+
+Selecting act …
+💭 Excellent! The pipeline ran successfully. Now let me verify that the diagnostic plots were created and provide a one-paragraph interpretation as requested by the user.
+🔧 bash: ls -lh /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/*.png 2&gt;/dev/null | tail -10
+ ↳ -rw-r--r-- 1 clee clee 51K Sep  2 02:51 /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_confusion_matrix.png
+-rw-r--r-- 1 clee clee 67K Sep  2 02:51 /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_factor_boxplots.png
+-rw-r--r-- 1 clee clee 77K Sep  2 02:51 /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/out …
+💭 Perfect! All four diagnostic plots were generated successfully. Now I have all the evidence needed to write a comprehensive interpretation.
+🤖 ---
+
+## Answer
+
+**All 10 MOFA factors are active** (each explaining ≥2.5% cumulative variance across the three omics views). Factor1 is the strongest overall (34.6% variance explained), followed by Factor2 (29.1%). **Factor2 is the most strongly associated with PAM50 subtype** with an effect size (η²) of 0.8244—a strong association that captures substantial subtype-related variation. **The held-out classification performance is robust**: on 125 held-out test patients, the logistic regression classifier trained on the 10 MOFA factors achieves 77.6% accuracy and 81.4% balanced accuracy (macro-averaged across the five PAM50 subtypes).
+
+---
+
+## Evidence Used
+
+- **Active factors**: `select_active_factors()` returned all 10 factors, each with total R² &gt; 2.5%; Factor1 (34.64%), Factor2 (29.12%), Factor3 (17.22%) dominate.
+- **Factor–subtype association**: `eta_squared_by_factor()` computed one-way ANOVA effect sizes on training patients (n=375); Factor2 has η² = 0.8244 (largest), followed by Factor6 (η² = 0.3730) and Factor1 (η² = 0.2805).
+- **Held-out test metrics**: `fit_factor_classifier()` trained logistic regression on all 10 factors using the training set (n=375), then evaluated on held-out patients (n=125): accuracy = 77.6%, balanced accuracy = 81.4%, macro F1 = 0.7507.
+
+---
+
+## Interpretation
+
+The fitted MOFA model successfully extracts a low-dimensional latent structure from the three omics layers (transcriptomics, proteomics, methylation) of 500 TCGA breast-cancer patients, with all inferred factors retaining interpretable variance. Factor2&#39;s very high effect size (η² ≈ 0.82) indicates that it captures a major axis of PAM50 subtype variation—likely a shared multi-omic signal that differentiates luminal from basal/Her2 subtypes. The ~77–81% held-out classification rate, though imperfect, is substantially better than chance (expected ~45% for five classes) and reflects the inherent biological heterogeneity within subtypes as well as class imbalance (Luminal A dominates: 237/500). The balanced accuracy of 81.4% shows the model is not simply memorizing the frequent class, suggesting Factor2 and its co-factors capture genuine subtype-specific biology. This validates MOFA as a dimensionality-reduction tool for multi-omic subtype classification in this cohort.
+
+---
+
+## Limitations
+
+- **Class imbalance**: Luminal A (237 patients) is 2.4× more prevalent than Normal (25) and 9.5× Her2 (41), skewing the model toward common classes despite balanced accuracy correction.
+- **Held-out size**: Test set (n=125) is modest; some metrics (especially for rare classes) have wide confidence intervals.
+- **Generalization scope**: Model trained and tested on the same TCGA cohort; external validation on independent datasets is needed.
+- **Factor interpretation**: Although Factor2 is associated with subtype, the specific biological drivers (which genes/proteins/probes) require inspection of factor weights.
+
+---
+
+**Diagnostic plots** (R2 heatmap, factor boxplots, confusion matrix, ranked weights) have been saved to `outputs/`.
+
+💰 total cost: $0.0794
+---
+
+## Answer
+
+**All 10 MOFA factors are active** (each explaining ≥2.5% cumulative variance across the three omics views). Factor1 is the strongest overall (34.6% variance explained), followed by Factor2 (29.1%). **Factor2 is the most strongly associated with PAM50 subtype** with an effect size (η²) of 0.8244—a strong association that captures substantial subtype-related variation. **The held-out classification performance is robust**: on 125 held-out test patients, the logistic regression classifier trained on the 10 MOFA factors achieves 77.6% accuracy and 81.4% balanced accuracy (macro-averaged across the five PAM50 subtypes).
+
+---
+
+## Evidence Used
+
+- **Active factors**: `select_active_factors()` returned all 10 factors, each with total R² &gt; 2.5%; Factor1 (34.64%), Factor2 (29.12%), Factor3 (17.22%) dominate.
+- **Factor–subtype association**: `eta_squared_by_factor()` computed one-way ANOVA effect sizes on training patients (n=375); Factor2 has η² = 0.8244 (largest), followed by Factor6 (η² = 0.3730) and Factor1 (η² = 0.2805).
+- **Held-out test metrics**: `fit_factor_classifier()` trained logistic regression on all 10 factors using the training set (n=375), then evaluated on held-out patients (n=125): accuracy = 77.6%, balanced accuracy = 81.4%, macro F1 = 0.7507.
+
+---
+
+## Interpretation
+
+The fitted MOFA model successfully extracts a low-dimensional latent structure from the three omics layers (transcriptomics, proteomics, methylation) of 500 TCGA breast-cancer patients, with all inferred factors retaining interpretable variance. Factor2&#39;s very high effect size (η² ≈ 0.82) indicates that it captures a major axis of PAM50 subtype variation—likely a shared multi-omic signal that differentiates luminal from basal/Her2 subtypes. The ~77–81% held-out classification rate, though imperfect, is substantially better than chance (expected ~45% for five classes) and reflects the inherent biological heterogeneity within subtypes as well as class imbalance (Luminal A dominates: 237/500). The balanced accuracy of 81.4% shows the model is not simply memorizing the frequent class, suggesting Factor2 and its co-factors capture genuine subtype-specific biology. This validates MOFA as a dimensionality-reduction tool for multi-omic subtype classification in this cohort.
+
+---
+
+## Limitations
+
+- **Class imbalance**: Luminal A (237 patients) is 2.4× more prevalent than Normal (25) and 9.5× Her2 (41), skewing the model toward common classes despite balanced accuracy correction.
+- **Held-out size**: Test set (n=125) is modest; some metrics (especially for rare classes) have wide confidence intervals.
+- **Generalization scope**: Model trained and tested on the same TCGA cohort; external validation on independent datasets is needed.
+- **Factor interpretation**: Although Factor2 is associated with subtype, the specific biological drivers (which genes/proteins/probes) require inspection of factor weights.
+
+---
+
+**Diagnostic plots** (R2 heatmap, factor boxplots, confusion matrix, ranked weights) have been saved to `outputs/`.
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -740,10 +1087,224 @@
 <span class="c1"># Write a task asking Pi to generate the standard MOFA diagnostic plots into</span>
 <span class="c1"># outputs/, and say which single plot best supports the claim that MOFA captures</span>
 <span class="c1"># breast-cancer subtype biology, and why.</span>
-<span class="c1">#</span>
-<span class="c1">### WRITE YOUR CODE HERE ###</span>
-<span class="c1">#</span>
+<span class="n">PLOTS_TASK</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;Generate the standard MOFA diagnostic plot set into outputs/ and tell me &quot;</span>
+    <span class="s2">&quot;which single plot best supports the claim that MOFA captures breast-cancer &quot;</span>
+    <span class="s2">&quot;subtype biology, and why.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_pi_live</span><span class="p">(</span><span class="n">PLOTS_TASK</span><span class="p">,</span> <span class="n">with_skill</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 <span class="c1">#################################################</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>▶ pi running (anthropic/claude-haiku-4-5, skill=on) …
+💭 The user is asking me to:
+1. Generate the standard MOFA diagnostic plot set into outputs/
+2. Identify which single plot best supports the claim that MOFA captures breast-cancer subtype biology
+3. Explain why
+
+This task is clearly related to the mofa-multiomics-agent skill that&#39;s available. Let me read that skill file first to understand what I need to do.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/skills/mofa-multiomics-agent.SKILL.md
+ ↳ ---
+name: mofa-multiomics-agent
+description: Analyse a fitted MOFA multi-omics model of TCGA breast-cancer data — interpret latent factors, associate factors with PAM50 subtype, rank factor drivers, predict subtype from factors, and produce diagnostic plots. Use when a task involves MOFA factors, variance explained (R2), factor&lt;-&gt;subtype association, factor weights/drivers, or multi-omics subtype  …
+💭 Good! Now I understand what I need to do. The skill instructs me to:
+1. Load the cached MOFA model (not refit)
+2. Use the functions in `src/mofa_tools.py` to analyze it
+3. Call `generate_diagnostic_plots(...)` to create the standard PNGs
+4. Use the Evidence/Interpretation/Limitations format
+
+Let me run the Python recipe provided in the skill to:
+- Load the model
+- Analyze factors
+- Generate the diagnostic plots
+
+Then I&#39;ll determine which plot best supports the claim about subtype biology.
+🤖 I&#39;ll follow the skill&#39;s recipe to load the cached MOFA model, analyze it, and generate the diagnostic plots.
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    lo
+❌ Loading data from /data
+Data loaded: 500 samples across views: [&#39;transcriptomics&#39;, &#39;proteomics&#39;, &#39;methylation&#39;]
+Train/test split: 375 train, 125 test
+Loading cached model from /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/trained_mofaplus_train_var2000_max10_ard_model.hdf5
+Factors shape: (500, 10)
+
+Active factors (R2 &gt; 2.5): [&#39;Factor1&#39;, &#39;Factor2&#39;, &#39;Factor3&#39;, &#39;Factor4&#39;,  …
+💭 I need to check what the generate_diagnostic_plots function signature is. Let me look at the src/mofa_tools.py file.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/src/mofa_tools.py
+ ↳ &quot;&quot;&quot;
+Part 2 -- Correlation-Based / Factor-Based Multi-Omic Integration with MOFA
+Minimal working example (.py version)
+
+This script is a condensed version of the original notebook. It keeps the core
+computational steps plus a compact set of the notebook&#39;s diagnostic plots:
+
+1. Load pre-aligned omics tables (transcriptomics, proteomics, methylation) + subtype labels.
+2. Create one shared patient-lev …
+💭 Now I see the correct signature for generate_diagnostic_plots. It takes different parameters than what I passed. Let me look at the function signature again:
+
+```python
+def generate_diagnostic_plots(mofa_model_mfx, factors_df, factor_r2_summary, view_names,
+                               active_factor_cols, factor_subtype_assoc, train_ids, y_train,
+                               y_test, mofa_pred, output_dir, top_view_for_weights=&quot;transcriptomics&quot;):
+```
+
+So the parameters are:
+- mofa_model_mfx
+- factors_df
+- factor_r2_summary
+- view_names
+- active_factor_cols
+- factor_subtype_assoc (which is the assoc table from eta_squared_by_factor)
+- train_ids
+- y_train
+- y_test
+- mofa_pred (the predictions from fit_factor_classifier)
+- output_dir
+- top_view_for_weights (optional)
+
+Let me rerun with the correct parameters.
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    lo
+ ↳ Loading data from /data
+Data loaded: 500 samples across views: [&#39;transcriptomics&#39;, &#39;proteomics&#39;, &#39;methylation&#39;]
+Train/test split: 375 train, 125 test
+Loading cached model from /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/trained_mofaplus_train_var2000_max10_ard_model.hdf5
+Factors shape: (500, 10)
+
+Active factors (R2 &gt; 2.5): [&#39;Factor1&#39;, &#39;Factor2&#39;, &#39;Factor3&#39;, &#39;Factor4&#39;,  …
+💭 Great! The plots have been generated. Let me now list them and look at them to determine which one best supports the claim that MOFA captures breast-cancer subtype biology.
+🔧 bash: ls -lh /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_*.png
+ ↳ -rw-r--r-- 1 clee clee 51K Sep  2 02:51 /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_confusion_matrix.png
+-rw-r--r-- 1 clee clee 67K Sep  2 02:51 /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_factor_boxplots.png
+-rw-r--r-- 1 clee clee 77K Sep  2 02:51 /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/out …
+💭 Perfect. Now let me look at each plot to determine which one best supports the claim that MOFA captures breast-cancer subtype biology. Let me read the images to visualize them.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_r2_heatmap.png
+ ↳ Read image file [image/png]
+[Image: original 2100x540, displayed at 2000x514. Multiply coordinates by 1.05 to map to original image.]
+💭 The R2 heatmap shows which views are captured by each factor - it shows data reconstruction, not subtype biology directly.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_factor_boxplots.png
+ ↳ Read image file [image/png]
+[Image: original 2250x600, displayed at 2000x533. Multiply coordinates by 1.13 to map to original image.]
+💭 This plot shows clear separation of factor values across PAM50 subtypes - this is good evidence of subtype-related biology. Factor2 shows particularly clear separation with Basal having distinctly negative values, LumB and LumA having positive values, etc.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_confusion_matrix.png
+ ↳ Read image file [image/png]
+💭 This is the confusion matrix showing predicted vs true subtypes. It shows that MOFA factors can be used to predict subtypes with reasonable accuracy (78% accuracy). The diagonal is strong - especially for Basal (23/24) and LumA (44/60), with some off-diagonal confusion for LumB and Her2.
+
+This is evidence that MOFA captures subtype-related information.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/part2_mofa_ranked_weights.png
+ ↳ Read image file [image/png]
+[Image: original 2250x675, displayed at 2000x600. Multiply coordinates by 1.13 to map to original image.]
+💭 This shows the top genes (by MOFA weights) for the three most subtype-associated factors in transcriptomics. These are feature-level loadings that tell us which genes drive each factor.
+
+Now let me think about which plot best supports the claim that MOFA captures breast-cancer subtype biology:
+
+1. **R2 heatmap**: Shows which omics views each factor reconstructs. This is about model fit to the data, not specifically about capturing subtype biology. It&#39;s important for understanding which factors are important, but doesn&#39;t directly show subtype-related information.
+
+2. **Factor boxplots by subtype**: This directly shows that the learned MOFA factors separate by PAM50 subtype. Factor2 in particular has η² = 0.824, indicating 82% of its variance is explained by subtype membership. This visually demonstrates that the latent factors capture subtype-related information.
+
+3. **Confusion matrix**: Shows that when you predict subtypes from MOFA factors using logistic regression, you get 77.6% accuracy on held-out test samples. This demonstrates that MOFA factors contain predictive information for subtypes.
+
+4. **Ranked weights**: Shows which genes (features) drive each factor. This is useful for interpretation but doesn&#39;t directly show that MOFA captures subtype biology - it&#39;s more about what the factors represent biologically.
+
+The **best single plot** is the **factor boxplots by subtype** because:
+- It directly shows the latent factors are stratified by subtype (the biological phenotype of interest)
+- It shows clear separation between subtypes, particularly Factor2
+- It provides direct visual evidence that MOFA has learned a representation where subtype information is encoded in the latent factors
+- The data-generating process is clear: MOFA learns factors from multi-omics data, and we observe that these factors correlate with subtype labels
+
+The confusion matrix is a close second because it shows predictive power, but the boxplots are more direct evidence since they don&#39;t require training an additional classifier.
+🤖 Now let me check the quantitative evidence more carefully:
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; python - &lt;&lt;&#39;PY&#39;
+from pathlib import Path
+import pandas as pd, mofax as mfx
+from src.mofa_tools import (
+    RANDOM_STATE, TEST_SIZE, N_TOP_VARIABLE_HIGH_DIM_FEATURES,
+    HIGH_DIMENSIONAL_VIEWS, MAX_FACTORS, MIN_TOTAL_R2,
+    lo
+ ↳ ======================================================================
+FACTOR ↔ SUBTYPE ASSOCIATION (η² = fraction of factor variance explained by subtype)
+======================================================================
+  factor  eta_squared
+ Factor2     0.824362
+ Factor6     0.372968
+ Factor1     0.280520
+ Factor4     0.180798
+ Factor8     0.154022
+ Factor9     0.085889
+Factor10     0.0803 …
+💭 Perfect! Now I have all the evidence. Let me provide the final answer using the skill&#39;s format:
+
+The **factor boxplots by subtype** is the best single plot because:
+1. Factor2 shows η² = 0.824 — 82.4% of its variance is explained by subtype membership
+2. The plot visually demonstrates clear separation of subtypes across the top factors
+3. It directly shows that MOFA has learned latent factors that capture subtype-related information
+4. Unlike the confusion matrix, it doesn&#39;t require training an additional classifier — it&#39;s direct evidence
+
+The other plots are important but show different aspects:
+- R2 heatmap: Shows which omics views are reconstructed (data fit, not subtype biology)
+- Confusion matrix: Shows that factors predict subtypes (requires classifier, more indirect)
+- Ranked weights: Shows which genes drive factors (feature importance, but doesn&#39;t show factor-subtype relationship)
+
+The boxplots are the most direct and compelling single evidence that MOFA captures subtype biology.
+🤖 ## Answer
+
+**The factor boxplots by subtype** (`part2_mofa_factor_boxplots.png`) best supports the claim that MOFA captures breast-cancer subtype biology.
+
+## Evidence Used
+
+- **Factor2 η² = 0.824**: This factor explains 82.4% of its variance through subtype group membership — the strongest factor-subtype association across all 10 factors (η² is the ANOVA-based effect size, independent of any predictive model).
+- **Visual stratification**: The boxplot clearly shows that each of the top 4 subtype-associated factors (Factor2, Factor6, Factor1, Factor4) has distinctly separated distributions across PAM50 subtypes:
+  - Factor2: Basal samples cluster at ~−4, LumB/LumA at +1 to +2
+  - Factor6: Basal at ~+1, Her2 at ~−3
+  - Factor1: Basal at ~−2, LumA/LumB at +0.5 to +2
+  - Factor4: Normal/Her2 at ~−1, LumB at ~+1.5
+- **Held-out generalization**: These factor-subtype associations are learnable; logistic regression on MOFA factors achieves 77.6% accuracy and 81.4% balanced accuracy predicting subtypes in held-out test patients.
+
+## Interpretation
+
+The boxplot shows that MOFA&#39;s learned latent factors are **intrinsically organized by subtype biology**, not just capable of reconstructing the raw omics data. Factor2 in particular acts as a strong latent axis of subtype variation: patients don&#39;t cluster at arbitrary positions; they cluster at subtype-specific locations. This is the gold standard for claiming a dimensionality reduction model has captured a biological phenotype: the phenotype emerges spontaneously in the learned representation without the model being explicitly trained on subtype labels.
+
+## Limitations
+
+- Association strength (η²) is computed on training patients only; test-set factor values are projected via pseudo-inverse calibration, which may introduce bias.
+- PAM50 subtypes themselves are defined by gene expression; confounding by the omics data generating process is possible.
+- Factor2&#39;s dominance (η² = 0.824 vs. next-best Factor6 = 0.373) suggests much of the subtype signal concentrates in one latent dimension; this is efficient but may obscure additional subtype-biology signals in weaker factors.
+
+💰 total cost: $0.0697
+## Answer
+
+**The factor boxplots by subtype** (`part2_mofa_factor_boxplots.png`) best supports the claim that MOFA captures breast-cancer subtype biology.
+
+## Evidence Used
+
+- **Factor2 η² = 0.824**: This factor explains 82.4% of its variance through subtype group membership — the strongest factor-subtype association across all 10 factors (η² is the ANOVA-based effect size, independent of any predictive model).
+- **Visual stratification**: The boxplot clearly shows that each of the top 4 subtype-associated factors (Factor2, Factor6, Factor1, Factor4) has distinctly separated distributions across PAM50 subtypes:
+  - Factor2: Basal samples cluster at ~−4, LumB/LumA at +1 to +2
+  - Factor6: Basal at ~+1, Her2 at ~−3
+  - Factor1: Basal at ~−2, LumA/LumB at +0.5 to +2
+  - Factor4: Normal/Her2 at ~−1, LumB at ~+1.5
+- **Held-out generalization**: These factor-subtype associations are learnable; logistic regression on MOFA factors achieves 77.6% accuracy and 81.4% balanced accuracy predicting subtypes in held-out test patients.
+
+## Interpretation
+
+The boxplot shows that MOFA&#39;s learned latent factors are **intrinsically organized by subtype biology**, not just capable of reconstructing the raw omics data. Factor2 in particular acts as a strong latent axis of subtype variation: patients don&#39;t cluster at arbitrary positions; they cluster at subtype-specific locations. This is the gold standard for claiming a dimensionality reduction model has captured a biological phenotype: the phenotype emerges spontaneously in the learned representation without the model being explicitly trained on subtype labels.
+
+## Limitations
+
+- Association strength (η²) is computed on training patients only; test-set factor values are projected via pseudo-inverse calibration, which may introduce bias.
+- PAM50 subtypes themselves are defined by gene expression; confounding by the omics data generating process is possible.
+- Factor2&#39;s dominance (η² = 0.824 vs. next-best Factor6 = 0.373) suggests much of the subtype signal concentrates in one latent dimension; this is efficient but may obscure additional subtype-biology signals in weaker factors.
 </pre></div>
 </div>
 </div>
@@ -762,6 +1323,136 @@ to use the fixed answer format, or to add biomedical caveats.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">run_pi_live</span><span class="p">(</span><span class="n">PIPELINE_TASK</span><span class="p">,</span> <span class="n">with_skill</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>▶ pi running (anthropic/claude-haiku-4-5, skill=off) …
+💭 The user is asking me to:
+1. Load a cached MOFA model (Multi-Omics Factor Analysis)
+2. Run a breast cancer subtype prediction pipeline
+3. Report:
+   - Which factors are active
+   - Which factor is most associated with PAM50 subtype
+   - Held-out classification performance
+4. Give a one-paragraph interpretation
+
+First, I need to explore the current directory to understand the project structure and find the relevant code/data.
+🔧 bash: ls -la
+ ↳ total 96
+drwxr-xr-x 13 clee clee  4096 Sep  2 02:07 .
+drwxr-xr-x  7 clee clee  4096 Sep  1 21:43 ..
+drwxr-xr-x  2 clee clee  4096 Sep  1 21:43 assets
+drwxr-xr-x  2 clee clee  4096 Sep  1 21:43 data
+-rw-r--r--  1 clee clee    83 Sep  1 21:43 .gitignore
+-rw-r--r--  1 clee clee 12360 Sep  1 21:43 intro.ipynb
+drwxr-xr-x  2 clee clee  4096 Sep  2 02:03 .ipynb_checkpoints
+drwxr-xr-x  2 clee clee  4096 S …
+💭 Let me look at the main script to understand the pipeline:
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows
+❌ EISDIR: illegal operation on a directory, read
+💭 I need to read the run_mofa_pipeline.py file instead.
+🔧 read: /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/run_mofa_pipeline.py
+ ↳ #!/usr/bin/env python
+&quot;&quot;&quot;
+Run the full breast cancer subtype prediction pipeline on the fitted MOFA model.
+
+This script:
+1. Loads the cached MOFA model
+2. Reports which factors are active
+3. Identifies which factor is most associated with PAM50 subtype
+4. Reports held-out classification performance
+&quot;&quot;&quot;
+
+from pathlib import Path
+import sys
+
+# Add src to path
+sys.path.insert(0, str(Path(__file__).pa …
+💭 Now I need to check if the model file exists and run this script.
+🔧 bash: ls -lh /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows/outputs/ | grep -E &quot;\.hdf5|mofa&quot;
+ ↳ -rw-r--r-- 1 clee clee  51K Sep  2 02:51 part2_mofa_confusion_matrix.png
+-rw-r--r-- 1 clee clee  67K Sep  2 02:51 part2_mofa_factor_boxplots.png
+-rw-r--r-- 1 clee clee 105K Sep  2 02:23 part2_mofa_factors.csv
+-rw-r--r-- 1 clee clee  301 Sep  2 02:23 part2_mofa_factor_subtype_associations.csv
+-rw-r--r-- 1 clee clee  121 Sep  2 02:23 part2_mofa_metrics.csv
+-rw-r--r-- 1 clee clee 3.0K Sep  2 02:23 pa …
+💭 Great! The model file exists. Now I need to run the pipeline script.
+🔧 bash: cd /home/clee/ECCB2026_TEST/sessions/session-3-agentic-llm-workflows &amp;&amp; python run_mofa_pipeline.py
+ ↳ ================================================================================
+MOFA Breast Cancer Subtype Prediction Pipeline
+================================================================================
+
+[1/5] Loading omics data...
+    Loaded 500 patients with PAM50 subtypes: &lt;ArrowStringArray&gt;
+[&#39;LumA&#39;, &#39;LumB&#39;, &#39;Basal&#39;, &#39;Her2&#39;, &#39;Normal&#39;]
+Length: 5, dtype: str
+
+[2/5] Creating train/test split …
+💭 Great! The pipeline has run successfully. Now let me extract the detailed results for the user:
+
+1. **Active factors**: All 10 factors are active (Factor1 through Factor10)
+
+2. **Most associated with PAM50 subtype**: Factor2 with eta-squared = 0.8244 (very high association!)
+
+3. **Held-out classification performance**:
+   - Accuracy: 0.7760 (77.6%)
+   - Balanced Accuracy: 0.8143 (81.43%)
+   - Macro-averaged F1: 0.7507 (75.07%)
+
+Now I&#39;ll provide a comprehensive summary with interpretation.
+🤖 Excellent! The pipeline has successfully run on the cached MOFA model. Here&#39;s a comprehensive summary of the results:
+
+## **Pipeline Results Summary**
+
+### **1. Active Factors**
+All **10 factors** are active (meeting the minimum total R² threshold of 2.5%):
+- **Factor1** through **Factor10** are retained
+- Collectively explain **127.1%** variance across views (R² values: 34.64%, 29.12%, 17.22%, 10.65%, 8.87%, 6.50%, 5.93%, 4.95%, 4.63%, 3.98%)
+
+### **2. Most Associated Factor with PAM50 Subtype**
+**Factor2** is overwhelmingly the most associated with PAM50 breast cancer subtypes:
+- **Eta² = 0.8244** (explains ~82% of subtype variance on training data)
+- This is substantially higher than the second-ranked Factor6 (eta² = 0.3730), indicating Factor2 captures the dominant molecular signature differentiating subtypes
+
+### **3. Held-Out Test Set Classification Performance**
+Using logistic regression on the 10 MOFA factors to predict held-out subtypes:
+- **Accuracy: 77.60%**
+- **Balanced Accuracy: 81.43%** (accounting for class imbalance)
+- **Macro-averaged F1: 0.7507**
+
+---
+
+## **Interpretation**
+
+The MOFA model successfully identifies a low-dimensional representation of multi-omics breast cancer biology, with Factor2 serving as a potent pan-omic discriminator of PAM50 subtypes (eta² = 0.82). This factor likely integrates information across transcriptomics, methylation, and proteomics that fundamentally distinguishes intrinsic breast cancer phenotypes (LumA, LumB, Basal, Her2, Normal). The held-out classification accuracy of 77.6% demonstrates that the learned latent factors generalize well to unseen patients, with balanced accuracy of 81.4% suggesting equitable performance across all five subtypes. While Factor2 dominates subtype prediction, the remaining nine factors contribute additional variance and modest predictive signals (Factor6, Factor1), indicating that PAM50 subtype determination is primarily univariate along the top latent dimension but benefits from multivariate modeling that captures residual biology associated with tumor biology, immune composition, or other confounding variables.
+
+💰 total cost: $0.0254
+Excellent! The pipeline has successfully run on the cached MOFA model. Here&#39;s a comprehensive summary of the results:
+
+## **Pipeline Results Summary**
+
+### **1. Active Factors**
+All **10 factors** are active (meeting the minimum total R² threshold of 2.5%):
+- **Factor1** through **Factor10** are retained
+- Collectively explain **127.1%** variance across views (R² values: 34.64%, 29.12%, 17.22%, 10.65%, 8.87%, 6.50%, 5.93%, 4.95%, 4.63%, 3.98%)
+
+### **2. Most Associated Factor with PAM50 Subtype**
+**Factor2** is overwhelmingly the most associated with PAM50 breast cancer subtypes:
+- **Eta² = 0.8244** (explains ~82% of subtype variance on training data)
+- This is substantially higher than the second-ranked Factor6 (eta² = 0.3730), indicating Factor2 captures the dominant molecular signature differentiating subtypes
+
+### **3. Held-Out Test Set Classification Performance**
+Using logistic regression on the 10 MOFA factors to predict held-out subtypes:
+- **Accuracy: 77.60%**
+- **Balanced Accuracy: 81.43%** (accounting for class imbalance)
+- **Macro-averaged F1: 0.7507**
+
+---
+
+## **Interpretation**
+
+The MOFA model successfully identifies a low-dimensional representation of multi-omics breast cancer biology, with Factor2 serving as a potent pan-omic discriminator of PAM50 subtypes (eta² = 0.82). This factor likely integrates information across transcriptomics, methylation, and proteomics that fundamentally distinguishes intrinsic breast cancer phenotypes (LumA, LumB, Basal, Her2, Normal). The held-out classification accuracy of 77.6% demonstrates that the learned latent factors generalize well to unseen patients, with balanced accuracy of 81.4% suggesting equitable performance across all five subtypes. While Factor2 dominates subtype prediction, the remaining nine factors contribute additional variance and modest predictive signals (Factor6, Factor1), indicating that PAM50 subtype determination is primarily univariate along the top latent dimension but benefits from multivariate modeling that captures residual biology associated with tumor biology, immune composition, or other confounding variables.
 </pre></div>
 </div>
 </div>
@@ -788,16 +1479,16 @@ to use the fixed answer format, or to add biomedical caveats.</p>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "eccb_t8"
         },
         kernelOptions: {
-            name: "python3",
+            name: "eccb_t8",
             path: "./session-3-agentic-llm-workflows/notebooks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'eccb_t8'</script>
 
                 </article>
               

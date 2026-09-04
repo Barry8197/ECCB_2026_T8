@@ -542,7 +542,7 @@ The per-omic embeddings are concatenated into a <strong>joint multi-omic represe
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.cm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelEncoder</span><span class="p">,</span> <span class="n">StandardScaler</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -581,6 +581,11 @@ The per-omic embeddings are concatenated into a <strong>joint multi-omic represe
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using device: cpu
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="load-the-prepared-omics-data-and-patient-train-test-splits">
@@ -602,6 +607,25 @@ The per-omic embeddings are concatenated into a <strong>joint multi-omic represe
 
 <span class="n">train_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;train_ids&#39;</span><span class="p">]</span>
 <span class="n">test_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;test_ids&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Omic view dimensions:
+  transcriptomics:  500 patients ×  29995 features
+  proteomics     :  500 patients ×    464 features
+  methylation    :  500 patients × 200000 features
+
+Subtype counts:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>paper_BRCA_Subtype_PAM50
+LumA      237
+LumB      100
+Basal      97
+Her2       41
+Normal     25
+Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
@@ -669,6 +693,21 @@ The per-omic embeddings are concatenated into a <strong>joint multi-omic represe
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Classes: [&#39;Basal&#39;, &#39;Her2&#39;, &#39;LumA&#39;, &#39;LumB&#39;, &#39;Normal&#39;]
+Encoded Label: [0 1 2 3 4]
+</pre></div>
+</div>
+<img alt="../_images/f6e0c9ca4f8d55c4f20a5e31663a0bf4048fe42589836cf599e5a385a631a26d.png" src="../_images/f6e0c9ca4f8d55c4f20a5e31663a0bf4048fe42589836cf599e5a385a631a26d.png" />
+<img alt="../_images/2b80e593df7bea6b27f93298ddf787a888692319c2ac22ca9b8df3d12289493c.png" src="../_images/2b80e593df7bea6b27f93298ddf787a888692319c2ac22ca9b8df3d12289493c.png" />
+<img alt="../_images/abd1e9c21fd66b27e60c9f2b766b9a4f142e1b5e4940353737cdcd24d00e981b.png" src="../_images/abd1e9c21fd66b27e60c9f2b766b9a4f142e1b5e4940353737cdcd24d00e981b.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Input dimensions per view:
+  transcriptomics: 29995
+  proteomics     : 464
+  methylation    : 200000
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="helper-functions-for-training-and-evaluation-of-a-neural-network">
@@ -709,6 +748,7 @@ Given predicted values and true labels, this function computes and prints the re
         <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">)</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">make_multiview_loader</span><span class="p">(</span>
     <span class="n">X_views_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
@@ -762,6 +802,7 @@ Given predicted values and true labels, this function computes and prints the re
 
     <span class="k">return</span> <span class="n">history</span>
 
+
 <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return predicted class indices for every sample in a DataLoader.&quot;&quot;&quot;</span>
@@ -775,6 +816,7 @@ Given predicted values and true labels, this function computes and prints the re
         <span class="n">preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+
 
 <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_embeddings</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">n_mod</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">]:</span>
@@ -826,18 +868,10 @@ Given predicted values and true labels, this function computes and prints the re
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Concatenate all omic views into a single feature matrix.</span>
 <span class="n">X_train_early</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    YOUR CODE HERE</span>
-<span class="sd">    Use a list comprehension to iterate over the keys of `X_train_views` and collect the corresponding values into a list</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">[</span><span class="n">X_train_views</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">X_train_views</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
 <span class="p">)</span>
 <span class="n">X_test_early</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    YOUR CODE HERE</span>
-<span class="sd">    Use a list comprehension to iterate over the keys of `X_train_views` and collect the corresponding values into a list</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">[</span><span class="n">X_test_views</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">X_test_views</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
 <span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Early integration — train : </span><span class="si">{</span><span class="n">X_train_early</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -845,10 +879,19 @@ Given predicted values and true labels, this function computes and prints the re
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Early integration — train : (375, 230459)
+Early integration — test  : (125, 230459)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">EarlyIntegrationMLP</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PATH&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;:/opt/conda/envs/ECCB_2026/bin&#39;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EarlyIntegrationMLP</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A two-layer MLP for concatenated multi-omic features.</span>
 
@@ -905,6 +948,9 @@ Given predicted values and true labels, this function computes and prints the re
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/51b47bf3d511e2b0d193afc57bc4c17008466f68e319237a4f0f71a740f8cf8c.svg" src="../_images/51b47bf3d511e2b0d193afc57bc4c17008466f68e319237a4f0f71a740f8cf8c.svg" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -925,6 +971,22 @@ Given predicted values and true labels, this function computes and prints the re
 <span class="n">_</span> <span class="o">=</span> <span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">early_pred</span><span class="p">,</span> <span class="s2">&quot;Early Integration MLP&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training early-integration MLP …
+  Epoch 002/10 | loss = 4.7128
+  Epoch 004/10 | loss = 1.7601
+  Epoch 006/10 | loss = 1.4080
+  Epoch 008/10 | loss = 0.9727
+  Epoch 010/10 | loss = 0.6615
+
+Early Integration MLP
+─────────────────────
+  Accuracy          : 0.696 
+  Balanced accuracy : 0.565
+</pre></div>
+</div>
+<img alt="../_images/2db913be9e392c3073eb2b3c4c17d387dd83fb51e49dd12474faa6f7aa2ce315.png" src="../_images/2db913be9e392c3073eb2b3c4c17d387dd83fb51e49dd12474faa6f7aa2ce315.png" />
 </div>
 </div>
 </section>
@@ -987,15 +1049,12 @@ Each omic retains its own learned representation before integration, so unique a
 
         <span class="bp">self</span><span class="o">.</span><span class="n">view_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">input_dims</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-        <span class="c1"># One small MLP encoder per omic view.</span>
+        <span class="c1"># One small encoder per omic view.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encoders</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleDict</span><span class="p">({</span>
             <span class="n">name</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            YOUR CODE HERE</span>
-<span class="sd">            1. Add a linear layer from dim -&gt; view_embedding_dim</span>
-<span class="sd">            2. Add a non linear activation function</span>
-<span class="sd">            3. Add dropout function which takes value from var `dropout`</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">view_embedding_dim</span><span class="p">),</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">input_dims</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">})</span>
@@ -1004,12 +1063,9 @@ Each omic retains its own learned representation before integration, so unique a
 
         <span class="c1"># Shared classifier over the concatenated embeddings.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">joint_embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            YOUR CODE HERE</span>
-<span class="sd">            1. Add a linear layer from dim -&gt; view_embedding_dim</span>
-<span class="sd">            2. Add a non linear activation function</span>
-<span class="sd">            3. Add dropout function which takes value from var `dropout`</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">joint_dim</span><span class="p">,</span> <span class="n">joint_embedding_dim</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">joint_embedding_dim</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
 
@@ -1052,6 +1108,9 @@ Each omic retains its own learned representation before integration, so unique a
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/44c8e3ca1df11601e1651d59b1f285c7b846038fe3b2578a16eae05e8796c1bc.svg" src="../_images/44c8e3ca1df11601e1651d59b1f285c7b846038fe3b2578a16eae05e8796c1bc.svg" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1072,6 +1131,22 @@ Each omic retains its own learned representation before integration, so unique a
 <span class="n">_</span> <span class="o">=</span> <span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">multi_pred</span><span class="p">,</span> <span class="s2">&quot;Multi-Modal Encoder Network&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training multi-modal encoder …
+  Epoch 002/10 | loss = 4.7069
+  Epoch 004/10 | loss = 2.3796
+  Epoch 006/10 | loss = 1.7692
+  Epoch 008/10 | loss = 1.8624
+  Epoch 010/10 | loss = 1.5121
+
+Multi-Modal Encoder Network
+───────────────────────────
+  Accuracy          : 0.456 
+  Balanced accuracy : 0.560
+</pre></div>
+</div>
+<img alt="../_images/94fb17d3626320281ae2c770488e8b8ab6da2731275f290159d9f721b54914a0.png" src="../_images/94fb17d3626320281ae2c770488e8b8ab6da2731275f290159d9f721b54914a0.png" />
 </div>
 </div>
 </section>
@@ -1099,17 +1174,53 @@ Each omic retains its own learned representation before integration, so unique a
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>Accuracy</th>
+      <th>Balanced Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Early Integration MLP</td>
+      <td>0.696</td>
+      <td>0.565333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Multi-Modal Encoder</td>
+      <td>0.456</td>
+      <td>0.560000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">YOUR CODE HERE</span>
-<span class="sd">1. Call `ax.plot()` to plot `early_history`</span>
-<span class="sd">2. Call `ax.plot()` again to plot `multi_history`</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">early_history</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Early Integration MLP&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">multi_history</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Multi-Modal Encoder&quot;</span><span class="p">,</span>   <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Epoch&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Training Loss (cross-entropy)&quot;</span><span class="p">)</span>
@@ -1121,6 +1232,9 @@ Each omic retains its own learned representation before integration, so unique a
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/24e9772f8d1bdcb45254f9b5115407ad3a3bd82c540d5cfc4ea694098d64c01d.png" src="../_images/24e9772f8d1bdcb45254f9b5115407ad3a3bd82c540d5cfc4ea694098d64c01d.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1168,27 +1282,17 @@ Each omic retains its own learned representation before integration, so unique a
 
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">test_loader</span><span class="p">:</span>
-<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">                -----------------</span>
-<span class="sd">                YOUR CODE HERE</span>
-<span class="sd">                -----------------</span>
-<span class="sd">                1. Unpack the batch using star unpacking (as per previous ) </span>
-<span class="sd">                    so that all elements except the last are collected into `features` and the last becomes `target`.</span>
-<span class="sd">                    </span>
-<span class="sd">                2. Move each element of `features` to `device` using a list comprehension, </span>
-<span class="sd">                    and move `target` to `device` as well.</span>
-<span class="sd">                    </span>
-<span class="sd">                3. Pass the features to the model using argument unpacking (`model(*features)`) to get `logits`.</span>
-<span class="sd">                </span>
-<span class="sd">                4. Compute the `loss` using `criterion(logits, target)`.</span>
-<span class="sd">                </span>
-<span class="sd">                5. Accumulate the loss into `running_val_loss`, scaling by the batch size using `target.size(0)`.</span>
-<span class="sd">                </span>
-<span class="sd">                6. After the loop, compute `val_epoch_loss` by dividing `running_val_loss` </span>
-<span class="sd">                    by the total number of samples in `test_loader.dataset`.</span>
-<span class="sd">                    </span>
-<span class="sd">                7. Append `val_epoch_loss` to `val_history`.</span>
-<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="o">*</span><span class="n">features</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">batch</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">features</span><span class="p">]</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">features</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+
+                <span class="n">running_val_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">target</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">val_epoch_loss</span> <span class="o">=</span> <span class="n">running_val_loss</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_loader</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+        <span class="n">val_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_epoch_loss</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
@@ -1210,19 +1314,23 @@ Each omic retains its own learned representation before integration, so unique a
     <span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span>
 <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">-----------------</span>
-<span class="sd">YOUR CODE HERE</span>
-<span class="sd">-----------------</span>
-<span class="sd">1. Call `make_multiview_loader` with `X_train_views`, `y_train`, `batch_size`, and setting `shuffle` to `True`. </span>
-<span class="sd">   Assign the result to `multi_train_loader`.</span>
-<span class="sd">   </span>
-<span class="sd">2. Call `make_multiview_loader` again with `X_test_views` and `y_test`, `batch_size`, and setting `shuffle` to `False`.</span>
-<span class="sd">    Assign the result to `multi_test_loader`.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">multi_train_loader</span> <span class="o">=</span> <span class="n">make_multiview_loader</span><span class="p">(</span><span class="n">X_train_views</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">multi_test_loader</span>  <span class="o">=</span> <span class="n">make_multiview_loader</span><span class="p">(</span><span class="n">X_test_views</span><span class="p">,</span>  <span class="n">y_test</span><span class="p">,</span>  <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training multi-modal encoder …&quot;</span><span class="p">)</span>
 <span class="n">multi_history</span><span class="p">,</span> <span class="n">multi_val_history</span> <span class="o">=</span> <span class="n">train_classifier_val</span><span class="p">(</span><span class="n">multi_model</span><span class="p">,</span> <span class="n">multi_train_loader</span><span class="p">,</span> <span class="n">multi_test_loader</span><span class="p">,</span> <span class="n">n_epochs</span><span class="o">=</span><span class="mi">75</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training multi-modal encoder …
+  Epoch 010/75 | train loss = 0.9735 | val loss = 0.7654
+  Epoch 020/75 | train loss = 0.6270 | val loss = 0.9807
+  Epoch 030/75 | train loss = 0.5555 | val loss = 1.0911
+  Epoch 040/75 | train loss = 0.3622 | val loss = 1.3121
+  Epoch 050/75 | train loss = 0.3271 | val loss = 1.3378
+  Epoch 060/75 | train loss = 0.2336 | val loss = 1.2266
+  Epoch 070/75 | train loss = 0.2971 | val loss = 1.5203
 </pre></div>
 </div>
 </div>
@@ -1259,6 +1367,9 @@ Each omic retains its own learned representation before integration, so unique a
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4616966a45079c501611c9c72442b5419498db92970d68266cdc79cefe03ccd5.png" src="../_images/4616966a45079c501611c9c72442b5419498db92970d68266cdc79cefe03ccd5.png" />
 </div>
 </div>
 </section>
@@ -1378,6 +1489,15 @@ Each omic retains its own learned representation before integration, so unique a
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Early] Train embedding : (375, 8)
+[Early] Test  embedding : (125, 8)
+[Multi] Train embedding : (375, 8)
+[Multi] Test  embedding : (125, 8)
+</pre></div>
+</div>
+<img alt="../_images/47227b8785881b0cc82198b5aef2b93897a494651887d98a101f6e1298c8703a.png" src="../_images/47227b8785881b0cc82198b5aef2b93897a494651887d98a101f6e1298c8703a.png" />
+</div>
 </div>
 </section>
 <section id="per-omic-encoder-embedding-spaces-t-sne">
@@ -1475,6 +1595,26 @@ the <em>i</em>-th view encoder rather than the full joint embedding.</p>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generate Train and Test Embedding for transcriptomics
+[transcriptomics] Train embedding : (375, 32)
+[transcriptomics] Test  embedding : (125, 32)
+</pre></div>
+</div>
+<img alt="../_images/a7311b0762a46b34de4e886a3b4dc99f25658398d0e31c8496110fff01e89cb3.png" src="../_images/a7311b0762a46b34de4e886a3b4dc99f25658398d0e31c8496110fff01e89cb3.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generate Train and Test Embedding for proteomics
+[proteomics] Train embedding : (375, 32)
+[proteomics] Test  embedding : (125, 32)
+</pre></div>
+</div>
+<img alt="../_images/1196d52a2fb4bff9fb964bd5d06012bfc9df5457d0b5a5412a9036f7d8288a17.png" src="../_images/1196d52a2fb4bff9fb964bd5d06012bfc9df5457d0b5a5412a9036f7d8288a17.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generate Train and Test Embedding for methylation
+[methylation] Train embedding : (375, 32)
+[methylation] Test  embedding : (125, 32)
+</pre></div>
+</div>
+<img alt="../_images/c1409b2225bf9bacc199105d95fca1e734ec5560b540374c46c6e2bf5eb68769.png" src="../_images/c1409b2225bf9bacc199105d95fca1e734ec5560b540374c46c6e2bf5eb68769.png" />
 </div>
 </div>
 </section>
@@ -1647,6 +1787,29 @@ actual input:</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Running Integrated Gradients …
+  Features : 230,459  (scored simultaneously)
+  Steps    : 50
+  Device   : cpu
+
+Attribution matrix : (125, 230459)  (patients × features)
+Total features     : 230,459
+
+Top 10 features by mean |attribution|:
+   1. transcriptomics:17281           |attr| = 0.00556
+   2. transcriptomics:21761           |attr| = 0.00530
+   3. transcriptomics:18238           |attr| = 0.00523
+   4. transcriptomics:23791           |attr| = 0.00489
+   5. transcriptomics:23755           |attr| = 0.00488
+   6. transcriptomics:7397            |attr| = 0.00483
+   7. transcriptomics:25093           |attr| = 0.00481
+   8. transcriptomics:23132           |attr| = 0.00478
+   9. transcriptomics:26977           |attr| = 0.00477
+  10. transcriptomics:26109           |attr| = 0.00474
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1767,6 +1930,9 @@ actual input:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b023d86270c4b1621da9809fbddf4427d364f68725cd0df44be596af7d4c5184.png" src="../_images/b023d86270c4b1621da9809fbddf4427d364f68725cd0df44be596af7d4c5184.png" />
 </div>
 </div>
 </section>
@@ -1922,6 +2088,28 @@ actual input:</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=======================================================
+  Dimensionality
+=======================================================
+  Raw concatenated features :  230,459 columns
+    └─ transcriptomics        :   29,995
+    └─ proteomics             :      464
+    └─ methylation            :  200,000
+  Multi-omic embedding      :       96 columns
+  Reduction factor          :   2400.6×
+  Dimensionality saved      :   100.0 %
+
+=======================================================
+  Memory (all 500 patients, float32)
+=======================================================
+  Raw matrix   :    460.92 MB  (460,918,000 bytes)
+  Embedding    :     192.0 KB  (192,000 bytes)
+  Memory saved :    460.73 MB  (100.0 %)
+</pre></div>
+</div>
+<img alt="../_images/9aaee2f4248a35c879765846f8e60f3ea24a844d53677ff1f2086d75ff2ded1d.png" src="../_images/9aaee2f4248a35c879765846f8e60f3ea24a844d53677ff1f2086d75ff2ded1d.png" />
+</div>
 </div>
 </section>
 <section id="takeaways">
@@ -1967,16 +2155,16 @@ actual input:</p>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb_2026"
+            mode: "test"
         },
         kernelOptions: {
-            name: "eccb_2026",
+            name: "test",
             path: "./session-2-multi-omics"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb_2026'</script>
+    <script>kernelName = 'test'</script>
 
                 </article>
               

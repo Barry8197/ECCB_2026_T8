@@ -543,6 +543,25 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Omic view dimensions:
+  transcriptomics:  500 patients ×  29995 features
+  proteomics     :  500 patients ×    464 features
+  methylation    :  500 patients × 200000 features
+
+Subtype counts:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>paper_BRCA_Subtype_PAM50
+LumA      237
+LumB      100
+Basal      97
+Her2       41
+Normal     25
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="pca-view-of-each-omic">
@@ -579,13 +598,18 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/9e5585b83998975bee95f2807272566858e2bb26a9641e58493e591c4386e6bc.png" src="../_images/9e5585b83998975bee95f2807272566858e2bb26a9641e58493e591c4386e6bc.png" />
+<img alt="../_images/44da91be628abff60929f14267f8fa0ff390aeace3b0d627852d0817b74c22a6.png" src="../_images/44da91be628abff60929f14267f8fa0ff390aeace3b0d627852d0817b74c22a6.png" />
+<img alt="../_images/1dd60c4c34ad447010a3d7b5758f70a4370f95150715d96e1226ac76a09ac278.png" src="../_images/1dd60c4c34ad447010a3d7b5758f70a4370f95150715d96e1226ac76a09ac278.png" />
+</div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
 <p>Transcriptomics shows the clearest visible subtype structure: Basal (purple) forms a distinct cluster separated from the LumA/LumB/Normal samples. This suggests that transcriptomic variation contains strong subtype-related signal, which may translate into stronger performance for transcriptomics-based models, although this must be confirmed using supervised prediction.</p>
 <p>Proteomics shows weaker visible subtype structure in the first two principal components: samples from different subtypes largely overlap, with only a few outliers separated along PC1. This suggests that subtype-related variation is less dominant in the major variance directions, which may make classification more challenging, although predictive performance must be evaluated directly.</p>
 <p>Methylation shows weaker partial structure: some separation along PC1 is visible (Basal/Her2 trending right, LumA/LumB trending left), but subtype groups remain substantially overlapping compared with transcriptomics.</p>
-<p>Low variance explained everywhere (7-16% per PC) means these plots are only 2D projections of high-dimensional data. Fine cluster shapes should not be over-interpreted; only broad patterns, such as the stronger subtype separation in transcriptomics, could be considered meaningful.</p>
+<p>Low variance explained everywhere (7–16% per PC) means these plots are only 2D projections of high-dimensional data. Fine cluster shapes should not be over-interpreted; only broad patterns, such as the stronger subtype separation in transcriptomics, could be considered meaningful.</p>
 </details></section>
 <section id="model-helpers">
 <h2>4. Model helpers<a class="headerlink" href="#model-helpers" title="Link to this heading">#</a></h2>
@@ -621,6 +645,7 @@
 <section id="single-omic-benchmarks">
 <h2>5. Single-omic benchmarks<a class="headerlink" href="#single-omic-benchmarks" title="Link to this heading">#</a></h2>
 <p><strong>Why integrate in the first place?</strong></p>
+<p>Before integrating data types, measure how far each omic gets on its own..</p>
 <p>Before comparing integration strategies, we need a reason to integrate in the first place. Each omic layer below is trained as a standalone linear classifier, using the <em>same</em> train/test split, model, and metrics as every method that follows.</p>
 <p>The question isn’t “which single omic is best?”; it’s whether the omics agree with each other or not. If every omic already predicted the same subtype for every patient, integration would add complexity without adding information. If they disagree on a meaningful fraction of patients, that disagreement is exactly the signal integration is trying to recover.</p>
 <div class="cell docutils container">
@@ -631,31 +656,89 @@
 
 <span class="n">base_model</span> <span class="o">=</span> <span class="n">make_linear_classifier</span><span class="p">()</span>
 
-<span class="c1">############################################################</span>
-<span class="c1">### EXERCISE: Train a single-omic baseline for each omic ###</span>
-<span class="c1">############################################################</span>
-
-<span class="c1"># For each omic (name, X) in X_omics.items():</span>
-<span class="c1">#   1. Fit base_model on X.loc[train_ids] / y[train_ids] and predict on</span>
-<span class="c1">#      X.loc[test_ids], using fit_predict(base_model, X_train, y_train, X_test)</span>
-<span class="c1">#      -&gt; returns (model, pred, proba)</span>
-<span class="c1">#   2. Store the fitted model in single_omic_models[name]</span>
-<span class="c1">#   3. Store the predicted probabilities in single_omic_probabilities[name]</span>
-<span class="c1">#   4. Score pred with evaluate_predictions(y[test_ids], pred, f&quot;single omic: {name}&quot;)</span>
-<span class="c1">#      and append the result to `results`</span>
-
-<span class="c1"># ENTER YOUR CODE HERE</span>
-
-
-<span class="c1">############################################################</span>
-
-
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">X_omics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">proba</span> <span class="o">=</span> <span class="n">fit_predict</span><span class="p">(</span>
+        <span class="n">base_model</span><span class="p">,</span>
+        <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">train_ids</span><span class="p">],</span>
+        <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">single_omic_models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="n">single_omic_probabilities</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">proba</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">pred</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;single omic: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
 
 <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">results_df</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: transcriptomics
+────────────────────────────
+  Accuracy          : 0.824 
+  Balanced accuracy : 0.799
+</pre></div>
+</div>
+<img alt="../_images/f9450d940d2a3fdbb4ff4f1005167dfe5ccc1e6475e0e99fa6fa113a698855a8.png" src="../_images/f9450d940d2a3fdbb4ff4f1005167dfe5ccc1e6475e0e99fa6fa113a698855a8.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: proteomics
+───────────────────────
+  Accuracy          : 0.720 
+  Balanced accuracy : 0.643
+</pre></div>
+</div>
+<img alt="../_images/e74d810aa18192e0f5f761d10d4b60d23932c63d0e9a7cc237e6b26fe420049e.png" src="../_images/e74d810aa18192e0f5f761d10d4b60d23932c63d0e9a7cc237e6b26fe420049e.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single omic: methylation
+────────────────────────
+  Accuracy          : 0.712 
+  Balanced accuracy : 0.688
+</pre></div>
+</div>
+<img alt="../_images/f6b54db66268f348350bd10689a90eb8263d3ebc8594725bf474d692b45396bd.png" src="../_images/f6b54db66268f348350bd10689a90eb8263d3ebc8594725bf474d692b45396bd.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -690,6 +773,157 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test patients where every omic predicts the same subtype: 60.0%
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_patients</th>
+      <th>pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>all omics agree</th>
+      <td>75</td>
+      <td>60.0</td>
+    </tr>
+    <tr>
+      <th>omics disagree</th>
+      <td>50</td>
+      <td>40.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Of the disputed patients, 92% have at least one omic that got the true subtype right.
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>transcriptomics</th>
+      <th>proteomics</th>
+      <th>methylation</th>
+      <th>true_label</th>
+      <th>any_omic_correct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>TCGA-E9-A5UO</th>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-D8-A1XY</th>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-D8-A27G</th>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-AR-A5QQ</th>
+      <td>Basal</td>
+      <td>Basal</td>
+      <td>Normal</td>
+      <td>Basal</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-BH-A1FN</th>
+      <td>Basal</td>
+      <td>Basal</td>
+      <td>LumB</td>
+      <td>LumB</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-E2-A108</th>
+      <td>Normal</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>Normal</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-AO-A0JC</th>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-AR-A0TX</th>
+      <td>Her2</td>
+      <td>LumA</td>
+      <td>Her2</td>
+      <td>Her2</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-BH-A0BJ</th>
+      <td>Normal</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>LumA</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>TCGA-AR-A24R</th>
+      <td>LumB</td>
+      <td>LumA</td>
+      <td>LumB</td>
+      <td>LumB</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -732,6 +966,67 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Early integration matrix: 500 patients x 230459 features
+
+early integration: concatenation
+────────────────────────────────
+  Accuracy          : 0.752 
+  Balanced accuracy : 0.702
+</pre></div>
+</div>
+<img alt="../_images/78bb1800198ccac303146c6fa42202b1097f42743c83d7d4258ae6c6e51b31ce.png" src="../_images/78bb1800198ccac303146c6fa42202b1097f42743c83d7d4258ae6c6e51b31ce.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>early integration: concatenation</td>
+      <td>0.752</td>
+      <td>0.702333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -779,6 +1074,195 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>omic</th>
+      <th>features_in_top_100</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>transcriptomics</td>
+      <td>56</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>proteomics</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>methylation</td>
+      <td>21</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature</th>
+      <th>abs_coefficient</th>
+      <th>omic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>223955</th>
+      <td>methylation::cg26591149</td>
+      <td>0.003857</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>30088</th>
+      <td>proteomics::CDK1_pT14</td>
+      <td>0.003600</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>30347</th>
+      <td>proteomics::PLK1</td>
+      <td>0.003514</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>30119</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>0.003480</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>229474</th>
+      <td>methylation::cg24964883</td>
+      <td>0.003210</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>30136</th>
+      <td>proteomics::DNMT1</td>
+      <td>0.003144</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>219956</th>
+      <td>methylation::cg16050326</td>
+      <td>0.003037</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>18078</th>
+      <td>transcriptomics::ENSG00000223392.1</td>
+      <td>0.002989</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>179328</th>
+      <td>methylation::cg21250931</td>
+      <td>0.002979</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>30084</th>
+      <td>proteomics::cdc25C</td>
+      <td>0.002977</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>30111</th>
+      <td>proteomics::Cox2</td>
+      <td>0.002966</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>18200</th>
+      <td>transcriptomics::ENSG00000223949.8</td>
+      <td>0.002958</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>30271</th>
+      <td>proteomics::MSH6</td>
+      <td>0.002941</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>30038</th>
+      <td>proteomics::Aurora-A</td>
+      <td>0.002797</td>
+      <td>proteomics</td>
+    </tr>
+    <tr>
+      <th>29739</th>
+      <td>transcriptomics::ENSG00000287564.1</td>
+      <td>0.002743</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>9904</th>
+      <td>transcriptomics::ENSG00000159495.8</td>
+      <td>0.002687</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>209145</th>
+      <td>methylation::cg07980671</td>
+      <td>0.002674</td>
+      <td>methylation</td>
+    </tr>
+    <tr>
+      <th>5718</th>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>0.002652</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>16308</th>
+      <td>transcriptomics::ENSG00000198914.5</td>
+      <td>0.002610</td>
+      <td>transcriptomics</td>
+    </tr>
+    <tr>
+      <th>13759</th>
+      <td>transcriptomics::ENSG00000179826.7</td>
+      <td>0.002590</td>
+      <td>transcriptomics</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../_images/c2833031646639da579eafad0204f26bf3753e44e5a028c7d109418a160839b5.png" src="../_images/c2833031646639da579eafad0204f26bf3753e44e5a028c7d109418a160839b5.png" />
 </div>
 </div>
 <details>
@@ -831,6 +1315,176 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature_1</th>
+      <th>feature_2</th>
+      <th>omic_pair</th>
+      <th>abs_correlation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>815</th>
+      <td>proteomics::CDK1_pT14</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.439948</td>
+    </tr>
+    <tr>
+      <th>855</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.432839</td>
+    </tr>
+    <tr>
+      <th>835</th>
+      <td>proteomics::PLK1</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.420436</td>
+    </tr>
+    <tr>
+      <th>824</th>
+      <td>proteomics::PLK1</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.410333</td>
+    </tr>
+    <tr>
+      <th>1010</th>
+      <td>proteomics::ASNS</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.403460</td>
+    </tr>
+    <tr>
+      <th>844</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.396262</td>
+    </tr>
+    <tr>
+      <th>1004</th>
+      <td>proteomics::ASNS</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.393260</td>
+    </tr>
+    <tr>
+      <th>1075</th>
+      <td>proteomics::TRIP13</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.392305</td>
+    </tr>
+    <tr>
+      <th>859</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>transcriptomics::ENSG00000129484.14</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.389710</td>
+    </tr>
+    <tr>
+      <th>804</th>
+      <td>proteomics::CDK1_pT14</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.384738</td>
+    </tr>
+    <tr>
+      <th>839</th>
+      <td>proteomics::PLK1</td>
+      <td>transcriptomics::ENSG00000129484.14</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.381803</td>
+    </tr>
+    <tr>
+      <th>970</th>
+      <td>proteomics::CYCLINE1</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.375960</td>
+    </tr>
+    <tr>
+      <th>850</th>
+      <td>proteomics::CYCLINB1</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.364153</td>
+    </tr>
+    <tr>
+      <th>830</th>
+      <td>proteomics::PLK1</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.362718</td>
+    </tr>
+    <tr>
+      <th>819</th>
+      <td>proteomics::CDK1_pT14</td>
+      <td>transcriptomics::ENSG00000129484.14</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.352746</td>
+    </tr>
+    <tr>
+      <th>944</th>
+      <td>proteomics::Aurora-A</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.349084</td>
+    </tr>
+    <tr>
+      <th>895</th>
+      <td>proteomics::cdc25C</td>
+      <td>transcriptomics::ENSG00000138658.16</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.343621</td>
+    </tr>
+    <tr>
+      <th>924</th>
+      <td>proteomics::MSH6</td>
+      <td>transcriptomics::ENSG00000127589.4</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.340917</td>
+    </tr>
+    <tr>
+      <th>969</th>
+      <td>proteomics::CYCLINE1</td>
+      <td>transcriptomics::ENSG00000241359.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.339857</td>
+    </tr>
+    <tr>
+      <th>1090</th>
+      <td>proteomics::FOXM1</td>
+      <td>transcriptomics::ENSG00000225208.1</td>
+      <td>proteomics ↔ transcriptomics</td>
+      <td>0.339588</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../_images/6840568980e7f439fbb1e4f2c0ec756d11a91c31f54567136fbd28720e5ab798.png" src="../_images/6840568980e7f439fbb1e4f2c0ec756d11a91c31f54567136fbd28720e5ab798.png" />
+</div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -844,38 +1498,92 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 <p>Late integration trains one model per omic and averages the class probabilities. Each omic gets an equal vote by default.This sidesteps the dimensionality problem of early integration and keeps each omic’s model easy to inspect on its own, but it assumes equal weighting is the right call, an assumption we will stress-test later.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">############################################################</span>
-<span class="c1">### EXERCISE: Late integration by prediction averaging #####</span>
-<span class="c1">############################################################</span>
-<span class="c1"># 1. Write the function late_integrated_probabilities(probability_tables, weights=None):</span>
-<span class="c1">#      Args:</span>
-<span class="c1">#        - probability_tables: dict[str, pd.DataFrame], mapping omic name -&gt;</span>
-<span class="c1">#          a (patients x classes) probability table, e.g. single_omic_probabilities</span>
-<span class="c1">#        - weights: optional dict[str, float] mapping omic name -&gt; weight.</span>
-<span class="c1">#          If None, default every omic to weight 1.0.</span>
-<span class="c1">#      Returns:</span>
-<span class="c1">#        - pd.DataFrame (patients x classes): the weighted average of the</span>
-<span class="c1">#          input probability tables, i.e. sum(table * weight) / sum(weights)</span>
-<span class="c1">#</span>
-<span class="c1">#      With a docstring that describes what it does.</span>
-<span class="c1">#</span>
-<span class="c1"># 2. Call it on single_omic_probabilities to get late_proba.</span>
-<span class="c1">#</span>
-<span class="c1"># 3. Convert late_proba to class predictions: late_proba.idxmax(axis=1),</span>
-<span class="c1">#    renamed &quot;prediction&quot; -&gt; late_pred.</span>
-<span class="c1">#</span>
-<span class="c1"># 4. Score late_pred with evaluate_predictions(y[test_ids], late_pred,</span>
-<span class="c1">#    &quot;late integration: equal weights&quot;) and append the result to `results`.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">late_integrated_probabilities</span><span class="p">(</span><span class="n">probability_tables</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Average same-index, same-column probability tables from omic-specific models.&quot;&quot;&quot;</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="ow">or</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">probability_tables</span><span class="p">}</span>
+    <span class="n">weight_total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
-<span class="c1"># ENTER YOUR CODE HERE</span>
+    <span class="n">averaged</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">proba</span> <span class="ow">in</span> <span class="n">probability_tables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">weighted_proba</span> <span class="o">=</span> <span class="n">proba</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">averaged</span> <span class="o">=</span> <span class="n">weighted_proba</span> <span class="k">if</span> <span class="n">averaged</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">averaged</span> <span class="o">+</span> <span class="n">weighted_proba</span>
 
-<span class="c1">############################################################</span>
+    <span class="k">return</span> <span class="n">averaged</span> <span class="o">/</span> <span class="n">weight_total</span>
 
+<span class="n">late_proba</span> <span class="o">=</span> <span class="n">late_integrated_probabilities</span><span class="p">(</span><span class="n">single_omic_probabilities</span><span class="p">)</span>
+<span class="n">late_pred</span> <span class="o">=</span> <span class="n">late_proba</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;prediction&quot;</span><span class="p">)</span>
+
+<span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluate_predictions</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">late_pred</span><span class="p">,</span> <span class="s2">&quot;late integration: equal weights&quot;</span><span class="p">))</span>
 <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;balanced_accuracy&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">results_df</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late integration: equal weights
+───────────────────────────────
+  Accuracy          : 0.832 
+  Balanced accuracy : 0.772
+</pre></div>
+</div>
+<img alt="../_images/eb1218230252adc55094422949f4594c955b0c1a2da0d6ec95c8eae6e3869d2b.png" src="../_images/eb1218230252adc55094422949f4594c955b0c1a2da0d6ec95c8eae6e3869d2b.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>late integration: equal weights</td>
+      <td>0.832</td>
+      <td>0.772000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>early integration: concatenation</td>
+      <td>0.752</td>
+      <td>0.702333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>What is your interpretation of these results?</p>
 <details>
@@ -930,6 +1638,87 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
+────
+  Accuracy          : 0.832 
+  Balanced accuracy : 0.772
+</pre></div>
+</div>
+<img alt="../_images/eb1218230252adc55094422949f4594c955b0c1a2da0d6ec95c8eae6e3869d2b.png" src="../_images/eb1218230252adc55094422949f4594c955b0c1a2da0d6ec95c8eae6e3869d2b.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
+────
+  Accuracy          : 0.824 
+  Balanced accuracy : 0.764
+</pre></div>
+</div>
+<img alt="../_images/0f59d62f792cb7f4b8a9573adb3ddd5e6d4ca4ef6aa78496637e072b9f68c3dc.png" src="../_images/0f59d62f792cb7f4b8a9573adb3ddd5e6d4ca4ef6aa78496637e072b9f68c3dc.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
+────
+  Accuracy          : 0.832 
+  Balanced accuracy : 0.707
+</pre></div>
+</div>
+<img alt="../_images/d2350931fd2eecab95515251bceea9dc35dfce3ee2d639d7518c1fed1ac69e43.png" src="../_images/d2350931fd2eecab95515251bceea9dc35dfce3ee2d639d7518c1fed1ac69e43.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late
+────
+  Accuracy          : 0.776 
+  Balanced accuracy : 0.729
+</pre></div>
+</div>
+<img alt="../_images/1d806801a44fcea6c081f380400af1b7fc32b559f38701a46eae0c8b7f23edcb.png" src="../_images/1d806801a44fcea6c081f380400af1b7fc32b559f38701a46eae0c8b7f23edcb.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>weighting</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>equal weights</td>
+      <td>0.832</td>
+      <td>0.772000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>boost transcriptomics</td>
+      <td>0.824</td>
+      <td>0.764000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>boost methylation</td>
+      <td>0.776</td>
+      <td>0.729000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>boost proteomics</td>
+      <td>0.832</td>
+      <td>0.707333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../_images/48dc79697e96056575976455cecb919201e64351224531e0adfbf0f60f4322a9.png" src="../_images/48dc79697e96056575976455cecb919201e64351224531e0adfbf0f60f4322a9.png" />
+</div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -983,6 +1772,77 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>late integration: stacking (meta-learner)
+─────────────────────────────────────────
+  Accuracy          : 0.808 
+  Balanced accuracy : 0.801
+</pre></div>
+</div>
+<img alt="../_images/11a07ae0ac5ac9b5ed4bb9facb0b2da6803c582fc92d1a0bf1381b588fceabff.png" src="../_images/11a07ae0ac5ac9b5ed4bb9facb0b2da6803c582fc92d1a0bf1381b588fceabff.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>late integration: stacking (meta-learner)</td>
+      <td>0.808</td>
+      <td>0.801333</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>late integration: equal weights</td>
+      <td>0.832</td>
+      <td>0.772000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>early integration: concatenation</td>
+      <td>0.752</td>
+      <td>0.702333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1000,6 +1860,64 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>omic</th>
+      <th>methylation</th>
+      <th>proteomics</th>
+      <th>transcriptomics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Basal</th>
+      <td>0.36</td>
+      <td>1.02</td>
+      <td>0.75</td>
+    </tr>
+    <tr>
+      <th>Her2</th>
+      <td>0.50</td>
+      <td>0.62</td>
+      <td>0.92</td>
+    </tr>
+    <tr>
+      <th>LumA</th>
+      <td>0.49</td>
+      <td>0.49</td>
+      <td>0.72</td>
+    </tr>
+    <tr>
+      <th>LumB</th>
+      <td>0.73</td>
+      <td>0.57</td>
+      <td>0.76</td>
+    </tr>
+    <tr>
+      <th>Normal</th>
+      <td>0.52</td>
+      <td>0.44</td>
+      <td>1.13</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <details>
 <summary><b>Interpretation</b> (click to expand)</summary>
@@ -1024,6 +1942,71 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>late integration: stacking (meta-learner)</td>
+      <td>0.808</td>
+      <td>0.801333</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>single omic: transcriptomics</td>
+      <td>0.824</td>
+      <td>0.798667</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>late integration: equal weights</td>
+      <td>0.832</td>
+      <td>0.772000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>early integration: concatenation</td>
+      <td>0.752</td>
+      <td>0.702333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>single omic: methylation</td>
+      <td>0.712</td>
+      <td>0.688333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>single omic: proteomics</td>
+      <td>0.720</td>
+      <td>0.643333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="../_images/6ed9901bc05f2567df5386e65715327dc03484d73ee808bd809ad98746f0d518.png" src="../_images/6ed9901bc05f2567df5386e65715327dc03484d73ee808bd809ad98746f0d518.png" />
 </div>
 </div>
 <details>
@@ -1054,6 +2037,12 @@ On 65% of patients, all three omics agree. These represent cases where each moda
 <span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_ids</span><span class="p">],</span> <span class="n">best_pred</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model by balanced accuracy: late integration: stacking (meta-learner)
+</pre></div>
+</div>
+<img alt="../_images/11a07ae0ac5ac9b5ed4bb9facb0b2da6803c582fc92d1a0bf1381b588fceabff.png" src="../_images/11a07ae0ac5ac9b5ed4bb9facb0b2da6803c582fc92d1a0bf1381b588fceabff.png" />
 </div>
 </div>
 <details>
@@ -1145,16 +2134,16 @@ On 65% of patients, all three omics agree. These represent cases where each moda
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "eccb_2026"
+            mode: "eccb_t8"
         },
         kernelOptions: {
-            name: "eccb_2026",
+            name: "eccb_t8",
             path: "./session-2-multi-omics"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'eccb_2026'</script>
+    <script>kernelName = 'eccb_t8'</script>
 
                 </article>
               

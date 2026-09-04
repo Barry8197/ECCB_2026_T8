@@ -835,7 +835,9 @@ arbitrary decision: pick a threshold, and keep the pairs above it.</p>
 <span class="sd">- Store the result in a variable called `correlations`.</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="c1">### YOUR CODE HERE ###</span>
+<span class="c1"># --- SOLUTION ---</span>
+<span class="n">correlations</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">correlation_matrix</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+<span class="c1"># --- END SOLUTION ---</span>
 
 <span class="n">coexpr</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">coexpression_network</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">correlations</span><span class="o">=</span><span class="n">correlations</span><span class="p">)</span>
 <span class="n">h</span><span class="o">.</span><span class="n">print_graph_info</span><span class="p">(</span><span class="n">coexpr</span><span class="p">)</span>

@@ -462,7 +462,7 @@
   <section class="tex2jax_ignore mathjax_ignore" id="part-1-mofa-tools-for-an-llm-agent-langchain-tool">
 <h1>Part 1 — MOFA tools for an LLM agent (LangChain <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>)<a class="headerlink" href="#part-1-mofa-tools-for-an-llm-agent-langchain-tool" title="Link to this heading">#</a></h1>
 <p>In this notebook, we’re going to learn about how to make LLMs use <strong>tools</strong>. Tools are simply <em>functions</em>, given to a LLM agent, which then decides which to call to answer a given task, instead of relying only on its internal knowledge.</p>
-<p>We’ll specifically be using as tools the functions defined in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>. These tools will help Claude answer questions about the multi-omics MOFA model we fitted: A fitted MOFA model of TCGA breast-cancer subtypes, with 500 patients × 3 omics views (transcriptomics, proteomics, methylation), PAM50 subtype per patient.</p>
+<p>We’ll specifically be using as tools the functions defined in <code class="docutils literal notranslate"><span class="pre">src/mofa_tools.py</span></code>. These tools will help Claude answer questions about the multi-omics MOFA model we fitted in Part 0: A fitted MOFA model of TCGA breast-cancer subtypes, with 603 patients × 3 omics views (transcriptomics, proteomics, methylation), PAM50 subtype per patient.</p>
 <p>For Claude to know when to use each function, they all contain a short description (a docstring) of what it does, and Claude decides on its own which ones to use, and in what order.</p>
 <p><strong>Key design choice: the model is not fit by the agent.</strong>
 Within these functions, we have decided not to include the function to fit the MOFA model (<code class="docutils literal notranslate"><span class="pre">fit_mofa</span></code>). The agent’s tools operate on the already
@@ -488,7 +488,9 @@ not exposed as a tool. Tools are the cheap, interpretable analysis steps.</p>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
 
-<span class="n">SESSION_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;notebooks&quot;</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="n">SESSION_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s2">&quot;ECCB_SESSION3_DIR&quot;</span><span class="p">,</span>
+    <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;ECCB2026_TEST/sessions/session-3-agentic-llm-workflows&quot;</span><span class="p">))</span>
 <span class="k">assert</span> <span class="n">SESSION_DIR</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Session directory not found: </span><span class="si">{</span><span class="n">SESSION_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="n">DOTENV_PATH</span> <span class="o">=</span> <span class="s2">&quot;/.env&quot;</span>
 <span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="n">SESSION_DIR</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>  <span class="c1"># shared mount on workshop servers</span>
@@ -500,6 +502,11 @@ not exposed as a tool. Tools are the cheap, interpretable analysis steps.</p>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY not found. Add it to a .env in the project root.&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY loaded:&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ANTHROPIC_API_KEY loaded: True
 </pre></div>
 </div>
 </div>
@@ -547,11 +554,17 @@ close over the objects built in this cell.</p>
 <span class="n">factors_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">factors_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 <span class="n">factors_df</span> <span class="o">=</span> <span class="n">factors_df</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
 
-<span class="n">active_cols</span><span class="p">,</span> <span class="n">r2_summary</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39; ## YOUR CODE HERE ## Implement the appropiate including the model, MIN_TOTAL_R2 and MAX_FACTORS.&#39;&#39;&#39;</span>
+<span class="n">active_cols</span><span class="p">,</span> <span class="n">r2_summary</span> <span class="o">=</span> <span class="n">select_active_factors</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">MIN_TOTAL_R2</span><span class="p">,</span> <span class="n">MAX_FACTORS</span><span class="p">)</span>
 <span class="n">r2_all</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_r2</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Factor&quot;</span><span class="p">:</span> <span class="s2">&quot;factor&quot;</span><span class="p">,</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span> <span class="s2">&quot;view&quot;</span><span class="p">,</span>
                                         <span class="s2">&quot;Group&quot;</span><span class="p">:</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;R2&quot;</span><span class="p">:</span> <span class="s2">&quot;r2&quot;</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded cached MOFA model | views=</span><span class="si">{</span><span class="n">view_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;train=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_ids</span><span class="p">)</span><span class="si">}</span><span class="s2">  test=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_ids</span><span class="p">)</span><span class="si">}</span><span class="s2">  active factors=</span><span class="si">{</span><span class="n">active_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Loaded cached MOFA model | views=[&#39;transcriptomics&#39;, &#39;proteomics&#39;, &#39;methylation&#39;]
+train=375  test=125  active factors=[&#39;Factor1&#39;, &#39;Factor2&#39;, &#39;Factor3&#39;, &#39;Factor4&#39;, &#39;Factor5&#39;, &#39;Factor6&#39;, &#39;Factor7&#39;, &#39;Factor8&#39;, &#39;Factor9&#39;, &#39;Factor10&#39;]
 </pre></div>
 </div>
 </div>
@@ -568,10 +581,10 @@ before handing them to the model.</p>
 <span class="c1"># Write a funciton &amp; its docstring that summarises </span>
 <span class="c1"># the patients information and features per omics view, plus the subtype class counts.</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">data_summary</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    ## YOUR DOCSTRING HERE ## </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1">## YOUR CODE HERE ##</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Patients and features per omics view, plus the subtype class counts.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;views&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;patients&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">X_omics</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                          <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">X_omics</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">view_names</span><span class="p">},</span>
+            <span class="s2">&quot;subtype_counts&quot;</span><span class="p">:</span> <span class="n">y</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()}</span>
 <span class="c1">#################################################</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">split_summary</span><span class="p">():</span>
@@ -648,6 +661,16 @@ before handing them to the model.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>data_summary          : {&quot;LumA&quot;: 237, &quot;LumB&quot;: 100, &quot;Basal&quot;: 97, &quot;Her2&quot;: 41, &quot;Normal&quot;: 25}
+split_summary          : {&quot;n_train&quot;: 375, &quot;n_test&quot;: 125, &quot;features_per_view&quot;: {&quot;transcriptomics&quot;: 2000, &quot;proteomics&quot;: 464, &quot;methylation&quot;: 2000}}
+active_factors         : [&#39;Factor1&#39;, &#39;Factor2&#39;, &#39;Factor3&#39;, &#39;Factor4&#39;, &#39;Factor5&#39;, &#39;Factor6&#39;, &#39;Factor7&#39;, &#39;Factor8&#39;, &#39;Factor9&#39;, &#39;Factor10&#39;]
+factor_view_r2(Factor1): {&quot;factor&quot;: &quot;Factor1&quot;, &quot;r2_by_view&quot;: {&quot;transcriptomics&quot;: 1.426, &quot;proteomics&quot;: 0.811, &quot;methylation&quot;: 32.407}, &quot;top_view&quot;: &quot;methylation&quot;}
+subtype assoc (top 3)  : [{&#39;factor&#39;: &#39;Factor2&#39;, &#39;eta_squared&#39;: 0.824}, {&#39;factor&#39;: &#39;Factor6&#39;, &#39;eta_squared&#39;: 0.373}, {&#39;factor&#39;: &#39;Factor1&#39;, &#39;eta_squared&#39;: 0.281}]
+classify               : {&quot;metrics&quot;: {&quot;accuracy&quot;: 0.776, &quot;balanced_accuracy&quot;: 0.814, &quot;macro_f1&quot;: 0.751}, &quot;most_confused&quot;: {&quot;true&quot;: &quot;LumA&quot;, &quot;predicted&quot;: &quot;LumB&quot;, &quot;count&quot;: 10}}
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="wrap-the-functions-as-langchain-tools">
@@ -680,8 +703,7 @@ give the model ways to misfire.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Variance explained (R2) by one factor (e.g. &#39;Factor1&#39;) in each omics view,</span>
 <span class="sd">    and which view it explains most.&quot;&quot;&quot;</span>
     <span class="c1">#################################################</span>
-    <span class="c1"># Complete the function using the existing functions to return the factor view r2.</span>
-    <span class="c1">## YOUR CODE HERE ##</span>
+    <span class="k">return</span> <span class="n">factor_view_r2</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
     <span class="c1">#################################################</span>
     
 <span class="nd">@tool</span>
@@ -712,6 +734,18 @@ give the model ways to misfire.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;data_summary_tool&#39;,
+ &#39;split_summary_tool&#39;,
+ &#39;active_factors_tool&#39;,
+ &#39;factor_view_r2_tool&#39;,
+ &#39;factor_subtype_association_tool&#39;,
+ &#39;top_features_for_factor_tool&#39;,
+ &#39;classify_subtype_from_factors_tool&#39;,
+ &#39;train_vs_test_subtype_association_tool&#39;]
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="bind-the-tools-to-claude">
@@ -728,6 +762,11 @@ give the model ways to misfire.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bound 8 tools to claude-haiku-4-5
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="the-agent-loop">
@@ -740,9 +779,11 @@ give the model ways to misfire.</p>
 <span class="c1">#################################################</span>
 <span class="c1"># Write the prompt to define the persona, the activity that the agent should perform. </span>
 <span class="c1"># Additional clue: List the factors and the subtypes in the prompt.</span>
-<span class="n">SYSTEM</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;`</span>
-<span class="s1">#               YOUR PROMPT HERE</span>
-<span class="s1">&#39;&#39;&#39;</span>
+<span class="n">SYSTEM</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You are a computational-biology assistant analysing a fitted MOFA model &quot;</span>
+          <span class="s2">&quot;of TCGA breast-cancer multi-omics data. Use the tools to gather evidence; &quot;</span>
+          <span class="s2">&quot;ground every quantitative claim in tool results and name which tool you used. &quot;</span>
+          <span class="s2">&quot;Factors are named &#39;Factor1&#39;..&#39;Factor10&#39;; subtypes are PAM50 (LumA, LumB, &quot;</span>
+          <span class="s2">&quot;Basal, Her2, Normal).&quot;</span><span class="p">)</span>
 <span class="c1">#################################################</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">run_agent</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AIMessage</span><span class="p">:</span>
@@ -785,17 +826,63 @@ give the model ways to misfire.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[step 0] -&gt; data_summary_tool({})
+Based on the **data_summary_tool** results, here&#39;s the breakdown:
+
+## Patients and Features per Omics View
+
+| View | Patients | Features |
+|------|----------|----------|
+| **Transcriptomics** | 500 | 29,995 |
+| **Proteomics** | 500 | 464 |
+| **Methylation** | 500 | 200,000 |
+
+## Patients per PAM50 Subtype
+
+| Subtype | Count |
+|---------|-------|
+| **LumA** | 237 |
+| **LumB** | 100 |
+| **Basal** | 97 |
+| **Her2** | 41 |
+| **Normal** | 25 |
+| **Total** | 500 |
+
+The dataset is dominated by Luminal A (LumA) subtype (47.4% of patients), followed by Luminal B and Basal subtypes (~20% each), with Her2 and Normal subtypes being less common (8.2% and 5% respectively).
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q2: the split</span>
 <span class="c1">#################################################</span>
-<span class="c1"># Write the text to ask the agent to split the cohort between test and train. Additional clue: detail the information that you are asking for, eg. how many patients each?</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">#               YOUR PROMPT HERE</span>
-<span class="s1">&#39;&#39;&#39;</span>
+<span class="c1"># Write the text to ask the agent to split the cohort between test and train. </span>
+<span class="c1"># Additional clue: detail the information that you are asking for, eg. how many patients each?</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span>
+<span class="s2">&quot;Split the cohort into train/test. How many patients in each, &quot;</span>
+<span class="s2">&quot;and how many features survive per view after selection?&quot;</span>
 <span class="c1">#################################################</span>
 <span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[step 0] -&gt; split_summary_tool({})
+Based on the **split_summary_tool** results:
+
+**Patient counts:**
+- **Training set:** 375 patients
+- **Test set:** 125 patients
+- **Total:** 500 patients (75/25 split)
+
+**Features retained per view after selection:**
+- **Transcriptomics:** 2,000 features
+- **Proteomics:** 464 features
+- **Methylation:** 2,000 features
+
+The feature selection has been most stringent for proteomics (464 features), while transcriptomics and methylation retained 2,000 features each.
 </pre></div>
 </div>
 </div>
@@ -808,11 +895,48 @@ give the model ways to misfire.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[step 0] -&gt; active_factors_tool({})
+Based on the **active_factors_tool**, all 10 factors are active in the MOFA model. Here&#39;s the total variance (R²) explained by each:
+
+| Factor | Total R² (%) |
+|--------|-------------|
+| **Factor1** | 34.64% |
+| **Factor2** | 29.12% |
+| **Factor3** | 17.22% |
+| **Factor4** | 10.65% |
+| **Factor5** | 8.87% |
+| **Factor6** | 6.50% |
+| **Factor7** | 5.93% |
+| **Factor8** | 4.95% |
+| **Factor9** | 4.63% |
+| **Factor10** | 3.98% |
+
+**Key observations:**
+- **Factor1 and Factor2 dominate**, together explaining ~63.8% of total variance
+- The first three factors account for ~81% of variance
+- Variance drops off substantially after Factor3, with each subsequent factor explaining &lt;11%
+- All 10 factors combined explain 126.6% (note: this is cumulative R² across views, so values can exceed 100%)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q4: factor vs view</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Which omics view does Factor1 explain the most?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[step 0] -&gt; factor_view_r2_tool({&#39;factor&#39;: &#39;Factor1&#39;})
+Based on the **factor_view_r2_tool** results, **Factor1 explains the most variance in the methylation view**, with an R² of **32.41%**. 
+
+For comparison, Factor1 explains:
+- **1.43%** of variance in transcriptomics
+- **0.81%** of variance in proteomics
+
+This indicates that Factor1 is primarily a methylation-driven factor.
 </pre></div>
 </div>
 </div>
@@ -828,12 +952,55 @@ give the model ways to misfire.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[step 0] -&gt; factor_subtype_association_tool({})
+[step 1] -&gt; top_features_for_factor_tool({&#39;factor&#39;: &#39;Factor2&#39;, &#39;view&#39;: &#39;transcriptomics&#39;, &#39;n&#39;: 10})
+## Summary
+
+**Factor2** is the MOFA factor most strongly associated with breast-cancer PAM50 subtype (η² = 0.824, from `factor_subtype_association_tool`).
+
+### Top Transcriptomic Drivers of Factor2:
+
+**Positive drivers** (highest weights):
+1. **ENSG00000160182.3** (weight: 0.589)
+2. **ENSG00000173467.9** (weight: 0.568)
+3. **ENSG00000160180.15** (weight: 0.532)
+4. **ENSG00000106541.12** (weight: 0.493)
+5. **ENSG00000235687.9** (weight: 0.492)
+
+**Negative drivers** (lowest weights):
+1. **ENSG00000166535.20** (weight: -0.365)
+2. **ENSG00000185686.18** (weight: -0.36)
+3. **ENSG00000164434.12** (weight: -0.352)
+4. **ENSG00000186832.9** (weight: -0.349)
+5. **ENSG00000102243.13** (weight: -0.344)
+
+These transcriptomic features represent the key molecular drivers that distinguish breast-cancer subtypes in this MOFA model. The strong association (η² = 0.824) indicates that Factor2 captures substantial subtype-specific transcriptomic variation.
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q6: predict + failure mode</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Can we predict subtype from the MOFA factors alone? Report the &quot;</span>
                 <span class="s2">&quot;held-out performance and say which two subtypes are most confused.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[step 0] -&gt; classify_subtype_from_factors_tool({})
+Yes, we can predict PAM50 subtype from MOFA factors alone with reasonable performance on held-out test data:
+
+**Held-out Performance:**
+- **Accuracy:** 77.6%
+- **Balanced Accuracy:** 81.4%
+- **Macro F1:** 0.751
+
+**Most Confused Subtype Pair:**
+- **LumA** (true) is most frequently misclassified as **LumB** (10 instances)
+
+This makes biological sense: Luminal A and Luminal B are both luminal subtypes and share many molecular features, so they are naturally more difficult to distinguish than, say, Basal or Her2 subtypes. The model achieves good overall discrimination, suggesting that the MOFA factors capture subtype-relevant variation across the multi-omics data.
 </pre></div>
 </div>
 </div>
@@ -851,12 +1018,92 @@ give the model ways to misfire.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[step 0] -&gt; active_factors_tool({})
+[step 0] -&gt; factor_subtype_association_tool({})
+Excellent! Now I can provide a detailed comparison. Here&#39;s what the data shows:
+
+## R2 Ranking (Variance Explained - Total Across All Views)
+1. **Factor1**: 34.64%
+2. **Factor2**: 29.12%
+3. **Factor3**: 17.22%
+4. **Factor4**: 10.65%
+5. **Factor5**: 8.87%
+6. **Factor6**: 6.50%
+7. **Factor7**: 5.93%
+8. **Factor8**: 4.95%
+9. **Factor9**: 4.63%
+10. **Factor10**: 3.98%
+
+## Subtype Association Ranking (η² with PAM50 Subtype)
+1. **Factor2**: 0.824
+2. **Factor6**: 0.373
+3. **Factor1**: 0.281
+4. **Factor4**: 0.181
+5. **Factor8**: 0.154
+6. **Factor9**: 0.086
+7. **Factor10**: 0.080
+8. **Factor3**: 0.049
+9. **Factor5**: 0.046
+10. **Factor7**: 0.018
+
+## Key Findings &amp; Mismatch Explanation
+
+**The factor that explains the most variance (Factor1) is NOT the one that best separates subtypes (Factor2).**
+
+### The Mismatch:
+- **Factor1** dominates in total variance (34.64% R²) but ranks **3rd** in subtype association (η² = 0.281)
+- **Factor2** is 2nd in variance (29.12% R²) but ranks **1st** in subtype association (η² = 0.824)
+
+### Why This Mismatch Occurs:
+
+1. **Factor1 captures general biological variation**: With the highest R² across all omics views, Factor1 likely captures broad, subtype-independent biological signals (e.g., general tumor vs. normal tissue differences, or general proliferation signals that span multiple subtypes).
+
+2. **Factor2 is subtype-specific**: Despite explaining less total variance, Factor2 has a dramatically higher association with PAM50 subtypes (η² = 0.824 vs. 0.281). This suggests Factor2 captures variation that is highly discriminative between the five PAM50 classes, even if it doesn&#39;t explain as much overall variance.
+
+3. **Factor6 is another interesting case**: It ranks 6th in variance (6.50% R²) but 2nd in subtype association (η² = 0.373), further illustrating that subtype-discriminative power is independent of total variance explained.
+
+### Biological Interpretation:
+This is actually a **healthy pattern** in multi-omics analysis. The largest factors often capture ubiquitous biological signals (like proliferation or immune infiltration), while smaller, more focused factors capture the specific molecular signatures that define disease subtypes. Factor2 appears to be precisely such a subtype-defining factor.
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Q8: out-of-sample check</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">run_agent</span><span class="p">(</span><span class="s2">&quot;Do the MOFA factors still separate subtypes on the held-out test &quot;</span>
                 <span class="s2">&quot;patients? Compare the train and test subtype associations.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[step 0] -&gt; train_vs_test_subtype_association_tool({})
+Excellent news: **Yes, the MOFA factors maintain or even strengthen their ability to separate subtypes on held-out test patients.** Here&#39;s the detailed comparison:
+
+## Train vs Test Subtype Association (η² = effect size)
+
+| Factor | Train η² | Test η² | Change |
+|--------|----------|---------|--------|
+| **Factor2** | 0.824 | 0.872 | ↑ +0.048 |
+| **Factor6** | 0.373 | 0.365 | ↓ -0.008 |
+| **Factor1** | 0.281 | 0.399 | ↑ +0.118 |
+| **Factor4** | 0.181 | 0.277 | ↑ +0.096 |
+| **Factor8** | 0.154 | 0.299 | ↑ +0.145 |
+| **Factor9** | 0.086 | 0.115 | ↑ +0.029 |
+| **Factor10** | 0.080 | 0.103 | ↑ +0.023 |
+| **Factor3** | 0.049 | 0.181 | ↑ +0.132 |
+| **Factor5** | 0.046 | 0.097 | ↑ +0.051 |
+| **Factor7** | 0.018 | 0.091 | ↑ +0.073 |
+
+## Key Findings:
+
+1. **Strong generalization**: 9 out of 10 factors show *improved* or stable subtype associations on test data
+2. **Factor2 dominates**: Maintains the strongest association (η² = 0.872), explaining ~87% of subtype variance
+3. **Surprising improvements**: Several factors (Factor8, Factor3, Factor1) show notably *stronger* associations on test data, suggesting the model captures robust biological signals
+4. **No overfitting**: The lack of degradation indicates the factors are not overfitted to training data
+
+This suggests the MOFA model has learned generalizable patterns that robustly separate PAM50 subtypes across independent patient cohorts.
 </pre></div>
 </div>
 </div>
@@ -886,16 +1133,16 @@ reuse this exact <code class="docutils literal notranslate"><span class="pre">mo
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "eccb_t8"
         },
         kernelOptions: {
-            name: "python3",
+            name: "eccb_t8",
             path: "./session-3-agentic-llm-workflows/notebooks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'eccb_t8'</script>
 
                 </article>
               

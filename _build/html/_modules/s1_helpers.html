@@ -623,7 +623,7 @@
 <span class="sd">    including ones that end up with no edges, because &quot;which genes dropped out at</span>
 <span class="sd">    this threshold?&quot; is a question worth being able to ask.</span>
 
-<span class="sd">    `absolute` thresholds on |r|, so strong anti-correlation counts as a</span>
+<span class="sd">    `absolute` thresholds on r, so strong anti-correlation counts as a</span>
 <span class="sd">    relationship. Pass `correlations` to reuse a matrix already computed - it is</span>
 <span class="sd">    by far the expensive part, and the threshold sweep calls this repeatedly.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -687,7 +687,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">coexpression_partners</span><span class="p">(</span><span class="n">correlations</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">gene_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                           <span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The genes most strongly co-expressed with one gene, strongest |r| first.</span>
+<span class="sd">    The genes most strongly co-expressed with one gene, strongest r first.</span>
 
 <span class="sd">    Pass the knowledge graph as `G` to get gene symbols alongside the Ensembl ids</span>
 <span class="sd">    - the ranking is unreadable without them.</span>

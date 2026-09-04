@@ -716,10 +716,22 @@ ICD-10 code?</p>
 <span class="sd">- If `&quot;icd10&quot;` appears anywhere in that list, append `d` to `covered`.</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="c1">### YOUR CODE HERE ###</span>
+<span class="c1"># --- SOLUTION ---</span>
+<span class="n">covered</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">diseases</span><span class="p">:</span>
+    <span class="n">neighbour_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;icd10&quot;</span> <span class="ow">in</span> <span class="n">neighbour_types</span><span class="p">:</span>
+        <span class="n">covered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="c1"># --- END SOLUTION ---</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;diseases with a direct ICD-10 code: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">covered</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">diseases</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
       <span class="sa">f</span><span class="s2">&quot;  (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">covered</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">diseases</span><span class="p">)</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>diseases with a direct ICD-10 code: 19 / 90  (21%)
 </pre></div>
 </div>
 </div>
@@ -859,11 +871,37 @@ means the disease carries the code itself.</p>
 <span class="sd">- Turn `rows` into a DataFrame called `resolved`.</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="c1">### YOUR CODE HERE ###</span>
+<span class="c1"># --- SOLUTION ---</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">diseases</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">icd10_for_disease</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;disease&quot;</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">d</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;icd10&quot;</span><span class="p">:</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;icd10&quot;</span><span class="p">]),</span>
+        <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">],</span>
+    <span class="p">})</span>
+
+<span class="n">resolved</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+<span class="c1"># --- END SOLUTION ---</span>
 
 <span class="n">n_resolved</span> <span class="o">=</span> <span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;icd10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;resolved: </span><span class="si">{</span><span class="n">n_resolved</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">diseases</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>resolved: 82 / 90
+
+steps
+0.0    19
+1.0    10
+2.0    19
+3.0    21
+4.0    12
+5.0     1
+NaN     8
 </pre></div>
 </div>
 </div>
@@ -1111,7 +1149,14 @@ something to do with <em>causing</em> the disease.</p>
 <span class="sd">- Intersect them with `&amp;` and call the result `shared_causal`.</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="c1">### YOUR CODE HERE ###</span>
+<span class="c1"># --- SOLUTION ---</span>
+<span class="n">causal</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">filter_by_datatype</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">evidence</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">CAUSAL_DATATYPES</span><span class="p">)</span>
+
+<span class="n">causal_breast</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">causal</span><span class="p">,</span> <span class="n">breast</span><span class="p">)</span>
+<span class="n">causal_ovarian</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">causal</span><span class="p">,</span> <span class="n">ovarian</span><span class="p">)</span>
+
+<span class="n">shared_causal</span> <span class="o">=</span> <span class="n">causal_breast</span> <span class="o">&amp;</span> <span class="n">causal_ovarian</span>
+<span class="c1"># --- END SOLUTION ---</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;all evidence:   &quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">shared</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;causal only:    &quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">shared_causal</span><span class="p">))</span>
@@ -1120,6 +1165,14 @@ something to do with <em>causing</em> the disease.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;known_drug only:&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span>
     <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span>
     <span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">drug_only</span><span class="p">,</span> <span class="n">breast</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">h</span><span class="o">.</span><span class="n">genes_for_disease</span><span class="p">(</span><span class="n">drug_only</span><span class="p">,</span> <span class="n">ovarian</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>all evidence:    [&#39;BRCA1&#39;, &#39;BRCA2&#39;, &#39;BRIP1&#39;, &#39;PIK3CA&#39;, &#39;TOP1&#39;, &#39;TOP2A&#39;, &#39;TP53&#39;, &#39;TUBA1B&#39;, &#39;TUBA1C&#39;, &#39;TUBB&#39;, &#39;TUBB3&#39;]
+causal only:     [&#39;BRCA1&#39;, &#39;BRCA2&#39;, &#39;BRIP1&#39;, &#39;PIK3CA&#39;, &#39;TP53&#39;]
+
+known_drug only: [&#39;PIK3CA&#39;, &#39;TOP1&#39;, &#39;TOP2A&#39;, &#39;TP53&#39;, &#39;TUBA1B&#39;, &#39;TUBA1C&#39;, &#39;TUBB&#39;, &#39;TUBB3&#39;]
 </pre></div>
 </div>
 </div>

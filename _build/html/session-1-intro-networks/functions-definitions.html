@@ -514,7 +514,7 @@ largest component. Directed graphs use weakly connected components.</p>
 edge carries the correlation as its <cite>weight</cite>. Nodes are added for all genes,
 including ones that end up with no edges, because “which genes dropped out at
 this threshold?” is a question worth being able to ask.</p>
-<p><cite>absolute</cite> thresholds on <a href="#id1"><span class="problematic" id="id2">|r|</span></a>, so strong anti-correlation counts as a
+<p><cite>absolute</cite> thresholds on r, so strong anti-correlation counts as a
 relationship. Pass <cite>correlations</cite> to reuse a matrix already computed - it is
 by far the expensive part, and the threshold sweep calls this repeatedly.</p>
 </dd></dl>
@@ -522,7 +522,7 @@ by far the expensive part, and the threshold sweep calls this repeatedly.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="s1_helpers.coexpression_partners">
 <span class="sig-prename descclassname"><span class="pre">s1_helpers.</span></span><span class="sig-name descname"><span class="pre">coexpression_partners</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">correlations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/s1_helpers.html#coexpression_partners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#s1_helpers.coexpression_partners" title="Link to this definition">#</a></dt>
-<dd><p>The genes most strongly co-expressed with one gene, strongest <a href="#id3"><span class="problematic" id="id4">|r|</span></a> first.</p>
+<dd><p>The genes most strongly co-expressed with one gene, strongest r first.</p>
 <p>Pass the knowledge graph as <cite>G</cite> to get gene symbols alongside the Ensembl ids
 - the ranking is unreadable without them.</p>
 </dd></dl>
